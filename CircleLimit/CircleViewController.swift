@@ -15,11 +15,17 @@ enum TouchType {
 }
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
-
+    
+    var trivialGroup = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("CircleViewController loaded")
-        let (generators, guidelines) = pqrGeneratorsAndGuidelines(3, q: 3, r: 4)
+        var generators: [HyperbolicTransformation] = []
+        var guidelines: [HDrawable] = []
+        if !trivialGroup {
+            (generators, guidelines) = pqrGeneratorsAndGuidelines(3, q: 3, r: 4)
+        }
         self.guidelines = guidelines
         for object in guidelines {
             object.size = 0.005
@@ -30,18 +36,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             group[mode] = selectElements(bigGroup, cutoff: cutoff[mode]!)        }
     }
     
-    func selectElements<T>(array : [T], test: T -> Bool) -> [T] {
-        var newArray : [T] = []
-        for x in array {
-            if test(x) {
-                newArray.append(x)
-            }
-        }
-        return newArray
-    }
-    
-    func selectElements(group: [HyperbolicTransformation],cutoff: Double) -> [HyperbolicTransformation] {
-        let a = selectElements(group) { (M: HyperbolicTransformation) in M.a.abs < cutoff }
+    func selectElements(group: [HyperbolicTransformation], cutoff: Double) -> [HyperbolicTransformation] {
+        let a = group.filter { (M: HyperbolicTransformation) in M.a.abs < cutoff }
         print("Selected \(a.count) elements with cutoff \(cutoff)")
         return a
     }
@@ -49,12 +45,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var guidelines : [HDrawable] = []
     
     var drawGuidelines = true
-
+    
     var drawing = true
     
     var drawObjects: [HDrawable] = []
     
-    var oldObjects: [HDrawable] = []
+    var undoneObjects: [HDrawable] = []
     
     var mode : Mode = .Usual
     
@@ -104,7 +100,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: Picture control
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
         if motion == .MotionShake {
-           clearPicture()
+            clearPicture()
         }
     }
     
@@ -117,14 +113,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     
-// MARK: Adding points and drawing
+    // MARK: Adding points and drawing
     let drawRadius = 0.99
     
     func hPoint(rawLocation: CGPoint) -> HPoint? {
         var thing = rawLocation
         thing = CGPointApplyAffineTransform(thing,toPoincare)
         let (x, y) = (Double(thing.x), Double(thing.y))
-        print(x, y)
+        //        print("New point: " + x.nice() + " " + y.nice())
         if x * x + y * y < drawRadius * drawRadius {
             let z = HPoint(Double(thing.x), Double(thing.y))
             return mask.inverse().appliedTo(z)
@@ -160,12 +156,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                         newCurve!.addPoint(z)
                         poincareView.setNeedsDisplay()
                         performSelectorInBackground("returnToUsualMode", withObject: nil)
-                   }
+                    }
                 }
             }
         }
     }
-
+    
     func returnToUsualMode() {
         guard drawing else { return }
         guard let curve = newCurve else { return }
@@ -174,44 +170,91 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         drawObjects.append(curve)
         newCurve = nil
         mode = .Usual
+        undoneObjects = []
         poincareView.setNeedsDisplay()
     }
     
+    var printingTouches = false
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("touchesBegan")
+        if printingTouches { print("touchesBegan") }
         super.touchesBegan(touches, withEvent: event)
         mode = .Drawing
         addPoint(touches, TouchType.Began)
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("touchesMoved")
+        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         addPoint(touches, TouchType.Moved)
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        print("touchesEnded")
+        if printingTouches { print("touchesEnded") }
         super.touchesEnded(touches, withEvent: event)
         addPoint(touches, TouchType.Ended)
     }
     
     // MARK: Gesture recognition
     
+    @IBOutlet var panRecognizer: UIPanGestureRecognizer!
+    
+    @IBOutlet var pinchRecognizer: UIPinchGestureRecognizer!
+    
+    @IBOutlet var undoRecognizer: UISwipeGestureRecognizer!
+    
+    @IBOutlet var redoRecognizer: UISwipeGestureRecognizer!
+    
+    //    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    //        return otherGestureRecognizer === swipeRecognizer
+    //    }
+    
+    //    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    //        return gestureRecognizer === swipeRecognizer
+    //    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer
+    }
+    
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return otherGestureRecognizer == pinchRecognizer && (gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer)
+    }
+    
+    @IBAction func redo(sender: UISwipeGestureRecognizer) {
+        print("redo")
+        mode = .Usual
+        guard undoneObjects.count > 0 else {return}
+        drawObjects.append(undoneObjects.removeLast())
+        poincareView.setNeedsDisplay()
+    }
+    
+    
+    @IBAction func undo(sender: UISwipeGestureRecognizer) {
+        print("undo!")
+        mode = .Usual
+        guard drawObjects.count > 0 else { return }
+        undoneObjects.append(drawObjects.removeLast())
+        poincareView.setNeedsDisplay()
+    }
+    
+    
+    
     @IBAction func simplePan(gesture: UIPanGestureRecognizer) {
-         switch gesture.state {
+        switch gesture.state {
         case .Began:
             drawing = false
             newCurve = nil
             mode = Mode.Moving
         case .Changed:
             let translation = gesture.translationInView(poincareView)
-//            println("Raw translation: \(translation.x, translation.y)")
+            //            println("Raw translation: \(translation.x, translation.y)")
             gesture.setTranslation(CGPointZero, inView: poincareView)
             var a = Complex64(Double(translation.x/scale), Double(translation.y/scale))
             a = a/(a.abs+1) // This prevents bad transformations
             let M = HyperbolicTransformation(a: -a)
-//            println("Moebius translation: \(M)")
+            //            println("Moebius translation: \(M)")
             mask = M.following(mask)
             recomputeMask()
             poincareView.setNeedsDisplay()
@@ -225,14 +268,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     @IBAction func toggleGuidelines(sender: UITapGestureRecognizer) {
-        print("tapped")
+        //        print("tapped")
         mode = Mode.Usual
         let z = hPoint(sender.locationInView(poincareView))
         if z == nil {
             print("toggling guidelines")
             drawGuidelines = !drawGuidelines
         } else {
- //           drawObjects.append(HyperbolicDot(center: z!))
+            //           drawObjects.append(HyperbolicDot(center: z!))
         }
         poincareView.setNeedsDisplay()
     }
@@ -240,7 +283,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     func recomputeMask() {
         var bestA = mask.a.abs
         var bestMask = mask
-//        println("Trying to improve : \(bestA)")
+        //        println("Trying to improve : \(bestA)")
         var foundBetter = false
         repeat {
             foundBetter = false
@@ -250,15 +293,15 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                     foundBetter = true
                     bestA = newMask.a.abs
                     bestMask = newMask
-//                    println("Found \(bestA)")
+                    //                    println("Found \(bestA)")
                 }
             }
         } while (foundBetter)
         mask = bestMask
-   }
+    }
     
     @IBAction func zoom(gesture: UIPinchGestureRecognizer) {
-//        println("Zooming")
+        //        println("Zooming")
         switch gesture.state {
         case .Began:
             mode = Mode.Moving
@@ -275,7 +318,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
         poincareView.setNeedsDisplay()
     }
-
+    
     // MARK: Outlets to other views
     
     @IBOutlet weak var poincareView: PoincareView! {
@@ -283,15 +326,15 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             poincareView.dataSource = self
         }
     }
-
+    
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using segue.destinationViewController.
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
 }

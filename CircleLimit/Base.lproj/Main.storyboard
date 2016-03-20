@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -22,14 +22,20 @@
                             <outletCollection property="gestureRecognizers" destination="n2t-D8-Sa6" appends="YES" id="KrR-We-dCg"/>
                             <outletCollection property="gestureRecognizers" destination="tDE-AL-ekJ" appends="YES" id="X4N-UW-Nl6"/>
                             <outletCollection property="gestureRecognizers" destination="HoZ-7h-xGw" appends="YES" id="s05-IJ-8UN"/>
+                            <outletCollection property="gestureRecognizers" destination="tEX-jU-Njj" appends="YES" id="rvG-Fz-8If"/>
+                            <outletCollection property="gestureRecognizers" destination="dlP-0b-g3q" appends="YES" id="pR1-B6-bzT"/>
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="panRecognizer" destination="n2t-D8-Sa6" id="7Cy-3r-lFY"/>
+                        <outlet property="pinchRecognizer" destination="tDE-AL-ekJ" id="ayW-em-yko"/>
                         <outlet property="poincareView" destination="IBq-aQ-8NE" id="eiR-RU-w03"/>
+                        <outlet property="redoRecognizer" destination="dlP-0b-g3q" id="lB4-gf-ej4"/>
+                        <outlet property="undoRecognizer" destination="tEX-jU-Njj" id="7ka-P0-UUX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <panGestureRecognizer minimumNumberOfTouches="2" id="n2t-D8-Sa6">
+                <panGestureRecognizer minimumNumberOfTouches="2" maximumNumberOfTouches="2" id="n2t-D8-Sa6">
                     <connections>
                         <action selector="simplePan:" destination="vXZ-lx-hvc" id="V0b-fx-1q6"/>
                     </connections>
@@ -44,8 +50,20 @@
                         <action selector="toggleGuidelines:" destination="vXZ-lx-hvc" id="PSA-eA-RK2"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="left" numberOfTouchesRequired="3" id="tEX-jU-Njj" userLabel="Undo Recognizer">
+                    <connections>
+                        <action selector="undo:" destination="vXZ-lx-hvc" id="VKh-fF-Dya"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="Fjr-Zp-oD4"/>
+                    </connections>
+                </swipeGestureRecognizer>
+                <swipeGestureRecognizer direction="right" numberOfTouchesRequired="3" id="dlP-0b-g3q">
+                    <connections>
+                        <action selector="redo:" destination="vXZ-lx-hvc" id="oJc-Ey-gp7"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="4WU-L6-3L1"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="259" y="263"/>
+            <point key="canvasLocation" x="212" y="266"/>
         </scene>
     </scenes>
 </document>

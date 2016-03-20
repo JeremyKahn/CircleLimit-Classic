@@ -13,3 +13,10 @@ extension NSTimer {
 
     
 }
+
+extension Double {
+    
+    func nice() -> String {
+        return String(format: "%.2f", self)
+    }
+}
