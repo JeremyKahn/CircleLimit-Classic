@@ -20,3 +20,7 @@ extension Double {
         return String(format: "%.2f", self)
     }
 }
+
+func asinh(y: Double) -> Double {
+    return log(y + sqrt(y * y + 1))
+}

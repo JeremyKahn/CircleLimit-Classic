@@ -99,8 +99,12 @@ class HyperbolicPolyline : HDrawable {
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
+    static let stepsPerNaturalExponentOfScale: Double = 3
+    
     var scaleOfMask : Int {
-        return min(Int(0.00001 - log(1-mask.a.abs)), HyperbolicPolyline.maxScaleIndex)
+        let _scaleOfMask = min(Int(0.00001 - HyperbolicPolyline.stepsPerNaturalExponentOfScale * log(1-mask.a.abs)), HyperbolicPolyline.maxScaleIndex)
+//        print("Scale of mask: \(_scaleOfMask)")
+        return _scaleOfMask
     }
     
     var activeSubsequence : [Int] {
@@ -113,6 +117,7 @@ class HyperbolicPolyline : HDrawable {
     }
     
     var maskedPointsToDraw: [HPoint] {
+//        print("Drawing a curve with subsequence: \(activeSubsequence)")
         var maskedPoints = subsequenceOf(points, withIndices: activeSubsequence)
         for i in 0..<maskedPoints.count {
             maskedPoints[i] = mask.appliedTo(maskedPoints[i])
@@ -162,10 +167,12 @@ class HyperbolicPolyline : HDrawable {
     }
     
     var distanceTolerance : Double {
-        return initialDistanceTolerance * exp(Double(scaleIndex))
+        return initialDistanceTolerance * exp(Double(scaleIndex)/HyperbolicPolyline.stepsPerNaturalExponentOfScale)
     }
     
-    static var maxScaleIndex = 6
+    static var maximumShrinkageFactor: Double = 1000
+    
+    static var maxScaleIndex = Int(log(maximumShrinkageFactor) * stepsPerNaturalExponentOfScale)
     
     var scaleIndex : Int = 0
     
@@ -175,6 +182,7 @@ class HyperbolicPolyline : HDrawable {
         var sinTheta : Double
         var cosTheta : Double
         var sinhDistanceToOrigin : Double
+        var coshDistanceToOrigin : Double
         
         init(z : Complex64) {
             let a = z.abs
@@ -182,17 +190,37 @@ class HyperbolicPolyline : HDrawable {
                 sinTheta = 0.0
                 cosTheta = 1.0
                 sinhDistanceToOrigin = 0.0
+                coshDistanceToOrigin = 1.0
             }
             else {
                 sinTheta = z.im / a
                 cosTheta = z.re / a
                 sinhDistanceToOrigin = 2 * a / ( 1 - a * a )
+                coshDistanceToOrigin = (1 + a * a)/(1 - a * a)
             }
         }
         
+        func sinAngleTo(y: radialDistanceCache) -> Double {
+            return sinTheta * y.cosTheta - cosTheta * y.sinTheta
+        }
+        
+        func cosAngleTo(y: radialDistanceCache) -> Double {
+            return cosTheta * y.cosTheta + sinTheta * y.sinTheta
+        }
+        
+        func coshDistanceTo(y: radialDistanceCache) -> Double {
+            let cosDeltaTheta = cosAngleTo(y)
+            return coshDistanceToOrigin * y.coshDistanceToOrigin - sinhDistanceToOrigin * y.sinhDistanceToOrigin * cosDeltaTheta
+        }
+        
         func distanceFromRadialLineTo(y: radialDistanceCache) -> Double {
-            let sinDeltaTheta = sinTheta * y.cosTheta - cosTheta * y.sinTheta
-            return sinhDistanceToOrigin * sinDeltaTheta.abs
+            let sinDeltaTheta = sinAngleTo(y)
+            let sinhAltitude = y.sinhDistanceToOrigin * sinDeltaTheta.abs
+            let coshDistanceToY = coshDistanceTo(y)
+            let sinhDistanceToY = sqrt(coshDistanceToY * coshDistanceToY - 1)
+            let minSinhAdjancentSides = min(y.sinhDistanceToOrigin, sinhDistanceToY)
+            let sinhDistanceFromRadialLineSegmentToY = max(sinhAltitude, minSinhAdjancentSides)
+            return asinh(sinhDistanceFromRadialLineSegmentToY)
         }
     }
     
