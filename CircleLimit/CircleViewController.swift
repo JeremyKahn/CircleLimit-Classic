@@ -16,7 +16,8 @@ enum TouchType {
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
-    var trivialGroup = false
+    var trivialGroup = true
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,6 +142,31 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var newCurve : HyperbolicPolyline?
     
+    var newPolygon: HyperbolicPolygon
+    
+    func addPointToPolygon(touches: Set<NSObject>, _ state: TouchType) {
+        if (!drawing) { return }
+        if let touch = touches.first as? UITouch {
+            if let z = hPoint(touch.locationInView(poincareView)) {
+                switch state {
+                case .Began:
+                    newCurve = HyperbolicPolyline(z)
+                case .Moved:
+                    newCurve?.addPoint(z)
+                    poincareView.setNeedsDisplay()
+                case .Ended:
+                    if newCurve != nil {
+                        newCurve!.addPoint(z)
+                        poincareView.setNeedsDisplay()
+                        performSelectorInBackground("returnToUsualMode", withObject: nil)
+                    }
+                }
+            }
+        }
+    }
+    
+
+    
     func addPoint(touches: Set<NSObject>, _ state: TouchType) {
         if (!drawing) { return }
         if let touch = touches.first as? UITouch {
@@ -176,24 +202,24 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var printingTouches = false
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesBegan") }
-        super.touchesBegan(touches, withEvent: event)
-        mode = .Drawing
-        addPoint(touches, TouchType.Began)
-    }
-    
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesMoved") }
-        super.touchesMoved(touches, withEvent: event)
-        addPoint(touches, TouchType.Moved)
-    }
-    
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesEnded") }
-        super.touchesEnded(touches, withEvent: event)
-        addPoint(touches, TouchType.Ended)
-    }
+//    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        if printingTouches { print("touchesBegan") }
+//        super.touchesBegan(touches, withEvent: event)
+//        mode = .Drawing
+//        addPoint(touches, TouchType.Began)
+//    }
+//    
+//    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        if printingTouches { print("touchesMoved") }
+//        super.touchesMoved(touches, withEvent: event)
+//        addPoint(touches, TouchType.Moved)
+//    }
+//    
+//    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+//        if printingTouches { print("touchesEnded") }
+//        super.touchesEnded(touches, withEvent: event)
+//        addPoint(touches, TouchType.Ended)
+//    }
     
     // MARK: Gesture recognition
     
