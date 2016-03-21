@@ -14,9 +14,10 @@ enum TouchType {
     case Ended
 }
 
+
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
-    var trivialGroup = true
+    var trivialGroup = false
 
     
     override func viewDidLoad() {
@@ -72,10 +73,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var multiplier = CGFloat(1.0)
     
     var objectsToDraw: [HDrawable] {
-        var fullDrawObjects = drawObjects
-        if drawGuidelines {
-            fullDrawObjects += guidelines
-        }
+        var fullDrawObjects = drawGuidelines ? guidelines : []
+        fullDrawObjects += drawObjects
         if newCurve != nil {
             fullDrawObjects.append(newCurve!)
         }
@@ -144,51 +143,31 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var newCurve : HyperbolicPolyline?
     
-    var newPolygon: HyperbolicPolygon
+//    var newPolygon: HyperbolicPolygon
     
-    func addPointToPolygon(touches: Set<NSObject>, _ state: TouchType) {
-        if (!drawing) { return }
-        if let touch = touches.first as? UITouch {
-            if let z = hPoint(touch.locationInView(poincareView)) {
-                switch state {
-                case .Began:
-                    newCurve = HyperbolicPolyline(z)
-                case .Moved:
-                    newCurve?.addPoint(z)
-                    poincareView.setNeedsDisplay()
-                case .Ended:
-                    if newCurve != nil {
-                        newCurve!.addPoint(z)
-                        poincareView.setNeedsDisplay()
-                        performSelectorInBackground("returnToUsualMode", withObject: nil)
-                    }
-                }
-            }
-        }
-    }
     
+//    func addPoint(touches: Set<NSObject>, _ state: TouchType) {
+//        if (!drawing) { return }
+//        if let touch = touches.first as? UITouch {
+//            if let z = hPoint(touch.locationInView(poincareView)) {
+//                switch state {
+//                case .Began:
+//                    newCurve = HyperbolicPolyline(z)
+//                case .Moved:
+//                    newCurve?.addPoint(z)
+//                    poincareView.setNeedsDisplay()
+//                case .Ended:
+//                    if newCurve != nil {
+//                        newCurve!.addPoint(z)
+//                        poincareView.setNeedsDisplay()
+//                        performSelectorInBackground("returnToUsualMode", withObject: nil)
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    
 
-    
-    func addPoint(touches: Set<NSObject>, _ state: TouchType) {
-        if (!drawing) { return }
-        if let touch = touches.first as? UITouch {
-            if let z = hPoint(touch.locationInView(poincareView)) {
-                switch state {
-                case .Began:
-                    newCurve = HyperbolicPolyline(z)
-                case .Moved:
-                    newCurve?.addPoint(z)
-                    poincareView.setNeedsDisplay()
-                case .Ended:
-                    if newCurve != nil {
-                        newCurve!.addPoint(z)
-                        poincareView.setNeedsDisplay()
-                        performSelectorInBackground("returnToUsualMode", withObject: nil)
-                    }
-                }
-            }
-        }
-    }
     
     func returnToUsualMode() {
         guard drawing else { return }
@@ -246,6 +225,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        var answer = false
+        answer = answer || gestureRecognizer == singleTapRecognizer && otherGestureRecognizer == doubleTapRecognizer
+        answer = answer || (gestureRecognizer == pinchRecognizer || gestureRecognizer == panRecognizer) && (otherGestureRecognizer == singleTapRecognizer || otherGestureRecognizer == doubleTapRecognizer)
+        return answer
+    }
+    
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return otherGestureRecognizer == pinchRecognizer && (gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer)
     }
@@ -273,7 +259,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         switch gesture.state {
         case .Began:
             drawing = false
-            newCurve = nil
+//            newCurve = nil
             mode = Mode.Moving
         case .Changed:
             let translation = gesture.translationInView(poincareView)
@@ -298,21 +284,29 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     @IBOutlet var singleTapRecognizer: UITapGestureRecognizer!
     
     @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
-    
+
     @IBAction func singleTap(sender: UITapGestureRecognizer) {
         //        print("tapped")
-        mode = Mode.Usual
         let z = hPoint(sender.locationInView(poincareView))
         if z == nil {
             print("toggling guidelines")
             drawGuidelines = !drawGuidelines
+            mode = .Usual
         } else {
-            //           drawObjects.append(HyperbolicDot(center: z!))
+            if newCurve == nil {
+                newCurve = HyperbolicPolyline(z!)
+            } else {
+                newCurve!.addPoint(z!)
+            }
+            mode = .Drawing
         }
         poincareView.setNeedsDisplay()
     }
     
     
+    @IBAction func doubleTap(sender: UITapGestureRecognizer) {
+        returnToUsualMode()
+    }
     
     func recomputeMask() {
         var bestA = mask.a.abs
@@ -340,7 +334,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Began:
             mode = Mode.Moving
             drawing = false
-            newCurve = nil
+//            newCurve = nil
         case .Changed:
             let newMultiplier = multiplier * gesture.scale
             multiplier = newMultiplier >= 1 ? newMultiplier : 1

@@ -51,6 +51,7 @@
                 <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="HoZ-7h-xGw">
                     <connections>
                         <action selector="singleTap:" destination="vXZ-lx-hvc" id="ZLP-aC-58y"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="BAI-7s-7fK"/>
                     </connections>
                 </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="left" numberOfTouchesRequired="3" id="tEX-jU-Njj" userLabel="Undo Recognizer">
@@ -65,7 +66,12 @@
                         <outlet property="delegate" destination="vXZ-lx-hvc" id="4WU-L6-3L1"/>
                     </connections>
                 </swipeGestureRecognizer>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="hu9-Fi-Roa"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="hu9-Fi-Roa">
+                    <connections>
+                        <action selector="doubleTap:" destination="vXZ-lx-hvc" id="XjK-mu-hya"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="qgF-de-7Vp"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="212" y="266"/>
         </scene>

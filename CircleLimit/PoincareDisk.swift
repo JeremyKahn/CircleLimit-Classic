@@ -170,7 +170,7 @@ class HyperbolicPolyline : HDrawable {
         return initialDistanceTolerance * exp(Double(scaleIndex)/HyperbolicPolyline.stepsPerNaturalExponentOfScale)
     }
     
-    static var maximumShrinkageFactor: Double = 1000
+    static var maximumShrinkageFactor: Double = 1
     
     static var maxScaleIndex = Int(log(maximumShrinkageFactor) * stepsPerNaturalExponentOfScale)
     
@@ -302,6 +302,10 @@ class HyperbolicPolyline : HDrawable {
         //        println("Drawing path for points \(points)")
         color.set()
         let points = maskedPointsToDraw
+        if points.count == 1 {
+            let dot = HyperbolicDot(center: points[0], radius: size)
+            dot.draw()
+        }
         for i in 0..<(points.count - 1) {
             let path = geodesicArc(points[i], points[i+1])
             path.lineCapStyle = CGLineCap.Round
