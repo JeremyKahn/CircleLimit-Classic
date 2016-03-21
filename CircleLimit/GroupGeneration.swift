@@ -6,31 +6,63 @@
 //  Copyright © 2016 Jeremy Kahn. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+struct Action: Locatable {
+    
+    var motion: HyperbolicTransformation
+    
+    var action: ColorNumberPermutation
+    
+    typealias Location = Int
+    
+    var location: Location {
+        return motion.location
+    }
+    
+    static func neighbors(location: Location)->  [Location] {
+        return HyperbolicTransformation.neighbors(location)
+    }
+    
+    init() {
+        motion = HyperbolicTransformation()
+        action = ColorNumberPermutation()
+    }
+    
+    init(M: HyperbolicTransformation, P: ColorNumberPermutation) {
+        motion = M
+        action = P
+    }
+    
+}
+
+
 
 // right now we're using _semigroup_ generators
 // this generates all elements of the semigroup which can be realized as a path of words in the generators, each meeting the cutoff
-func generatedGroup(generators: [HyperbolicTransformation], bigCutoff: Double) -> [HyperbolicTransformation] {
-    let bigGroup = LocationTable<HyperbolicTransformation>()
-    bigGroup.add(HyperbolicTransformation())
+func generatedGroup(generators: [Action], bigCutoff: Double) -> [Action] {
+    let bigGroup = LocationTable<Action>()
+    bigGroup.add(Action())
     bigGroup.add(generators)
     var frontier = generators
     while(frontier.count > 0) {
-        var newFrontier: [HyperbolicTransformation] = []
+        var newFrontier: [Action] = []
         for M in frontier {
             search: for T in generators {
-                let X = M.following(T)
+                let X = M.motion.following(T.motion)
+                let P = M.action.following(T.action)
                 if X.a.abs > bigCutoff  {
                     continue
                 }
                 //              Check to see if X is already listed in bigGroup
                 for U in bigGroup.arrayForNearLocation(X.location) {
-                    if U.nearTo(X) {
+                    if U.motion.nearTo(X) {
                         continue search
                     }
                 }
-                newFrontier.append(X)
-                bigGroup.add(X)
+                let A = Action(M: X, P: P)
+                newFrontier.append(A)
+                bigGroup.add(A)
                 //                println("Found group element number \(++n): \(X.a, X.lambda)")
             }
         }
@@ -73,7 +105,76 @@ func pqrGeneratorsAndGuidelines(p: Int, q: Int, r: Int) -> ([HyperbolicTransform
     let R = RTB.appliedTo(P)
     
     let guidelines : [HDrawable] = [HyperbolicPolyline([P, Q]), HyperbolicPolyline([Q, R]), HyperbolicPolyline([R, P])]
-    
-    
     return ([A, B, C], guidelines)
 }
+
+typealias ColorTable = Dictionary<ColorNumber, UIColor>
+
+protocol HasUniverse: Hashable {
+    
+    static var universe: Set<Self> { get }
+    
+}
+
+typealias ColorNumber = Int
+
+extension ColorNumber: HasUniverse {
+    
+    static var universe = Set<ColorNumber>([1, 2, 3, 4])
+    
+    static var baseNumber = 1
+    
+}
+
+//class ColorNumber : Hashable {
+//    
+//    var number: Int
+//    
+//    init(_ n: Int) {
+//        number = n
+//    }
+//    
+//    var hashValue: Int {
+//        return number.hashValue
+//    }
+//    
+//    static var universe: Set<ColorNumber> = [ColorNumber(1), ColorNumber(2), ColorNumber(3), ColorNumber(4)]
+//    
+//    
+//}
+//
+//func== (lhs: ColorNumber, rhs: ColorNumber) -> Bool {
+//    return lhs.number == rhs.number
+//}
+
+
+class Permutation<Element: HasUniverse>: Equatable {
+    
+    var mapping = [Element: Element]()
+    
+    init() {
+        for i in Element.universe
+        {
+            mapping[i] = i
+        }
+    }
+    
+    init(mapping: [Element: Element]) {
+        self.mapping = mapping
+    }
+    
+    func following(y: Permutation<Element>) -> Permutation<Element> {
+        var newMapping = [Element: Element]()
+        for i in Element.universe {
+            newMapping[i] = mapping[y.mapping[i]!]!
+        }
+        return Permutation<Element>(mapping: newMapping)
+    }
+    
+}
+
+func ==<Element>(lhs: Permutation<Element>, rhs: Permutation<Element>) -> Bool{
+    return lhs.mapping == rhs.mapping
+}
+
+typealias ColorNumberPermutation = Permutation<ColorNumber>

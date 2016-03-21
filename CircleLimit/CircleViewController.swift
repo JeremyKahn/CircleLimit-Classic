@@ -31,15 +31,23 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         self.guidelines = guidelines
         for object in guidelines {
             object.size = 0.005
-            object.color = UIColor.blueColor()
+            object.color = UIColor.grayColor()
+            object.useColorTable = false
         }
-        let bigGroup = generatedGroup(generators, bigCutoff: 0.995)
+        
+        let (A, B, C) = (generators[0], generators[1], generators[2])
+        let a = ColorNumberPermutation(mapping: [1: 2, 2: 3, 3: 1, 4: 4])
+        let b = ColorNumberPermutation(mapping: [1: 1, 2: 3, 3: 4, 4: 2])
+        let c = ColorNumberPermutation(mapping: [1: 2, 2: 1, 3: 4, 4: 3])
+        assert(a.following(b).following(c) == ColorNumberPermutation())
+        let twistedGenerators = [Action(M: A, P: a), Action(M: B, P: b), Action(M: C, P: c)]
+        let bigGroup = generatedGroup(twistedGenerators, bigCutoff: 0.995)
         for mode in cutoff.keys {
             group[mode] = selectElements(bigGroup, cutoff: cutoff[mode]!)        }
     }
     
-    func selectElements(group: [HyperbolicTransformation], cutoff: Double) -> [HyperbolicTransformation] {
-        let a = group.filter { (M: HyperbolicTransformation) in M.a.abs < cutoff }
+    func selectElements(group: [Action], cutoff: Double) -> [Action] {
+        let a = group.filter { (M: Action) in M.motion.a.abs < cutoff }
         print("Selected \(a.count) elements with cutoff \(cutoff)")
         return a
     }
@@ -56,10 +64,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var mode : Mode = .Usual
     
-    var group = [Mode : [HyperbolicTransformation]]()
+    var group = [Mode : [Action]]()
     
     // Change these values to determine the size of the various groups
-    var cutoff : [ Mode : Double ] = [.Usual : 0.99, .Moving : 0.9, .Drawing : 0.8, .Searching: 0.85]
+    var cutoff : [ Mode : Double ] = [.Usual : 0.99, .Moving : 0.9, .Drawing : 0.8, .Searching: 0.95]
     
     enum Mode {
         case Usual
@@ -81,10 +89,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return fullDrawObjects
     }
     
-    var groupToDraw: [HyperbolicTransformation] {
-        var g : [HyperbolicTransformation] = []
+    var groupToDraw: [Action] {
+        var g : [Action] = []
         for M in group[mode]! {
-            g.append(mask.following(M))
+            g.append(Action(M: mask.following(M.motion), P: M.action))
         }
         return g
     }
@@ -313,10 +321,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         var bestMask = mask
         //        println("Trying to improve : \(bestA)")
         var foundBetter = false
+        let I = ColorNumberPermutation()
         repeat {
             foundBetter = false
             for E in group[Mode.Searching]! {
-                let newMask = mask.following(E.inverse())  // Let's try it
+                if E.action != I { continue }
+                let newMask = mask.following(E.motion.inverse())  // Let's try it
                 if  newMask.a.abs < bestA {
                     foundBetter = true
                     bestA = newMask.a.abs

@@ -10,7 +10,7 @@ import UIKit
 
 protocol PoincareViewDataSource : class {
     var objectsToDraw : [HDrawable] {get}
-    var groupToDraw : [HyperbolicTransformation] {get}
+    var groupToDraw : [Action] {get}
     var multiplier : CGFloat {get}
     var mode: CircleViewController.Mode {get}
 }
@@ -59,7 +59,7 @@ class PoincareView: UIView {
         return dataSource?.objectsToDraw ?? []
     }
     
-    var group: [HyperbolicTransformation] {
+    var group: [Action] {
         return dataSource?.groupToDraw ?? []
     }
     
@@ -94,7 +94,7 @@ class PoincareView: UIView {
         CGContextConcatCTM(gcontext, tf)
         for object in objects {
             for mask in group {
-                object.drawWithMask(mask)
+                object.drawWithMaskAndAction(mask)
             }
         }
         circleColor.set()
