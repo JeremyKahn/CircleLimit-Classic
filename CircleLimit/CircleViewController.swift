@@ -131,6 +131,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
     }
     
+    
+    
     func makeDot(rawLocation: CGPoint) {
         if let p = hPoint(rawLocation) {
             drawObjects.append(HyperbolicDot(center: p))
@@ -293,7 +295,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
     }
     
-    @IBAction func toggleGuidelines(sender: UITapGestureRecognizer) {
+    @IBOutlet var singleTapRecognizer: UITapGestureRecognizer!
+    
+    @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
+    
+    @IBAction func singleTap(sender: UITapGestureRecognizer) {
         //        print("tapped")
         mode = Mode.Usual
         let z = hPoint(sender.locationInView(poincareView))
@@ -305,6 +311,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
         poincareView.setNeedsDisplay()
     }
+    
+    
     
     func recomputeMask() {
         var bestA = mask.a.abs

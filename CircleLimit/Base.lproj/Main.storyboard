@@ -24,13 +24,16 @@
                             <outletCollection property="gestureRecognizers" destination="HoZ-7h-xGw" appends="YES" id="s05-IJ-8UN"/>
                             <outletCollection property="gestureRecognizers" destination="tEX-jU-Njj" appends="YES" id="rvG-Fz-8If"/>
                             <outletCollection property="gestureRecognizers" destination="dlP-0b-g3q" appends="YES" id="pR1-B6-bzT"/>
+                            <outletCollection property="gestureRecognizers" destination="hu9-Fi-Roa" appends="YES" id="a9e-jV-RWX"/>
                         </connections>
                     </view>
                     <connections>
+                        <outlet property="doubleTapRecognizer" destination="hu9-Fi-Roa" id="1ya-nI-kYy"/>
                         <outlet property="panRecognizer" destination="n2t-D8-Sa6" id="7Cy-3r-lFY"/>
                         <outlet property="pinchRecognizer" destination="tDE-AL-ekJ" id="ayW-em-yko"/>
                         <outlet property="poincareView" destination="IBq-aQ-8NE" id="eiR-RU-w03"/>
                         <outlet property="redoRecognizer" destination="dlP-0b-g3q" id="lB4-gf-ej4"/>
+                        <outlet property="singleTapRecognizer" destination="HoZ-7h-xGw" id="fdr-5g-8uE"/>
                         <outlet property="undoRecognizer" destination="tEX-jU-Njj" id="7ka-P0-UUX"/>
                     </connections>
                 </viewController>
@@ -47,7 +50,7 @@
                 </pinchGestureRecognizer>
                 <tapGestureRecognizer cancelsTouchesInView="NO" delaysTouchesEnded="NO" id="HoZ-7h-xGw">
                     <connections>
-                        <action selector="toggleGuidelines:" destination="vXZ-lx-hvc" id="PSA-eA-RK2"/>
+                        <action selector="singleTap:" destination="vXZ-lx-hvc" id="ZLP-aC-58y"/>
                     </connections>
                 </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="left" numberOfTouchesRequired="3" id="tEX-jU-Njj" userLabel="Undo Recognizer">
@@ -62,6 +65,7 @@
                         <outlet property="delegate" destination="vXZ-lx-hvc" id="4WU-L6-3L1"/>
                     </connections>
                 </swipeGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="hu9-Fi-Roa"/>
             </objects>
             <point key="canvasLocation" x="212" y="266"/>
         </scene>
