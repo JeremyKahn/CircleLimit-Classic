@@ -84,13 +84,38 @@ protocol HDrawable : class {
     
     func drawWithMask(_: HyperbolicTransformation)
     
+    func drawWithMaskAndAction(_: Action)
+    
     var size: Double { get set}
     
     var color: UIColor { get set}
     
+    var colorTable: ColorTable {get set}
+    
     var mask: HyperbolicTransformation { get set}
     
- }
+    var baseNumber: ColorNumber {get set}
+    
+    var useColorTable: Bool {get set}
+    
+}
+
+extension HDrawable {
+    
+    func drawWithMask(mask: HyperbolicTransformation) {
+        self.mask = mask
+        draw()
+    }
+    
+    func drawWithMaskAndAction(A: Action) {
+        if useColorTable {
+            color = colorTable[A.action.mapping[baseNumber]!]!
+        }
+        drawWithMask(A.motion)
+    }
+
+    
+}
 
 
 class HyperbolicPolyline : HDrawable {
@@ -131,7 +156,13 @@ class HyperbolicPolyline : HDrawable {
     
     var size = 0.03
     
-    var color = UIColor.purpleColor()
+    var color: UIColor = UIColor.purpleColor()
+    
+    var colorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
+    
+    var baseNumber = ColorNumber.baseNumber
+    
+    var useColorTable = true
     
     init(_ p: Complex64) {
         points = [p]
@@ -293,10 +324,6 @@ class HyperbolicPolyline : HDrawable {
         return path
     }
     
-    func drawWithMask(mask: HyperbolicTransformation) {
-        self.mask = mask
-        draw()
-    }
     
     func draw() {
         //        println("Drawing path for points \(points)")
@@ -336,8 +363,14 @@ class HyperbolicDot : HDrawable {
     
     var size = 0.03
     
-    var color = UIColor.purpleColor()
+    var color: UIColor = UIColor.purpleColor()
     
+    var colorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
+    
+    var baseNumber = ColorNumber.baseNumber
+    
+    var useColorTable = true
+
     init(dot: HyperbolicDot) {
         self.center = dot.center
         self.size  = dot.size
