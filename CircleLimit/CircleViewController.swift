@@ -17,30 +17,31 @@ enum TouchType {
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
-    var trivialGroup = false
-
+    var trivialGroup = true
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("CircleViewController loaded")
         var generators: [HyperbolicTransformation] = []
         var guidelines: [HDrawable] = []
+        var twistedGenerators: [Action] = []
         if !trivialGroup {
             (generators, guidelines) = pqrGeneratorsAndGuidelines(3, q: 3, r: 4)
+            for object in guidelines {
+                object.size = 0.005
+                object.color = UIColor.grayColor()
+                object.useColorTable = false
+            }
+            
+            let (A, B, C) = (generators[0], generators[1], generators[2])
+            let a = ColorNumberPermutation(mapping: [1: 2, 2: 3, 3: 1, 4: 4])
+            let b = ColorNumberPermutation(mapping: [1: 1, 2: 3, 3: 4, 4: 2])
+            let c = ColorNumberPermutation(mapping: [1: 2, 2: 1, 3: 4, 4: 3])
+            assert(a.following(b).following(c) == ColorNumberPermutation())
+            twistedGenerators = [Action(M: A, P: a), Action(M: B, P: b), Action(M: C, P: c)]
         }
         self.guidelines = guidelines
-        for object in guidelines {
-            object.size = 0.005
-            object.color = UIColor.grayColor()
-            object.useColorTable = false
-        }
-        
-        let (A, B, C) = (generators[0], generators[1], generators[2])
-        let a = ColorNumberPermutation(mapping: [1: 2, 2: 3, 3: 1, 4: 4])
-        let b = ColorNumberPermutation(mapping: [1: 1, 2: 3, 3: 4, 4: 2])
-        let c = ColorNumberPermutation(mapping: [1: 2, 2: 1, 3: 4, 4: 3])
-        assert(a.following(b).following(c) == ColorNumberPermutation())
-        let twistedGenerators = [Action(M: A, P: a), Action(M: B, P: b), Action(M: C, P: c)]
         let bigGroup = generatedGroup(twistedGenerators, bigCutoff: 0.995)
         for mode in cutoff.keys {
             group[mode] = selectElements(bigGroup, cutoff: cutoff[mode]!)        }
@@ -149,33 +150,33 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var touchPoints : [CGPoint] = []
     
-    var newCurve : HyperbolicPolyline?
+    var newCurve : HyperbolicPolygon?
     
-//    var newPolygon: HyperbolicPolygon
+    //    var newPolygon: HyperbolicPolygon
     
     
-//    func addPoint(touches: Set<NSObject>, _ state: TouchType) {
-//        if (!drawing) { return }
-//        if let touch = touches.first as? UITouch {
-//            if let z = hPoint(touch.locationInView(poincareView)) {
-//                switch state {
-//                case .Began:
-//                    newCurve = HyperbolicPolyline(z)
-//                case .Moved:
-//                    newCurve?.addPoint(z)
-//                    poincareView.setNeedsDisplay()
-//                case .Ended:
-//                    if newCurve != nil {
-//                        newCurve!.addPoint(z)
-//                        poincareView.setNeedsDisplay()
-//                        performSelectorInBackground("returnToUsualMode", withObject: nil)
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    
-
+    //    func addPoint(touches: Set<NSObject>, _ state: TouchType) {
+    //        if (!drawing) { return }
+    //        if let touch = touches.first as? UITouch {
+    //            if let z = hPoint(touch.locationInView(poincareView)) {
+    //                switch state {
+    //                case .Began:
+    //                    newCurve = HyperbolicPolyline(z)
+    //                case .Moved:
+    //                    newCurve?.addPoint(z)
+    //                    poincareView.setNeedsDisplay()
+    //                case .Ended:
+    //                    if newCurve != nil {
+    //                        newCurve!.addPoint(z)
+    //                        poincareView.setNeedsDisplay()
+    //                        performSelectorInBackground("returnToUsualMode", withObject: nil)
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //
+    
     
     func returnToUsualMode() {
         guard drawing else { return }
@@ -191,24 +192,24 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var printingTouches = false
     
-//    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//        if printingTouches { print("touchesBegan") }
-//        super.touchesBegan(touches, withEvent: event)
-//        mode = .Drawing
-//        addPoint(touches, TouchType.Began)
-//    }
-//    
-//    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//        if printingTouches { print("touchesMoved") }
-//        super.touchesMoved(touches, withEvent: event)
-//        addPoint(touches, TouchType.Moved)
-//    }
-//    
-//    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//        if printingTouches { print("touchesEnded") }
-//        super.touchesEnded(touches, withEvent: event)
-//        addPoint(touches, TouchType.Ended)
-//    }
+    //    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    //        if printingTouches { print("touchesBegan") }
+    //        super.touchesBegan(touches, withEvent: event)
+    //        mode = .Drawing
+    //        addPoint(touches, TouchType.Began)
+    //    }
+    //
+    //    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    //        if printingTouches { print("touchesMoved") }
+    //        super.touchesMoved(touches, withEvent: event)
+    //        addPoint(touches, TouchType.Moved)
+    //    }
+    //
+    //    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    //        if printingTouches { print("touchesEnded") }
+    //        super.touchesEnded(touches, withEvent: event)
+    //        addPoint(touches, TouchType.Ended)
+    //    }
     
     // MARK: Gesture recognition
     
@@ -267,7 +268,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         switch gesture.state {
         case .Began:
             drawing = false
-//            newCurve = nil
+            //            newCurve = nil
             mode = Mode.Moving
         case .Changed:
             let translation = gesture.translationInView(poincareView)
@@ -292,7 +293,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     @IBOutlet var singleTapRecognizer: UITapGestureRecognizer!
     
     @IBOutlet var doubleTapRecognizer: UITapGestureRecognizer!
-
+    
     @IBAction func singleTap(sender: UITapGestureRecognizer) {
         //        print("tapped")
         let z = hPoint(sender.locationInView(poincareView))
@@ -302,7 +303,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             mode = .Usual
         } else {
             if newCurve == nil {
-                newCurve = HyperbolicPolyline(z!)
+                newCurve = HyperbolicPolygon(z!)
             } else {
                 newCurve!.addPoint(z!)
             }
@@ -313,6 +314,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     
     @IBAction func doubleTap(sender: UITapGestureRecognizer) {
+        if newCurve != nil {
+            newCurve!.addPoint(newCurve!.points[0])
+        }
         returnToUsualMode()
     }
     
@@ -344,7 +348,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Began:
             mode = Mode.Moving
             drawing = false
-//            newCurve = nil
+            //            newCurve = nil
         case .Changed:
             let newMultiplier = multiplier * gesture.scale
             multiplier = newMultiplier >= 1 ? newMultiplier : 1

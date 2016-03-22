@@ -89,7 +89,7 @@ class PoincareView: UIView {
         if testingIBDesignable { dataSource = nil }
         print("\nStarting drawRect")
         let startTime = NSDate()
-        print("In drawing mode: \(mode)")
+        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(group.count)")
         let gcontext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(gcontext, tf)
         for object in objects {

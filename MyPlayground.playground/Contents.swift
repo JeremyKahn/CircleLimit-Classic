@@ -2,18 +2,36 @@
 
 import UIKit
 
-var str = "Hello, playground"
+protocol A {
+    
+    func show()
+    
+}
 
+extension A {
+    
+    func show() {
+        print("In A")
+    }
+    
+}
 
-2 + 3
+class B: A {
+    
+    func show() {
+        print("In B")
+    }
+    
+}
 
+var b: A = B()
 
-var x = [2]
+b.show()
 
-x
+b.show()
 
+b.show()
 
-x[5] = 7
+4/3 * tan(M_PI/8)
 
-x
 

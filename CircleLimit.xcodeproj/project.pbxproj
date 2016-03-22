@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B740F991C06A2FC0082BC4C /* Extensions.swift */; };
+		1BA2D5B31CA1E1C90036ACCD /* Algorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */; };
 		1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */; };
 		1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */; };
 		1BC1B2C41C3D71B400FF17C6 /* GroupGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		1B740F991C06A2FC0082BC4C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algorithms.swift; sourceTree = "<group>"; };
 		1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTable.swift; sourceTree = "<group>"; };
 		1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicTransformation.swift; sourceTree = "<group>"; };
 		1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupGeneration.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 				1BDBD0891B5C2BEA0057B710 /* Complex.swift */,
 				1BDBD0651B5C21370057B710 /* Main.storyboard */,
 				1BDBD08E1B5C43590057B710 /* PoincareView.swift */,
+				1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */,
 				1BDBD0811B5C21BE0057B710 /* CircleViewController.swift */,
 				1B740F991C06A2FC0082BC4C /* Extensions.swift */,
 				1BDBD0831B5C22740057B710 /* PoincareDisk.swift */,
@@ -247,6 +250,7 @@
 				1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */,
 				1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */,
 				1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */,
+				1BA2D5B31CA1E1C90036ACCD /* Algorithms.swift in Sources */,
 				1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */,
 				1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */,
 				1BDBD0821B5C21BE0057B710 /* CircleViewController.swift in Sources */,

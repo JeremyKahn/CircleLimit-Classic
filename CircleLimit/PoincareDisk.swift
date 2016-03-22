@@ -21,6 +21,14 @@ func distanceBetween(z: HPoint,w: HPoint) -> Double {
     
 }
 
+extension HPoint {
+    
+    func hyperbolicDistanceToOrigin() -> Double {
+        return distanceFromOrigin(self)
+    }
+    
+}
+
 extension Double {
     var degrees:  Int {
         return Int(360 * self/(2 * M_PI))
@@ -30,15 +38,14 @@ extension Double {
 func distanceFromOriginToGeodesicArc(a: HPoint, b: HPoint) -> Double {
     var (aa, bb) = (a, b)
     if (bb/aa).arg < 0 {
-        swap(&aa, &bb)
-    }
-    var (c, r, _, _) = geodesicArcCenterRadiusStartEnd(aa, b: bb)
+        swap(&aa, &bb)   }
+    var (c, r, _, _,_) = geodesicArcCenterRadiusStartEnd(aa, b: bb)
     if (c/aa).arg < 0 {
         print("Anomoly aa: \(aa.arg.degrees, bb.arg.degrees, c.arg.degrees, (c/aa).arg.degrees)")
         return distanceFromOrigin(aa)
     }
     else if (bb/c).arg < 0 {
-         print("Anomoly bb: \(aa.arg.degrees, bb.arg.degrees, c.arg.degrees, (bb/c).arg.degrees)")
+        print("Anomoly bb: \(aa.arg.degrees, bb.arg.degrees, c.arg.degrees, (bb/c).arg.degrees)")
         return distanceFromOrigin(bb)
     }
     else {
@@ -54,7 +61,7 @@ func distanceOfArcToPoint(start: HPoint, end: HPoint, middle: HPoint) -> Double 
 
 
 
-func geodesicArcCenterRadiusStartEnd(a: HPoint, b: HPoint) -> (Complex64, Double, Double, Double) {
+func geodesicArcCenterRadiusStartEnd(a: HPoint, b: HPoint) -> (Complex64, Double, Double, Double, Bool) {
     let M = HyperbolicTransformation(a: a)
     let M_inverse = M.inverse()
     let bPrime = M.appliedTo(b)
@@ -62,18 +69,46 @@ func geodesicArcCenterRadiusStartEnd(a: HPoint, b: HPoint) -> (Complex64, Double
     (u, v) = (M_inverse.appliedTo(u), M_inverse.appliedTo(v))
     var theta = 0.5 * (v/u).arg
     var (aa, bb) = (a, b)
+    var swapped = false
     if theta < 0 {
         swap(&u, &v)
         swap(&aa, &bb)
         theta = -theta
+        swapped = true
     }
     let radius = tan(theta)
-    let center = Complex(abs: 1/cos(theta), arg: u.arg) * Complex(abs: 1, arg: theta)
+    let center = Complex(abs: 1/cos(theta), arg: u.arg + theta)
     let start = (aa-center).arg
     let end = (bb-center).arg
-    return (center, radius, start, end)
+    return (center, radius, start, end, swapped)
 }
 
+func approximatingCubicBezierToCircularArc(center: Complex64, radius: Double, start: Double, end: Double, swapped: Bool) -> (Complex64, Complex64) {
+    var theta = (end - start).abs
+    if theta > Double.PI {
+        theta = 2 * Double.PI - theta
+    }
+    let h = magicNumber(theta)
+    let startPoint = center + radius * exp(start.i)
+    let startControl = startPoint + radius * h * exp(start.i - Double.PI.i/2)
+    let endPoint = center + radius * exp(end.i)
+    let endControl = endPoint + radius * h * exp(end.i + Double.PI.i/2)
+    return swapped ? (endControl, startControl) : (startControl, endControl)
+}
+
+func controlPointsForApproximatingCubicBezierToGeodesic(a: HPoint, b: HPoint) -> (HPoint, HPoint) {
+    let (center, radius, start, end, swapped) = geodesicArcCenterRadiusStartEnd(a, b: b)
+    let (startControl, endControl) = approximatingCubicBezierToCircularArc(center, radius: radius, start: start, end: end, swapped: swapped)
+    return (startControl, endControl)
+}
+
+func magicNumber(theta: Double) -> Double {
+    return (4.0/3.0) * tan(theta / 4)
+}
+
+func pointForComplex(z: Complex64) -> CGPoint {
+    return CGPoint(x: z.re, y: z.im)
+}
 
 protocol HDrawable : class {
     
@@ -113,10 +148,36 @@ extension HDrawable {
         }
         drawWithMask(A.motion)
     }
-
+    
     
 }
 
+class HyperbolicPolygon: HyperbolicPolyline {
+    
+    var borderColor = UIColor.blackColor()
+    
+    // Right now this makes the border by calling super
+    override func draw() {
+        let points = maskedPointsToDraw
+        color.setFill()
+        //        print("Fill color: \(color)")
+        let totalPath = UIBezierPath()
+        totalPath.moveToPoint(pointForComplex(points[0]))
+        for i in 0..<(points.count - 1) {
+            let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(points[i], b: points[i+1])
+                totalPath.addCurveToPoint(pointForComplex(points[i+1]), controlPoint1: pointForComplex(startControl), controlPoint2: pointForComplex(endControl))
+         }
+        totalPath.lineCapStyle = CGLineCap.Round
+        totalPath.fill()
+        color = borderColor
+        super.draw()
+        
+        let cPoint = centerPoint(points)
+        let centerDot = HyperbolicDot(center: cPoint)
+        centerDot.draw()
+    }
+    
+}
 
 class HyperbolicPolyline : HDrawable {
     
@@ -128,7 +189,7 @@ class HyperbolicPolyline : HDrawable {
     
     var scaleOfMask : Int {
         let _scaleOfMask = min(Int(0.00001 - HyperbolicPolyline.stepsPerNaturalExponentOfScale * log(1-mask.a.abs)), HyperbolicPolyline.maxScaleIndex)
-//        print("Scale of mask: \(_scaleOfMask)")
+        //        print("Scale of mask: \(_scaleOfMask)")
         return _scaleOfMask
     }
     
@@ -142,7 +203,7 @@ class HyperbolicPolyline : HDrawable {
     }
     
     var maskedPointsToDraw: [HPoint] {
-//        print("Drawing a curve with subsequence: \(activeSubsequence)")
+        //        print("Drawing a curve with subsequence: \(activeSubsequence)")
         var maskedPoints = subsequenceOf(points, withIndices: activeSubsequence)
         for i in 0..<maskedPoints.count {
             maskedPoints[i] = mask.appliedTo(maskedPoints[i])
@@ -154,7 +215,7 @@ class HyperbolicPolyline : HDrawable {
         return size
     }
     
-    var size = 0.03
+    var size = 0.01
     
     var color: UIColor = UIColor.purpleColor()
     
@@ -280,7 +341,7 @@ class HyperbolicPolyline : HDrawable {
                 canReplaceWithStraightLineCache[k] = canReplaceWithStraightLine
             }
             return canReplaceWithStraightLineCache[i]
-         }
+        }
     }
     
     func buildSubsequenceTable() {
@@ -295,18 +356,18 @@ class HyperbolicPolyline : HDrawable {
         print("distanceTolerance: \(distanceTolerance)")
         return bestSequenceTo(points.count - 1, toMinimizeSumOf: { (x: Int, y: Int) -> Int in
             return 1
-        }, withConstraint: canReplaceWithStraightLine)
+            }, withConstraint: canReplaceWithStraightLine)
     }
     
-
+    
     // MARK - Drawing
     
     // For the ambitious: make this a filled region between two circular arcs
     func geodesicArc(a: HPoint, _ b: HPoint) -> UIBezierPath {
         assert(a.abs <= 1 && b.abs <= 1)
-//        println("Drawing geodesic arc from \(a) to \(b)")
-        let (center, radius, start, end) = geodesicArcCenterRadiusStartEnd(a, b: b)//
-//        println("Data: \(center, radius, start, end)")
+        //        println("Drawing geodesic arc from \(a) to \(b)")
+        let (center, radius, start, end,_) = geodesicArcCenterRadiusStartEnd(a, b: b)//
+        //        println("Data: \(center, radius, start, end)")
         var path : UIBezierPath
         if radius > maxRadius || radius.isNaN {
             path = UIBezierPath()
@@ -319,11 +380,14 @@ class HyperbolicPolyline : HDrawable {
                 endAngle: CGFloat(end),
                 clockwise: false)
         }
-        let t = ((a + b)/2).abs
-        path.lineWidth = CGFloat(intrinsicLineWidth * (1 - t * t)) // rough guess
+        path.lineWidth = suitableLineWidth(a, b)
         return path
     }
     
+    func suitableLineWidth(a: HPoint, _ b: HPoint) -> CGFloat {
+        let t = ((a + b)/2).abs
+        return CGFloat(intrinsicLineWidth * (1 - t * t))
+    }
     
     func draw() {
         //        println("Drawing path for points \(points)")
@@ -352,11 +416,11 @@ class HyperbolicPolyline : HDrawable {
             assert(points[i].abs <= 1)
         }
     }
- }
+}
 
 
 class HyperbolicDot : HDrawable {
-   
+    
     var center: Complex64 = Complex64()
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
@@ -374,7 +438,7 @@ class HyperbolicDot : HDrawable {
     var baseNumber = ColorNumber.baseNumber
     
     var useColorTable = true
-
+    
     init(dot: HyperbolicDot) {
         self.center = dot.center
         self.size  = dot.size
@@ -401,7 +465,7 @@ class HyperbolicDot : HDrawable {
         let c = circlePath(euclDotCenter, radius: CGFloat(r))
         color.set()
         c.fill()
-     }
+    }
     
     func poincareDiskCenterRadius() -> (centerX: Double, centerY: Double, radius: Double) {
         let dotR = center.abs
@@ -413,7 +477,7 @@ class HyperbolicDot : HDrawable {
         let tMinus = (Q1 - 1)/(Q1 + 1)
         let euclCenterAbs = (tPlus + tMinus)/2
         let euclR = (tPlus - tMinus)/2
-//        println("dotR: \(dotR) E: \(E) M: \(M) Q0: \(Q0) Q1: \(Q1) tPlus: \(tPlus) tMinus: \(tMinus)")
+        //        println("dotR: \(dotR) E: \(E) M: \(M) Q0: \(Q0) Q1: \(Q1) tPlus: \(tPlus) tMinus: \(tMinus)")
         let complexEuclCenter = Complex(abs: euclCenterAbs, arg: center.arg)
         return(complexEuclCenter.re, complexEuclCenter.im, euclR)
     }
