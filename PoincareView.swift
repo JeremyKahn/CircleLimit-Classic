@@ -13,6 +13,7 @@ protocol PoincareViewDataSource : class {
     var groupToDraw : [Action] {get}
     var multiplier : CGFloat {get}
     var mode: CircleViewController.Mode {get}
+    var cutoffDistance: Double {get}
 }
 
 
@@ -75,6 +76,10 @@ class PoincareView: UIView {
         return baseScale * (dataSource?.multiplier ?? 1)
     }
     
+    var cutoffDistance: Double {
+        return dataSource?.cutoffDistance ?? 100
+    }
+    
     var tf : CGAffineTransform {
         //        println("Scale is now \(scale)")
         let t1 = CGAffineTransformMakeTranslation(viewCenter.x, viewCenter.y)
@@ -86,22 +91,46 @@ class PoincareView: UIView {
     
     override func drawRect(rect: CGRect) {
         //        println("entering PoincareView.drawRect with \(objects.count) objects")
+ 
         if testingIBDesignable { dataSource = nil }
+        
         print("\nStarting drawRect")
         let startTime = NSDate()
-        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(group.count)")
+        var filterTime = 0.0
+        let myGroup = group
+        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(myGroup.count)")
+        
         let gcontext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(gcontext, tf)
+ 
         for object in objects {
-            for mask in group {
-                object.drawWithMaskAndAction(mask)
+            
+            let objectCutoffAbs = distanceToAbs(cutoffDistance + object.radius)
+            let centerPoint = object.centerPoint
+            
+            let startFilterTime = NSDate()
+            let objectGroup = myGroup.filter() {$0.motion.appliedTo(centerPoint).abs < objectCutoffAbs}
+            filterTime += 1000 * NSDate().timeIntervalSinceDate(startFilterTime)
+            
+            print("Drawing an object with a group of size \(objectGroup.count)")
+            for action in objectGroup {
+                     object.drawWithMaskAndAction(action)
             }
         }
+
         circleColor.set()
         let boundaryCircle = circlePath(CGPointZero, radius: CGFloat(1.0))
         boundaryCircle.lineWidth = lineWidth
         boundaryCircle.stroke()
+        
+        // Added to test the new cutoff system
+        UIColor.redColor().colorWithAlphaComponent(0.75).set()
+        let cutoffCircle = circlePath(CGPointZero, radius: CGFloat(distanceToAbs(cutoffDistance)))
+        cutoffCircle.lineWidth = lineWidth/2
+        cutoffCircle.stroke()
+        
         let timeToDrawInMilliseconds = NSDate().timeIntervalSinceDate(startTime) * 1000
-        print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds)")
+        print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds.int) ms")
+        print("Filter time: \(filterTime.int) ms")
     }
 }

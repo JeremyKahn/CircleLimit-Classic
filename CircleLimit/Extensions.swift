@@ -14,10 +14,18 @@ extension NSTimer {
     
 }
 
+func timeInMillisecondsSince(date: NSDate) -> Int {
+    return (1000 * NSDate().timeIntervalSinceDate(date)).int
+}
+
 extension Double {
     
     func nice() -> String {
         return String(format: "%.2f", self)
+    }
+    
+    var int: Int {
+        return Int(self)
     }
 }
 
