@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B3EBE311CA210F700D1FC3B /* ZOMBIES ARE ENABLED.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B3EBE301CA210F700D1FC3B /* ZOMBIES ARE ENABLED.swift */; };
 		1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B740F991C06A2FC0082BC4C /* Extensions.swift */; };
 		1BA2D5B31CA1E1C90036ACCD /* Algorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */; };
 		1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B3EBE301CA210F700D1FC3B /* ZOMBIES ARE ENABLED.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ZOMBIES ARE ENABLED.swift"; sourceTree = "<group>"; };
 		1B740F991C06A2FC0082BC4C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algorithms.swift; sourceTree = "<group>"; };
 		1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTable.swift; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 		1BDBD0501B5C21370057B710 = {
 			isa = PBXGroup;
 			children = (
+				1B3EBE301CA210F700D1FC3B /* ZOMBIES ARE ENABLED.swift */,
 				1BDBD05B1B5C21370057B710 /* CircleLimit */,
 				1BDBD0741B5C21370057B710 /* CircleLimitTests */,
 				1BDBD05A1B5C21370057B710 /* Products */,
@@ -257,6 +260,7 @@
 				1BDBD0841B5C22740057B710 /* PoincareDisk.swift in Sources */,
 				1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */,
 				1BDBD0621B5C21370057B710 /* CircleLimit.xcdatamodeld in Sources */,
+				1B3EBE311CA210F700D1FC3B /* ZOMBIES ARE ENABLED.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +391,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CircleLimit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.cuny.gc.jkahn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -403,7 +407,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CircleLimit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "edu.cuny.gc.jkahn.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

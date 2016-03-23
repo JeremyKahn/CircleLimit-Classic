@@ -1,37 +1,21 @@
 //: Playground - noun: a place where people can play
 
-import UIKit
+let a = [0..<7]
 
-protocol A {
-    
-    func show()
-    
-}
+a.count
 
-extension A {
-    
-    func show() {
-        print("In A")
-    }
-    
-}
+let b = 0..<7
 
-class B: A {
-    
-    func show() {
-        print("In B")
-    }
-    
-}
+b.count
 
-var b: A = B()
+let c = [Int](b)
 
-b.show()
+c.count
 
-b.show()
+c[2]
 
-b.show()
+let d = Array(b)
 
-4/3 * tan(M_PI/8)
+
 
 

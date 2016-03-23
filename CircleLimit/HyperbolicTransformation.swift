@@ -70,7 +70,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     func toThe(n: Int) -> HyperbolicTransformation {
         assert(n >= 0)
         var M = HyperbolicTransformation()
-        for (var i = 0; i < n; i++) {
+        for _ in 0..<n {
             M = M.following(self)
         }
         return M

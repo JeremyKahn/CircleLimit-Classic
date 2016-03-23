@@ -10,9 +10,17 @@ import UIKit
 
 typealias HPoint = Complex64
 
+func absToDistance(a: Double) -> Double {
+    return log((1 + a)/(1 - a))
+}
+
+func distanceToAbs(d: Double) -> Double {
+    let e = exp(d)
+    return (e-1)/(e+1)
+}
+
 func distanceFromOrigin(z: HPoint) -> Double {
-    let x = z.abs
-    return log((1 + x)/(1-x))
+    return absToDistance(z.abs)
 }
 
 func distanceBetween(z: HPoint,w: HPoint) -> Double {
@@ -21,13 +29,13 @@ func distanceBetween(z: HPoint,w: HPoint) -> Double {
     
 }
 
-extension HPoint {
-    
-    func hyperbolicDistanceToOrigin() -> Double {
-        return distanceFromOrigin(self)
-    }
-    
-}
+//extension HPoint {
+//
+//    func hyperbolicDistanceToOrigin() -> Double {
+//        return distanceFromOrigin(self)
+//    }
+//
+//}
 
 extension Double {
     var degrees:  Int {
@@ -133,6 +141,10 @@ protocol HDrawable : class {
     
     var useColorTable: Bool {get set}
     
+    var centerPoint: HPoint {get}
+    
+    var radius: Double {get}
+    
 }
 
 extension HDrawable {
@@ -140,6 +152,10 @@ extension HDrawable {
     func drawWithMask(mask: HyperbolicTransformation) {
         self.mask = mask
         draw()
+        
+        let centerDot = HyperbolicDot(center: centerPoint, radius: radius)
+        centerDot.color = UIColor(colorLiteralRed: 1, green: 0, blue: 0, alpha: 0.5)
+        centerDot.drawWithMask(mask)
     }
     
     func drawWithMaskAndAction(A: Action) {
@@ -148,7 +164,6 @@ extension HDrawable {
         }
         drawWithMask(A.motion)
     }
-    
     
 }
 
@@ -165,21 +180,22 @@ class HyperbolicPolygon: HyperbolicPolyline {
         totalPath.moveToPoint(pointForComplex(points[0]))
         for i in 0..<(points.count - 1) {
             let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(points[i], b: points[i+1])
-                totalPath.addCurveToPoint(pointForComplex(points[i+1]), controlPoint1: pointForComplex(startControl), controlPoint2: pointForComplex(endControl))
-         }
+            totalPath.addCurveToPoint(pointForComplex(points[i+1]), controlPoint1: pointForComplex(startControl), controlPoint2: pointForComplex(endControl))
+        }
         totalPath.lineCapStyle = CGLineCap.Round
         totalPath.fill()
         color = borderColor
         super.draw()
         
-        let cPoint = centerPoint(points)
-        let centerDot = HyperbolicDot(center: cPoint)
-        centerDot.draw()
     }
     
 }
 
 class HyperbolicPolyline : HDrawable {
+    
+    var centerPoint = HPoint()
+    
+    var radius: Double = 0
     
     var points: [Complex64] = []
     
@@ -242,6 +258,11 @@ class HyperbolicPolyline : HDrawable {
     func addPoint(p: Complex64) {
         assert(p.abs <= 1)
         points.append(p)
+        update()
+    }
+    
+    func update() {
+        (centerPoint, radius) = centerPointAndRadius(points, delta: 0.1)
     }
     
     var maxRadius = 1000.0
@@ -375,10 +396,10 @@ class HyperbolicPolyline : HDrawable {
             path.addLineToPoint(CGPoint(x: b.re, y: b.im))
         } else {
             path = UIBezierPath(arcCenter: CGPoint(x: center.re, y: center.im),
-                radius: CGFloat(radius),
-                startAngle: CGFloat(start),
-                endAngle: CGFloat(end),
-                clockwise: false)
+                                radius: CGFloat(radius),
+                                startAngle: CGFloat(start),
+                                endAngle: CGFloat(end),
+                                clockwise: false)
         }
         path.lineWidth = suitableLineWidth(a, b)
         return path
@@ -420,6 +441,10 @@ class HyperbolicPolyline : HDrawable {
 
 
 class HyperbolicDot : HDrawable {
+    
+    var centerPoint: HPoint {
+        return center
+    }
     
     var center: Complex64 = Complex64()
     
