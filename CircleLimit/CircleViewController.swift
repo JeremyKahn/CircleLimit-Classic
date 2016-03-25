@@ -71,7 +71,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // Change these values to determine the size of the various groups
     var cutoff : [ Mode : Double ] = [.Usual : 0.99, .Moving : 0.8, .Drawing : 0.8, .Searching: 0.95]
     
-    var bigCutoff: [Mode: Double] = [.Usual: 0.998, .Moving: 0.99, .Drawing: 0.99, .Searching: 0.95]
+    var bigCutoff: [Mode: Double] = [.Usual: 0.998, .Moving: 0.99, .Drawing: 0.95, .Searching: 0.95]
     
     var cutoffDistance: Double {
         let scaleCutoff = Double(2/multiplier)
@@ -102,6 +102,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return fullDrawObjects
     }
     
+    
+    // TODO: Replace group[mode] with group(cutoff) that selects a group[cutoff] to be prefiltered
+    // The cutuff should then depend on the zoom multiplier as well as the mode. 
     var groupToDraw: [Action] {
         var g : [Action] = []
         
@@ -109,7 +112,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         g = group[mode]!
         g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
         let makeGroupTime = timeInMillisecondsSince(startMakeGroup)
-        print("Size of group: \(g.count))")
+        print("Size of group: \(g.count)")
         print("Time to make the group: \(makeGroupTime)")
 
         // Experimental prefiltering
