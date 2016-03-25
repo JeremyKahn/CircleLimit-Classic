@@ -153,9 +153,9 @@ extension HDrawable {
         self.mask = mask
         draw()
         
-        let centerDot = HyperbolicDot(center: centerPoint, radius: radius)
-        centerDot.color = UIColor(colorLiteralRed: 1, green: 0, blue: 0, alpha: 0.5)
-        centerDot.drawWithMask(mask)
+//        let centerDot = HyperbolicDot(center: centerPoint, radius: radius)
+//        centerDot.color = UIColor(colorLiteralRed: 1, green: 0, blue: 0, alpha: 0.5)
+//        centerDot.drawWithMask(mask)
     }
     
     func drawWithMaskAndAction(A: Action) {
@@ -243,16 +243,21 @@ class HyperbolicPolyline : HDrawable {
     
     init(_ p: Complex64) {
         points = [p]
+        update()
     }
     
     init(_ pp: [Complex64]) {
         points = pp
+        update()
+        complete()
     }
     
     init(_ a: HyperbolicPolyline) {
         self.points = a.points
         self.color = a.color
         self.size  = a.size
+        update()
+        complete()
     }
     
     func addPoint(p: Complex64) {

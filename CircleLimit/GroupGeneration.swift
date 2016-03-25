@@ -41,6 +41,7 @@ struct Action: Locatable {
 // right now we're using _semigroup_ generators
 // this generates all elements of the semigroup which can be realized as a path of words in the generators, each meeting the cutoff
 func generatedGroup(generators: [Action], bigCutoff: Double) -> [Action] {
+    let startTime = NSDate()
     let bigGroup = LocationTable<Action>()
     bigGroup.add(Action())
     bigGroup.add(generators)
@@ -69,6 +70,8 @@ func generatedGroup(generators: [Action], bigCutoff: Double) -> [Action] {
         frontier = newFrontier
     }
     print("Found \(bigGroup.count) elements in the big group")
+    let timeTaken = 1000 * NSDate().timeIntervalSinceDate(startTime)
+    print("Time taken: \(timeTaken) ms")
     return bigGroup.arrayForm
 }
 

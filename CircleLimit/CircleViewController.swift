@@ -18,7 +18,7 @@ enum TouchType {
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
-    var trivialGroup = true
+    var trivialGroup = false
     
     
     override func viewDidLoad() {
@@ -43,9 +43,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             twistedGenerators = [Action(M: A, P: a), Action(M: B, P: b), Action(M: C, P: c)]
         }
         self.guidelines = guidelines
-        let bigGroup = generatedGroup(twistedGenerators, bigCutoff: 0.995)
+        let bigGroup = generatedGroup(twistedGenerators, bigCutoff: 0.998)
         for mode in cutoff.keys {
-            group[mode] = selectElements(bigGroup, cutoff: cutoff[mode]!)        }
+            group[mode] = selectElements(bigGroup, cutoff: bigCutoff[mode]!)        }
     }
     
     func selectElements(group: [Action], cutoff: Double) -> [Action] {
@@ -69,7 +69,16 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var group = [Mode : [Action]]()
     
     // Change these values to determine the size of the various groups
-    var cutoff : [ Mode : Double ] = [.Usual : 0.99, .Moving : 0.9, .Drawing : 0.8, .Searching: 0.95]
+    var cutoff : [ Mode : Double ] = [.Usual : 0.99, .Moving : 0.8, .Drawing : 0.8, .Searching: 0.95]
+    
+    var bigCutoff: [Mode: Double] = [.Usual: 0.998, .Moving: 0.99, .Drawing: 0.99, .Searching: 0.95]
+    
+    var cutoffDistance: Double {
+        let scaleCutoff = Double(2/multiplier)
+        let cutoffAbs = cutoff[mode]!
+        let lesserAbs = min(scaleCutoff, cutoffAbs)
+        return absToDistance(lesserAbs)
+    }
     
     enum Mode {
         case Usual
@@ -77,6 +86,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case Moving
         case Searching
     }
+    
+    var formingPolygon = false
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
@@ -93,9 +104,27 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var groupToDraw: [Action] {
         var g : [Action] = []
-        for M in group[mode]! {
-            g.append(Action(M: mask.following(M.motion), P: M.action))
-        }
+        
+        let startMakeGroup = NSDate()
+        g = group[mode]!
+        g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
+        let makeGroupTime = timeInMillisecondsSince(startMakeGroup)
+        print("Size of group: \(g.count))")
+        print("Time to make the group: \(makeGroupTime)")
+
+        // Experimental prefiltering
+        let objects = objectsToDraw
+        let centers = objects.map() {$0.centerPoint}
+        let maxRadius = objects.reduce(0) { max($0, $1.radius) }
+        let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
+        let totalRadius = radius + maxRadius
+        
+        let startFilter = NSDate()
+        let cutoffAbs = distanceToAbs(cutoffDistance + totalRadius)
+        g = g.filter() { $0.motion.appliedTo(center).abs < cutoffAbs }
+        let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
+        print("Prefilter time: \(Int(prefilterTime)) milliseconds")
+        
         return g
     }
     
@@ -270,7 +299,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Began:
             drawing = false
             //            newCurve = nil
-            mode = Mode.Moving
+            mode = mode == .Drawing ? .Drawing :  .Moving
         case .Changed:
             let translation = gesture.translationInView(poincareView)
             //            println("Raw translation: \(translation.x, translation.y)")
@@ -283,7 +312,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             recomputeMask()
             poincareView.setNeedsDisplay()
         case .Ended:
-            mode = Mode.Usual
+            mode = mode == .Drawing ? .Drawing : .Usual
             recomputeMask()
             poincareView.setNeedsDisplay()
             drawing = true
@@ -308,6 +337,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             } else {
                 newCurve!.addPoint(z!)
             }
+            formingPolygon = true
             mode = .Drawing
         }
         poincareView.setNeedsDisplay()
@@ -318,10 +348,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if newCurve != nil {
             newCurve!.addPoint(newCurve!.points[0])
         }
+        formingPolygon = false
         returnToUsualMode()
     }
     
     func recomputeMask() {
+        guard !formingPolygon else { return }
         var bestA = mask.a.abs
         var bestMask = mask
         //        println("Trying to improve : \(bestA)")
