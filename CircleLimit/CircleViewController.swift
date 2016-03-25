@@ -86,6 +86,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case Searching
     }
     
+    var formingPolygon = false
+    
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
     var multiplier = CGFloat(1.0)
@@ -103,10 +105,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         var g : [Action] = []
         
         let startMakeGroup = NSDate()
-        for M in group[mode]! {
-            g.append(Action(M: mask.following(M.motion), P: M.action))
-        }
+        g = group[mode]!
+        g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
         let makeGroupTime = timeInMillisecondsSince(startMakeGroup)
+        print("Size of group: \(g.count))")
         print("Time to make the group: \(makeGroupTime)")
 
         // Experimental prefiltering
@@ -296,7 +298,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Began:
             drawing = false
             //            newCurve = nil
-            mode = Mode.Moving
+            mode = mode == .Drawing ? .Drawing :  .Moving
         case .Changed:
             let translation = gesture.translationInView(poincareView)
             //            println("Raw translation: \(translation.x, translation.y)")
@@ -309,7 +311,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             recomputeMask()
             poincareView.setNeedsDisplay()
         case .Ended:
-            mode = Mode.Usual
+            mode = mode == .Drawing ? .Drawing : .Usual
             recomputeMask()
             poincareView.setNeedsDisplay()
             drawing = true
@@ -334,6 +336,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             } else {
                 newCurve!.addPoint(z!)
             }
+            formingPolygon = true
             mode = .Drawing
         }
         poincareView.setNeedsDisplay()
@@ -344,10 +347,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if newCurve != nil {
             newCurve!.addPoint(newCurve!.points[0])
         }
+        formingPolygon = false
         returnToUsualMode()
     }
     
     func recomputeMask() {
+        guard !formingPolygon else { return }
         var bestA = mask.a.abs
         var bestMask = mask
         //        println("Trying to improve : \(bestA)")
