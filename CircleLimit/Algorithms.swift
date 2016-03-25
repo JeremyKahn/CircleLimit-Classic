@@ -9,6 +9,9 @@
 import UIKit
 
 func centerPointAndRadius(points: [HPoint], delta: Double) -> (HPoint, Double) {
+    guard points.count > 0 else {
+        return (HPoint(), 0.0)
+    }
     var M = HyperbolicTransformation(a: points[0])
     var movingPoints = points.map() { M.appliedTo($0) }
     var finished = false
@@ -20,6 +23,11 @@ func centerPointAndRadius(points: [HPoint], delta: Double) -> (HPoint, Double) {
         movingPoints = movingPoints.map() { motion.appliedTo($0) }
         M = motion.following(M)
         numberOfIterations += 1
+        if numberOfIterations > 1000 {
+            print("Moving points: \(movingPoints)")
+            print("motion: \(motion)")
+            print("radius: \(radius)")
+        }
     } while !finished
 //    print("Number of iterations: \(numberOfIterations)")
     return (M.inverse().appliedTo(HPoint()), radius)
@@ -49,12 +57,11 @@ func wayToShiftFinishedAndRadius(points: [HPoint], delta: Double) -> (Hyperbolic
         arg = arg > Double.PI ? arg - 2 * Double.PI : arg
         shiftedArgs[i] = arg
     }
-    // WTF is the problem with max?
     let maxArg = shiftedArgs.reduce(-Double.PI) { max($0, $1) }
     let minArg = shiftedArgs.reduce(Double.PI) { min($0, $1) }
     if maxArg - minArg < 0.9 * Double.PI {
         let avgArg = argMax + (maxArg + minArg)/2
-        let a = Complex<Double>(abs: delta/2, arg: avgArg)
+        let a = Complex<Double>(abs: delta/4, arg: avgArg)
         let M = HyperbolicTransformation(a: a)
         return (M, false, 0)
     }

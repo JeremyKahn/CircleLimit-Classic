@@ -12,7 +12,7 @@ import Foundation
 // Any two things that are close to each other must have Location's that are equal or are neighbors
 public protocol Locatable {
     
-    typealias  Location : Hashable
+    associatedtype  Location : Hashable
     
     var location : Location {get}
     
@@ -46,7 +46,7 @@ public class LocationTable<T: Locatable> {
         } else {
             table.updateValue([E], forKey: l)
         }
-        count++
+        count += 1
     }
     
     public func arrayForNearLocation(l: T.Location) -> [T] {

@@ -149,6 +149,15 @@ protocol HDrawable : class {
 
 extension HDrawable {
     
+    func filteredGroup(group: [Action], cutoffDistance: Double) -> [Action] {
+        
+        let objectCutoffAbs = distanceToAbs(cutoffDistance + radius)
+
+        let objectGroup = group.filter() {$0.motion.appliedTo(centerPoint).abs < objectCutoffAbs}
+        
+        return objectGroup
+    }
+    
     func drawWithMask(mask: HyperbolicTransformation) {
         self.mask = mask
         draw()
@@ -187,6 +196,14 @@ class HyperbolicPolygon: HyperbolicPolyline {
         color = borderColor
         super.draw()
         
+    }
+    
+    // Actually returns the indices of the nearby points
+    func pointsNear(selectedPoint point: HPoint, withmask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        let maskedPoints = points.map() { mask.appliedTo($0) }
+        let indexArray = [Int](0..<points.count)
+        let nearbyPoints = indexArray.filter() { distanceBetween(point, w: maskedPoints[$0]) < distance }
+        return nearbyPoints
     }
     
 }
@@ -263,6 +280,12 @@ class HyperbolicPolyline : HDrawable {
     func addPoint(p: Complex64) {
         assert(p.abs <= 1)
         points.append(p)
+        update()
+    }
+    
+    func movePointAtIndex(i: Int, to p: HPoint) {
+        assert(p.abs <= 1)
+        points[i] = p
         update()
     }
     

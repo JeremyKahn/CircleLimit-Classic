@@ -103,13 +103,12 @@ class PoincareView: UIView {
         let gcontext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(gcontext, tf)
  
+     
+
         for object in objects {
             
-            let objectCutoffAbs = distanceToAbs(cutoffDistance + object.radius)
-            let centerPoint = object.centerPoint
-            
             let startFilterTime = NSDate()
-            let objectGroup = myGroup.filter() {$0.motion.appliedTo(centerPoint).abs < objectCutoffAbs}
+            let objectGroup = object.filteredGroup(myGroup, cutoffDistance: cutoffDistance)
             filterTime += 1000 * NSDate().timeIntervalSinceDate(startFilterTime)
             
             print("Drawing an object with a group of size \(objectGroup.count)")
