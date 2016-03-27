@@ -25,17 +25,15 @@ func circlePath(center: CGPoint, radius: CGFloat) -> UIBezierPath {
 @IBDesignable
 class PoincareView: UIView {
     
-    @IBInspectable
+    
     var viewCenter: CGPoint {
         return convertPoint(center, fromView: superview)
     }
     
     @IBInspectable
-    var circleColor: UIColor {
-        return UIColor.blueColor()
-    }
+    var circleColor = UIColor.blueColor()
     
-    @IBInspectable
+    
     var viewRadius: CGFloat {
         return min(bounds.size.width, bounds.size.height)/2
     }
@@ -89,16 +87,18 @@ class PoincareView: UIView {
     
     var testingIBDesignable = false
     
+    var tracingDrawRect = false
+    
     override func drawRect(rect: CGRect) {
         //        println("entering PoincareView.drawRect with \(objects.count) objects")
  
         if testingIBDesignable { dataSource = nil }
         
-        print("\nStarting drawRect")
+        print("\nStarting drawRect", when: tracingDrawRect)
         let startTime = NSDate()
         var filterTime = 0.0
         let myGroup = group
-        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(myGroup.count)")
+        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(myGroup.count)", when: tracingDrawRect)
         
         let gcontext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(gcontext, tf)
@@ -111,7 +111,8 @@ class PoincareView: UIView {
             let objectGroup = object.filteredGroup(myGroup, cutoffDistance: cutoffDistance)
             filterTime += 1000 * NSDate().timeIntervalSinceDate(startFilterTime)
             
-            print("Drawing an object with a group of size \(objectGroup.count)")
+            print("Drawing an object with a group of size \(objectGroup.count)",
+                  when: tracingDrawRect)
             for action in objectGroup {
                      object.drawWithMaskAndAction(action)
             }
@@ -129,7 +130,8 @@ class PoincareView: UIView {
         cutoffCircle.stroke()
         
         let timeToDrawInMilliseconds = NSDate().timeIntervalSinceDate(startTime) * 1000
-        print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds.int) ms")
-        print("Filter time: \(filterTime.int) ms")
+        print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds.int) ms", when: tracingDrawRect)
+        print("Filter time: \(filterTime.int) ms",
+              when: tracingDrawRect)
     }
 }

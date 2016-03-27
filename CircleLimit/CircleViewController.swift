@@ -24,8 +24,11 @@ struct MatchedPoint {
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
-    var trivialGroup = false
+    var tracingGroupMaking = false
     
+    var tracingGesturesAndTouches = true
+    
+    var trivialGroup = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,6 +71,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var drawObjects: [HDrawable] = []
     
+    var oldDrawObjects: [HDrawable] = []
+    
     var undoneObjects: [HDrawable] = []
     
     var mode : Mode = .Usual
@@ -93,6 +98,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case Searching
     }
     
+    // Right now this is not used for anything and so can be removed
     var formingPolygon = false
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
@@ -122,8 +128,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         g = group[mode]!
         g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
         let makeGroupTime = timeInMillisecondsSince(startMakeGroup)
-        print("Size of group: \(g.count)")
-        print("Time to make the group: \(makeGroupTime)")
+        print("Size of group: \(g.count)", when: tracingGroupMaking)
+        print("Time to make the group: \(makeGroupTime)", when: tracingGroupMaking)
         
         g = prefilteredGroupFrom(g, withObjects: objectsToDraw)
         
@@ -140,7 +146,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         let cutoffAbs = distanceToAbs(cutoffDistance + totalRadius)
         let g = group.filter() { $0.motion.appliedTo(center).abs < cutoffAbs }
         let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
-        print("Prefilter time: \(Int(prefilterTime)) milliseconds")
+        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
         return g
     }
     
@@ -245,7 +251,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         for object in drawObjects {
             if !(object is HyperbolicPolygon) { continue }
             let polygon = object as! HyperbolicPolygon
-            print("Attempting to match polygon with points \(polygon.points)")
+//            print("Attempting to match polygon with points \(polygon.points)")
             
             // filtering the group by object
             let cutoffDistance = distance + object.radius
@@ -262,9 +268,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var matchedPoints: [MatchedPoint] = []
     
+    // TODO: Make the touches work so that the movement is cancelled without touchesEnded
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if printingTouches { print("touchesBegan") }
         super.touchesBegan(touches, withEvent: event)
+        guard touches.count == 1 else {return}
+        print("Saving objects", when: tracingGesturesAndTouches)
+        oldDrawObjects = drawObjects
         mode = .Moving
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
@@ -277,6 +287,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
+        guard touches.count == 1 else {return}
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
                 for m in matchedPoints {
@@ -292,6 +303,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         super.touchesEnded(touches, withEvent: event)
         touchesMoved(touches, withEvent: event)
         mode = .Usual
+        oldDrawObjects = []
+        poincareView.setNeedsDisplay()
     }
     
     // MARK: Gesture recognition
@@ -370,6 +383,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             recomputeMask()
             poincareView.setNeedsDisplay()
             drawing = true
+            if oldDrawObjects.count > 0 {
+                print("Restoring objects", when: tracingGesturesAndTouches)
+                drawObjects = oldDrawObjects
+            }
         default: break
         }
     }
@@ -407,6 +424,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             formingPolygon = false
             returnToUsualMode()
         }
+        poincareView.setNeedsDisplay()
     }
     
     func recomputeMask() {
@@ -446,6 +464,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Ended:
             drawing = true
             mode = Mode.Usual
+            if oldDrawObjects.count > 0 {
+                print("Restoring objects", when: tracingGesturesAndTouches)
+                drawObjects = oldDrawObjects
+            }
         default: break
         }
         poincareView.setNeedsDisplay()

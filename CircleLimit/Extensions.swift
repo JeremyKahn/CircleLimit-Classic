@@ -18,6 +18,13 @@ func timeInMillisecondsSince(date: NSDate) -> Int {
     return (1000 * NSDate().timeIntervalSinceDate(date)).int
 }
 
+
+func print(s: String, when condition: Bool) {
+    if condition {
+        print(s)
+    }
+}
+
 extension Double {
     
     func nice() -> String {
