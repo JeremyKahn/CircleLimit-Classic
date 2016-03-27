@@ -120,6 +120,8 @@ func pointForComplex(z: Complex64) -> CGPoint {
 
 protocol HDrawable : class {
     
+    func copy() -> HDrawable
+    
     // Deprecated
     func transformedBy(_: HyperbolicTransformation) -> HDrawable
     
@@ -177,6 +179,23 @@ extension HDrawable {
 }
 
 class HyperbolicPolygon: HyperbolicPolyline {
+    
+    override func copy() -> HDrawable {
+        return HyperbolicPolygon(self)
+    }
+    
+    init(_ a: HyperbolicPolygon) {
+        super.init(a)
+        self.borderColor = a.borderColor
+    }
+    
+    override init(_ z: HPoint) {
+        super.init(z)
+    }
+    
+    override init(_ pp: [Complex64]) {
+        super.init(pp)
+    }
     
     var borderColor = UIColor.blackColor()
     
@@ -269,10 +288,18 @@ class HyperbolicPolyline : HDrawable {
         complete()
     }
     
+    
+    func copy() -> HDrawable {
+        return HyperbolicPolyline(self)
+    }
+    
     init(_ a: HyperbolicPolyline) {
         self.points = a.points
         self.color = a.color
         self.size  = a.size
+        self.colorTable = a.colorTable
+        self.baseNumber = a.baseNumber
+        self.useColorTable = a.useColorTable
         update()
         complete()
     }
@@ -469,6 +496,10 @@ class HyperbolicPolyline : HDrawable {
 
 
 class HyperbolicDot : HDrawable {
+    
+    func copy() -> HDrawable {
+        return HyperbolicDot(dot: self)
+    }
     
     var centerPoint: HPoint {
         return center

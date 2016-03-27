@@ -274,7 +274,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         super.touchesBegan(touches, withEvent: event)
         guard touches.count == 1 else {return}
         print("Saving objects", when: tracingGesturesAndTouches)
-        oldDrawObjects = drawObjects
+        oldDrawObjects = drawObjects.map() { $0.copy() }
         mode = .Moving
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
@@ -285,7 +285,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesMoved") }
+//        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         guard touches.count == 1 else {return}
         if let touch = touches.first {
@@ -367,6 +367,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawing = false
             //            newCurve = nil
             mode = mode == .Drawing ? .Drawing :  .Moving
+            if oldDrawObjects.count > 0 {
+                print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
+                drawObjects = oldDrawObjects
+                matchedPoints = []
+            }
+
+            
         case .Changed:
             let translation = gesture.translationInView(poincareView)
             //            println("Raw translation: \(translation.x, translation.y)")
@@ -383,11 +390,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             recomputeMask()
             poincareView.setNeedsDisplay()
             drawing = true
-            if oldDrawObjects.count > 0 {
-                print("Restoring objects", when: tracingGesturesAndTouches)
-                drawObjects = oldDrawObjects
-            }
-        default: break
+         default: break
         }
     }
     
@@ -457,6 +460,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             mode = Mode.Moving
             drawing = false
         //            newCurve = nil
+            if oldDrawObjects.count > 0 {
+                print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
+                drawObjects = oldDrawObjects
+                matchedPoints = []
+            }
         case .Changed:
             let newMultiplier = multiplier * gesture.scale
             multiplier = newMultiplier >= 1 ? newMultiplier : 1
@@ -464,11 +472,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Ended:
             drawing = true
             mode = Mode.Usual
-            if oldDrawObjects.count > 0 {
-                print("Restoring objects", when: tracingGesturesAndTouches)
-                drawObjects = oldDrawObjects
-            }
-        default: break
+         default: break
         }
         poincareView.setNeedsDisplay()
     }
