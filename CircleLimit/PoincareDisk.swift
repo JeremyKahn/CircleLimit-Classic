@@ -203,18 +203,30 @@ class HyperbolicPolygon: HyperbolicPolyline {
     override func draw() {
         let points = maskedPointsToDraw
         color.setFill()
+        borderColor.setStroke()
         //        print("Fill color: \(color)")
         let totalPath = UIBezierPath()
         totalPath.moveToPoint(pointForComplex(points[0]))
+        var borderPaths: [UIBezierPath] = []
         for i in 0..<(points.count - 1) {
             let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(points[i], b: points[i+1])
-            totalPath.addCurveToPoint(pointForComplex(points[i+1]), controlPoint1: pointForComplex(startControl), controlPoint2: pointForComplex(endControl))
+            let (startPoint, endPoint, startHControl, endHControl) =
+                (pointForComplex(points[i]),
+                 pointForComplex(points[i+1]),
+                 pointForComplex(startControl),
+                 pointForComplex(endControl))
+            let borderPath = UIBezierPath()
+            borderPath.moveToPoint(startPoint)
+            borderPath.addCurveToPoint(endPoint, controlPoint1: startHControl, controlPoint2: endHControl)
+            borderPath.lineWidth = suitableLineWidth(points[i], points[i+1])
+            borderPath.lineCapStyle = CGLineCap.Round
+            borderPaths.append(borderPath)
+            totalPath.addCurveToPoint(endPoint, controlPoint1: startHControl, controlPoint2: endHControl)
         }
         totalPath.lineCapStyle = CGLineCap.Round
         totalPath.fill()
-        color = borderColor
-        super.draw()
-        
+        borderPaths.map() { $0.stroke() }
+        if points.count == 1 { super.draw() }
     }
     
     // Actually returns the indices of the nearby points

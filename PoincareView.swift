@@ -87,7 +87,9 @@ class PoincareView: UIView {
     
     var testingIBDesignable = false
     
-    var tracingDrawRect = false
+    var tracingDrawRect = true
+    
+    var showRedCircle = false
     
     override func drawRect(rect: CGRect) {
         //        println("entering PoincareView.drawRect with \(objects.count) objects")
@@ -123,11 +125,13 @@ class PoincareView: UIView {
         boundaryCircle.lineWidth = lineWidth
         boundaryCircle.stroke()
         
-        // Added to test the new cutoff system
-        UIColor.redColor().colorWithAlphaComponent(0.75).set()
-        let cutoffCircle = circlePath(CGPointZero, radius: CGFloat(distanceToAbs(cutoffDistance)))
-        cutoffCircle.lineWidth = lineWidth/2
-        cutoffCircle.stroke()
+        if showRedCircle {
+            // Added to test the new cutoff system
+            UIColor.redColor().colorWithAlphaComponent(0.75).set()
+            let cutoffCircle = circlePath(CGPointZero, radius: CGFloat(distanceToAbs(cutoffDistance)))
+            cutoffCircle.lineWidth = lineWidth/2
+            cutoffCircle.stroke()
+        }
         
         let timeToDrawInMilliseconds = NSDate().timeIntervalSinceDate(startTime) * 1000
         print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds.int) ms", when: tracingDrawRect)

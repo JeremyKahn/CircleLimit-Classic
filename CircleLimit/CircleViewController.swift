@@ -24,12 +24,15 @@ struct MatchedPoint {
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
+    
+    // MARK: Debugging variables
     var tracingGroupMaking = false
     
-    var tracingGesturesAndTouches = true
+    var tracingGesturesAndTouches = false
     
     var trivialGroup = false
     
+    //
     override func viewDidLoad() {
         super.viewDidLoad()
         print("CircleViewController loaded")
@@ -80,9 +83,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var group = [Mode : [Action]]()
     
     // Change these values to determine the size of the various groups
-    var cutoff : [ Mode : Double ] = [.Usual : 0.95, .Moving : 0.8, .Drawing : 0.8, .Searching: 0.95]
+    var cutoff : [ Mode : Double ] = [.Usual : 0.98, .Moving : 0.8, .Drawing : 0.8, .Searching: 0.95]
     
-    var bigCutoff: [Mode: Double] = [.Usual: 0.99, .Moving: 0.98, .Drawing: 0.95, .Searching: 0.95]
+    var bigCutoff: [Mode: Double] = [.Usual: 0.995, .Moving: 0.98, .Drawing: 0.95, .Searching: 0.95]
     
     var cutoffDistance: Double {
         let scaleCutoff = Double(2/multiplier)
@@ -105,8 +108,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var multiplier = CGFloat(1.0)
     
+    
     var touchDistance: Double {
-        return Double(0.5/multiplier)
+        let m = Double(multiplier)
+        let baseTouchDistance = 0.2
+        let exponent = 0.5
+        return baseTouchDistance/pow(m, 1 - exponent)
     }
     
     var objectsToDraw: [HDrawable] {
@@ -282,6 +289,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                 matchedPoints = nearbyPointsTo(z, withinDistance: distance)
             }
         }
+        touchesMoved(touches, withEvent: event)
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
