@@ -29,6 +29,7 @@
                     </view>
                     <connections>
                         <outlet property="doubleTapRecognizer" destination="hu9-Fi-Roa" id="1ya-nI-kYy"/>
+                        <outlet property="longPressRecognizer" destination="EgF-Ug-1Kd" id="PxN-GN-dCd"/>
                         <outlet property="panRecognizer" destination="n2t-D8-Sa6" id="7Cy-3r-lFY"/>
                         <outlet property="pinchRecognizer" destination="tDE-AL-ekJ" id="ayW-em-yko"/>
                         <outlet property="poincareView" destination="IBq-aQ-8NE" id="eiR-RU-w03"/>
@@ -74,6 +75,12 @@
                         <outlet property="delegate" destination="vXZ-lx-hvc" id="qgF-de-7Vp"/>
                     </connections>
                 </tapGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.29999999999999999" id="EgF-Ug-1Kd">
+                    <connections>
+                        <action selector="longPress:" destination="vXZ-lx-hvc" id="4eJ-4H-uV4"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="x60-pQ-MCA"/>
+                    </connections>
+                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="212" y="266"/>
         </scene>

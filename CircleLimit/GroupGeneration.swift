@@ -29,6 +29,11 @@ struct Action: Locatable {
         action = ColorNumberPermutation()
     }
     
+    init (motion: HyperbolicTransformation, action: ColorNumberPermutation) {
+        self.motion = motion
+        self.action = action
+    }
+    
     init(M: HyperbolicTransformation, P: ColorNumberPermutation) {
         motion = M
         action = P

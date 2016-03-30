@@ -26,7 +26,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     
     // MARK: Debugging variables
-    var tracingGroupMaking = false
+    var tracingGroupMaking = true
     
     var tracingGesturesAndTouches = false
     
@@ -55,9 +55,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             twistedGenerators = [Action(M: A, P: a), Action(M: B, P: b), Action(M: C, P: c)]
         }
         self.guidelines = guidelines
-        let bigGroup = generatedGroup(twistedGenerators, bigCutoff: 0.995)
-        for mode in cutoff.keys {
-            group[mode] = selectElements(bigGroup, cutoff: bigCutoff[mode]!)        }
+        let bigGroup = generatedGroup(twistedGenerators, bigCutoff: bigGroupCutoff)
+        groupForIntegerDistance = Array<[Action]>(count: maxGroupDistance + 1, repeatedValue: [])
+        for i in 0...maxGroupDistance {
+            groupForIntegerDistance[i] = selectElements(bigGroup, cutoff: distanceToAbs(Double(i)))
+        }
+        // Right now this is just a guess
+        let I = ColorNumberPermutation()
+        searchingGroup = groupForIntegerDistance[5].filter() { $0.action == I }
     }
     
     func selectElements(group: [Action], cutoff: Double) -> [Action] {
@@ -78,35 +83,38 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var undoneObjects: [HDrawable] = []
     
-    var mode : Mode = .Usual
+     // One group for each integral distance cutoff
+    var groupForIntegerDistance: [[Action]] = []
+    
+    func groupForDistance(distance: Double) -> [Action] {
+        return groupForIntegerDistance[min(maxGroupDistance, Int(distance) + 1)]
+    }
     
     var group = [Mode : [Action]]()
     
     // Change these values to determine the size of the various groups
-    var cutoff : [ Mode : Double ] = [.Usual : 0.98, .Moving : 0.8, .Drawing : 0.8, .Searching: 0.95]
+    var cutoff : [Mode : Double] = [.Usual : 0.98, .Moving : 0.8, .Drawing : 0.8]
     
-    var bigCutoff: [Mode: Double] = [.Usual: 0.995, .Moving: 0.98, .Drawing: 0.95, .Searching: 0.95]
+    var bigGroupCutoff = 0.995
     
-    var cutoffDistance: Double {
-        let scaleCutoff = Double(2/multiplier)
-        let cutoffAbs = cutoff[mode]!
-        let lesserAbs = min(scaleCutoff, cutoffAbs)
-        return absToDistance(lesserAbs)
+    var maxGroupDistance: Int {
+        return Int(absToDistance(bigGroupCutoff)) + 1
     }
+    
+    // The translates (by the color fixing subgroup) of a disk around the origin of this radius should cover the boundary of that disk
+    // Right now the size is determined by trial and error
+    var searchingGroup: [Action] = []
     
     enum Mode {
         case Usual
         case Drawing
         case Moving
-        case Searching
-    }
+     }
     
     // Right now this is not used for anything and so can be removed
     var formingPolygon = false
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
-    
-    var multiplier = CGFloat(1.0)
     
     
     var touchDistance: Double {
@@ -116,6 +124,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return baseTouchDistance/pow(m, 1 - exponent)
     }
     
+    // MARK: PoincareViewDataSource
     var objectsToDraw: [HDrawable] {
         var fullDrawObjects = drawGuidelines ? guidelines : []
         fullDrawObjects += drawObjects
@@ -125,38 +134,25 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return fullDrawObjects
     }
     
-    
-    // TODO: Replace group[mode] with group(cutoff) that selects a group[cutoff] to be prefiltered
-    // The cutuff should then depend on the zoom multiplier as well as the mode.
     var groupToDraw: [Action] {
-        var g : [Action] = []
-        
-        let startMakeGroup = NSDate()
-        g = group[mode]!
-        g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
-        let makeGroupTime = timeInMillisecondsSince(startMakeGroup)
-        print("Size of group: \(g.count)", when: tracingGroupMaking)
-        print("Time to make the group: \(makeGroupTime)", when: tracingGroupMaking)
-        
-        g = prefilteredGroupFrom(g, withObjects: objectsToDraw)
-        
-        return g
+        return groupForMode(mode, withObjects: objectsToDraw, withMask: true)
     }
     
-    func prefilteredGroupFrom(group: [Action], withObjects objects: [HDrawable]) -> [Action] {
-        let centers = objects.map() {$0.centerPoint}
-        let maxRadius = objects.reduce(0) { max($0, $1.radius) }
-        let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
-        let totalRadius = radius + maxRadius
-        
-        let startFilter = NSDate()
-        let cutoffAbs = distanceToAbs(cutoffDistance + totalRadius)
-        let g = group.filter() { $0.motion.appliedTo(center).abs < cutoffAbs }
-        let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
-        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
-        return g
+    var multiplier = CGFloat(1.0)
+    
+    var mode : Mode = .Usual
+    
+    func cutOffDistanceForAbsoluteCutoff(cutoffAbs: Double) -> Double {
+        let scaleCutoff = Double(2/multiplier)
+        let lesserAbs = min(scaleCutoff, cutoffAbs)
+        return absToDistance(lesserAbs)
     }
     
+    var cutoffDistance: Double {
+        return cutOffDistanceForAbsoluteCutoff(cutoff[mode]!)
+    }
+    
+    // MARK: Stuff from the poincareView
     var toPoincare : CGAffineTransform {
         return CGAffineTransformInvert(poincareView.tf)
     }
@@ -164,6 +160,48 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var scale: CGFloat {
         return poincareView.scale
     }
+
+    // MARK: Get the group you want
+    
+    // Returns all group elements (optionally followed by the mask) that might map the objects to intersect the disk of given radius around the origin
+    func groupForDistanceCutoff(cutoffDistance: Double, withObjects objects: [HDrawable], withMask useMask: Bool) -> [Action] {
+        let (center, objectRadius) = centerAndRadiusFor(objects)
+        let maskOriginDistance = useMask ? distanceFromOrigin(mask.a) : 0.0
+        let totalDistance = distanceFromOrigin(center) + maskOriginDistance + objectRadius + cutoffDistance
+        var g = groupForDistance(totalDistance)
+        
+        if useMask {
+            g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
+        }
+            
+        let newRadius = cutoffDistance + objectRadius
+        g = filterForCenterAndRadius(g, center: center, radius: newRadius)
+        return g
+    }
+    
+    func groupForMode(mode: Mode, withObjects objects: [HDrawable], withMask useMask: Bool ) -> [Action] {
+        let myCutoff = cutoff[mode]!
+        let distance = absToDistance(myCutoff)
+        return groupForDistanceCutoff(distance, withObjects: objects, withMask: useMask)
+    }
+    
+    func filterForCenterAndRadius(group: [Action], center: HPoint, radius: Double) -> [Action] {
+        let startFilter = NSDate()
+        let absCutoff = distanceToAbs(radius)
+        let g = group.filter() { $0.motion.appliedTo(center).abs < absCutoff }
+        let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
+        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
+        return g
+    }
+    
+    // TODO: Modify the center-and-radius algorithm to find the smallest disk containing a collection of disks, and use it here
+    func centerAndRadiusFor(objects: [HDrawable]) -> (HPoint, Double) {
+        let centers = objects.map() {$0.centerPoint}
+        let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
+        let totalRadius = objects.reduce(0) {max($0, distanceBetween($1.centerPoint, w: center) + $1.radius ) }
+        return (center, totalRadius)
+    }
+    
     
     // MARK: Picture control
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
@@ -252,13 +290,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var printingTouches = true
     
     func nearbyPointsTo(point: HPoint, withinDistance distance: Double) -> [MatchedPoint] {
-        var g = group[.Drawing]!  // again this should depend on the zoom scale
-        g = prefilteredGroupFrom(g, withObjects: drawObjects)
+        let totalDistance = distance + absToDistance(point.abs)
+        let objects = drawObjects.filter() { $0 is HyperbolicPolygon }
+        let g = groupForDistanceCutoff(totalDistance, withObjects: objects, withMask: false)
         var matchedPoints: [MatchedPoint] = []
         for object in drawObjects {
-            if !(object is HyperbolicPolygon) { continue }
             let polygon = object as! HyperbolicPolygon
-//            print("Attempting to match polygon with points \(polygon.points)")
             
             // filtering the group by object
             let cutoffDistance = distance + object.radius
@@ -275,7 +312,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var matchedPoints: [MatchedPoint] = []
     
-    // TODO: Make the touches work so that the movement is cancelled without touchesEnded
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         if printingTouches { print("touchesBegan") }
         super.touchesBegan(touches, withEvent: event)
@@ -293,7 +329,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
-//        if printingTouches { print("touchesMoved") }
+        //        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         guard touches.count == 1 else {return}
         if let touch = touches.first {
@@ -324,6 +360,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     @IBOutlet var undoRecognizer: UISwipeGestureRecognizer!
     
     @IBOutlet var redoRecognizer: UISwipeGestureRecognizer!
+    
+    @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     
     //    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     //        return otherGestureRecognizer === swipeRecognizer
@@ -380,7 +418,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                 drawObjects = oldDrawObjects
                 matchedPoints = []
             }
-
+            
             
         case .Changed:
             let translation = gesture.translationInView(poincareView)
@@ -398,7 +436,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             recomputeMask()
             poincareView.setNeedsDisplay()
             drawing = true
-         default: break
+        default: break
         }
     }
     
@@ -438,17 +476,20 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         poincareView.setNeedsDisplay()
     }
     
+    
+    @IBAction func longPress(sender: UILongPressGestureRecognizer) {
+        
+    }
+    
     func recomputeMask() {
         if mode == .Drawing { return }
         var bestA = mask.a.abs
         var bestMask = mask
         //        println("Trying to improve : \(bestA)")
         var foundBetter = false
-        let I = ColorNumberPermutation()
         repeat {
             foundBetter = false
-            for E in group[Mode.Searching]! {
-                if E.action != I { continue }
+            for E in searchingGroup  {
                 let newMask = mask.following(E.motion.inverse())  // Let's try it
                 if  newMask.a.abs < bestA {
                     foundBetter = true
@@ -467,7 +508,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Began:
             mode = Mode.Moving
             drawing = false
-        //            newCurve = nil
+            //            newCurve = nil
             if oldDrawObjects.count > 0 {
                 print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
                 drawObjects = oldDrawObjects
@@ -480,7 +521,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .Ended:
             drawing = true
             mode = Mode.Usual
-         default: break
+        default: break
         }
         poincareView.setNeedsDisplay()
     }

@@ -89,7 +89,7 @@ class PoincareView: UIView {
     
     var tracingDrawRect = true
     
-    var showRedCircle = false
+    var showRedCircle = true
     
     override func drawRect(rect: CGRect) {
         //        println("entering PoincareView.drawRect with \(objects.count) objects")
