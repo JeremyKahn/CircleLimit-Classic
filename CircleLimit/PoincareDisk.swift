@@ -43,7 +43,13 @@ extension Double {
     }
 }
 
-func distanceFromOriginToGeodesic(a: HPoint, b: HPoint) -> Double {
+func distanceFromOriginToGeodesicArc(a: HPoint, b: HPoint) -> Double {
+    let height = distanceFromOriginToGeodesicLine(a, b)
+    let minSideLength = min(distanceFromOrigin(a), distanceFromOrigin(b))
+    return max(height, minSideLength)
+}
+
+func distanceFromOriginToGeodesicLine(a: HPoint, _ b: HPoint) -> Double {
     var (aa, bb) = (a, b)
     if (bb/aa).arg < 0 {
         swap(&aa, &bb)   }
@@ -64,9 +70,8 @@ func distanceFromOriginToGeodesic(a: HPoint, b: HPoint) -> Double {
 
 func distanceOfLineToPoint(start: HPoint, end: HPoint, middle: HPoint) -> Double {
     let M = HyperbolicTransformation(a: middle)
-    return distanceFromOriginToGeodesic(M.appliedTo(start), b: M.appliedTo(end))
+    return distanceFromOriginToGeodesicLine(M.appliedTo(start), M.appliedTo(end))
 }
-
 
 
 func geodesicArcCenterRadiusStartEnd(a: HPoint, b: HPoint) -> (Complex64, Double, Double, Double, Bool) {
