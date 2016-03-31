@@ -14,7 +14,7 @@ class HyperbolicPolyline : HDrawable {
     
     var radius: Double = 0
     
-    var points: [Complex64] = []
+    var points: [HPoint] = []
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
@@ -31,7 +31,7 @@ class HyperbolicPolyline : HDrawable {
         return size
     }
     
-    var size = 0.01
+    var size = 0.015
     
     var color: UIColor = UIColor.purpleColor()
     
@@ -43,12 +43,12 @@ class HyperbolicPolyline : HDrawable {
     
     // MARK: Initializers
     
-    init(_ p: Complex64) {
+    init(_ p: HPoint) {
         points = [p]
         update()
     }
     
-    init(_ pp: [Complex64]) {
+    init(_ pp: [HPoint]) {
         points = pp
         update()
         complete()
@@ -72,7 +72,7 @@ class HyperbolicPolyline : HDrawable {
     }
     
     // MARK: Modifiers
-    func addPoint(p: Complex64) {
+    func addPoint(p: HPoint) {
         assert(p.abs <= 1)
         points.append(p)
         update()
@@ -125,9 +125,10 @@ class HyperbolicPolyline : HDrawable {
         return path
     }
     
+    // This is a tricky problem...really the line width should vary
     func suitableLineWidth(a: HPoint, _ b: HPoint) -> CGFloat {
-        let t = ((a + b)/2).abs
-        return CGFloat(intrinsicLineWidth * (1 - t * t))
+        let t = ((a.z + b.z)/2).abs
+        return CGFloat(intrinsicLineWidth * (1 - t * t) / 2)
     }
     
     func draw() {
@@ -202,7 +203,7 @@ class HyperbolicPolyline : HDrawable {
         var sinhDistanceToOrigin : Double
         var coshDistanceToOrigin : Double
         
-        init(z : Complex64) {
+        init(z : HPoint) {
             let a = z.abs
             if a == 0 {
                 sinTheta = 0.0

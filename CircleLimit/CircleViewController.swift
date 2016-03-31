@@ -166,8 +166,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // Returns all group elements (optionally followed by the mask) that might map the objects to intersect the disk of given radius around the origin
     func groupForDistanceCutoff(cutoffDistance: Double, withObjects objects: [HDrawable], withMask useMask: Bool) -> [Action] {
         let (center, objectRadius) = centerAndRadiusFor(objects)
-        let maskOriginDistance = useMask ? distanceFromOrigin(mask.a) : 0.0
-        let totalDistance = distanceFromOrigin(center) + maskOriginDistance + objectRadius + cutoffDistance
+        let maskOriginDistance = useMask ? mask.distance : 0.0
+        let totalDistance = center.distanceToOrigin + maskOriginDistance + objectRadius + cutoffDistance
         var g = groupForDistance(totalDistance)
         
         if useMask {
@@ -198,7 +198,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     func centerAndRadiusFor(objects: [HDrawable]) -> (HPoint, Double) {
         let centers = objects.map() {$0.centerPoint}
         let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
-        let totalRadius = objects.reduce(0) {max($0, distanceBetween($1.centerPoint, w: center) + $1.radius ) }
+        let totalRadius = objects.reduce(0) {max($0, $1.centerPoint.distanceTo(center) + $1.radius ) }
         return (center, totalRadius)
     }
     
@@ -228,7 +228,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         let (x, y) = (Double(thing.x), Double(thing.y))
         //        print("New point: " + x.nice() + " " + y.nice())
         if x * x + y * y < drawRadius * drawRadius {
-            let z = HPoint(Double(thing.x), Double(thing.y))
+            let z = HPoint(x + y.i)
             return mask.inverse().appliedTo(z)
         }
         else {
@@ -299,10 +299,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             
             // filtering the group by object
             let cutoffDistance = distance + object.radius
-            let objectGroup = g.filter() { distanceBetween($0.motion.appliedTo(object.centerPoint), w: point) < cutoffDistance }
+            let objectGroup = g.filter() { point.liesWithin(cutoffDistance)($0.motion.appliedTo(object.centerPoint)) }
+                
+//                { point.distanceTo($0.motion.appliedTo(object.centerPoint)) < cutoffDistance }
             
             for a in objectGroup {
-                let indices = polygon.pointsNear(selectedPoint: point, withmask: a.motion, withinDistance: distance)
+                let indices = polygon.pointsNear(selectedPoint: point, withMask: a.motion, withinDistance: distance)
                 let matched = indices.map() { MatchedPoint(index: $0, polygon: polygon, mask: a.motion) }
                 matchedPoints += matched
             }

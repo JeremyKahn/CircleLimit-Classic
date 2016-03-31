@@ -23,7 +23,7 @@ class HyperbolicPolygon: HyperbolicPolyline {
         super.init(z)
     }
     
-    override init(_ pp: [Complex64]) {
+    override init(_ pp: [HPoint]) {
         super.init(pp)
     }
     
@@ -36,13 +36,13 @@ class HyperbolicPolygon: HyperbolicPolyline {
         borderColor.setStroke()
         //        print("Fill color: \(color)")
         let totalPath = UIBezierPath()
-        totalPath.moveToPoint(pointForComplex(points[0]))
+        totalPath.moveToPoint(points[0].cgPoint)
         var borderPaths: [UIBezierPath] = []
         for i in 0..<(points.count - 1) {
             let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(points[i], b: points[i+1])
             let (startPoint, endPoint, startHControl, endHControl) =
-                (pointForComplex(points[i]),
-                 pointForComplex(points[i+1]),
+                (points[i].cgPoint,
+                 points[i+1].cgPoint,
                  pointForComplex(startControl),
                  pointForComplex(endControl))
             
@@ -62,10 +62,10 @@ class HyperbolicPolygon: HyperbolicPolyline {
     }
     
     // Actually returns the indices of the nearby points
-    func pointsNear(selectedPoint point: HPoint, withmask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+    func pointsNear(selectedPoint point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
         let maskedPoints = points.map() { mask.appliedTo($0) }
         let indexArray = [Int](0..<points.count)
-        let nearbyPoints = indexArray.filter() { distanceBetween(point, w: maskedPoints[$0]) < distance }
+        let nearbyPoints = indexArray.filter() { point.distanceTo(maskedPoints[$0]) < distance }
         return nearbyPoints
     }
     

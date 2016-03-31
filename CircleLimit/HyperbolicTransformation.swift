@@ -28,6 +28,10 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         self.a = a
     }
     
+    init(a: HPoint) {
+        self.a = a.z
+    }
+    
     init() {
         
     }
@@ -45,14 +49,26 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         a = -sinh(hyperbolicTranslation/2)/cosh(hyperbolicTranslation/2) + 0.i
     }
     
+    // MARK: Computed Properties
+    var abs: Double {
+        return a.abs
+    }
+    
+    var distance: Double {
+        return absToDistance(abs)
+    }
     
     // MARK: Group operations
     static let identity = HyperbolicTransformation()
     
-    func appliedTo(z: HPoint) -> HPoint {
+    func appliedTo(z: Complex64) -> Complex64 {
         var w = (z - a) / (1 - a.conj * z)
         w *= lambda
         return w
+    }
+    
+    func appliedTo(z: HPoint) -> HPoint {
+        return HPoint(appliedTo(z.z))
     }
     
     func inverse() -> HyperbolicTransformation {

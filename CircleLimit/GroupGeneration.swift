@@ -108,7 +108,7 @@ func pqrGeneratorsAndGuidelines(p: Int, q: Int, r: Int) -> ([HyperbolicTransform
     assert(C.toThe(r) == identity)
     assert(A.following(B).following(C) == identity)
     
-    let P = 0 + 0.i
+    let P = HPoint()
     let Q = TC.appliedTo(P)
     let R = RTB.appliedTo(P)
     

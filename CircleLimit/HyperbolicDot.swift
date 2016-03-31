@@ -18,7 +18,7 @@ class HyperbolicDot : HDrawable {
         return center
     }
     
-    var center: Complex64 = Complex64()
+    var center: HPoint = HPoint()
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
@@ -42,12 +42,12 @@ class HyperbolicDot : HDrawable {
         self.color = dot.color
     }
     
-    init(center: Complex64, radius: Double) {
+    init(center: HPoint, radius: Double) {
         self.center = center
         self.size = radius
     }
     
-    init(center: Complex64) {
+    init(center: HPoint) {
         self.center = center
     }
     

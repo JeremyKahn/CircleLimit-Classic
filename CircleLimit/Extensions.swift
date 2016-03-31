@@ -34,6 +34,7 @@ extension Double {
     var int: Int {
         return Int(self)
     }
+    
 }
 
 func asinh(y: Double) -> Double {
