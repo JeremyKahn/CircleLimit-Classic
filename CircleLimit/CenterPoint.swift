@@ -1,5 +1,5 @@
 //
-//  Algorithms.swift
+//  CenterPoint.swift
 //  CircleLimit
 //
 //  Created by Jeremy Kahn on 3/22/16.
@@ -8,11 +8,11 @@
 
 import UIKit
 
-func centerPointAndRadius(points: [HPoint], delta: Double) -> (HPoint, Double) {
+func centerPointAndRadius(points: [HPoint], delta: Double, startingAt startPoint: HPoint) -> (HPoint, Double) {
     guard points.count > 0 else {
         return (HPoint(), 0.0)
     }
-    var M = HyperbolicTransformation(a: points[0])
+    var M = HyperbolicTransformation(a: startPoint)
     var movingPoints = points.map() { M.appliedTo($0) }
     var finished = false
     var motion: HyperbolicTransformation
@@ -29,8 +29,17 @@ func centerPointAndRadius(points: [HPoint], delta: Double) -> (HPoint, Double) {
             print("radius: \(radius)")
         }
     } while !finished
-//    print("Number of iterations: \(numberOfIterations)")
+    //    print("Number of iterations: \(numberOfIterations)")
     return (M.inverse().appliedTo(HPoint()), radius)
+}
+
+
+
+func centerPointAndRadius(points: [HPoint], delta: Double) -> (HPoint, Double) {
+    guard points.count > 0 else {
+        return (HPoint(), 0.0)
+    }
+    return centerPointAndRadius(points, delta: delta, startingAt: points[0])
 }
 
 // Right now our goal is not the optimal algorithm
@@ -68,10 +77,3 @@ func wayToShiftFinishedAndRadius(points: [HPoint], delta: Double) -> (Hyperbolic
     return (HyperbolicTransformation(), true, maxDistance)
 }
 
-extension Array {
-    
-//    func maximizingElement<T: Comparable, Element>(startpoint: T, function: Element -> T) -> Element {
-//        return self.reduce(startpoint) { max($0, function($1)) }
-//    }
-    
-}

@@ -7,8 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B6EB46E1CAD711D00B08F09 /* HyperbolicDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */; };
+		1B6EB4701CAD716D00B08F09 /* HyperbolicPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */; };
+		1B6EB4731CAD724900B08F09 /* HyperbolicPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */; };
+		1B6EB4751CAD727700B08F09 /* HDrawable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB4741CAD727700B08F09 /* HDrawable.swift */; };
 		1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B740F991C06A2FC0082BC4C /* Extensions.swift */; };
-		1BA2D5B31CA1E1C90036ACCD /* Algorithms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */; };
+		1BA2D5B31CA1E1C90036ACCD /* CenterPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA2D5B21CA1E1C90036ACCD /* CenterPoint.swift */; };
 		1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */; };
 		1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */; };
 		1BC1B2C41C3D71B400FF17C6 /* GroupGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */; };
@@ -36,8 +40,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicDot.swift; sourceTree = "<group>"; };
+		1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HyperbolicPolyline.swift; path = HDrawable/HyperbolicPolyline.swift; sourceTree = "<group>"; };
+		1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicPolygon.swift; sourceTree = "<group>"; };
+		1B6EB4741CAD727700B08F09 /* HDrawable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HDrawable.swift; sourceTree = "<group>"; };
 		1B740F991C06A2FC0082BC4C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algorithms.swift; sourceTree = "<group>"; };
+		1BA2D5B21CA1E1C90036ACCD /* CenterPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterPoint.swift; sourceTree = "<group>"; };
 		1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTable.swift; sourceTree = "<group>"; };
 		1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicTransformation.swift; sourceTree = "<group>"; };
 		1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupGeneration.swift; sourceTree = "<group>"; };
@@ -76,6 +84,39 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B6EB4711CAD718A00B08F09 /* HDrawable */ = {
+			isa = PBXGroup;
+			children = (
+				1B6EB4741CAD727700B08F09 /* HDrawable.swift */,
+				1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */,
+				1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */,
+				1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */,
+			);
+			name = HDrawable;
+			sourceTree = "<group>";
+		};
+		1B6EB4761CAD78D900B08F09 /* Geometry */ = {
+			isa = PBXGroup;
+			children = (
+				1BDBD0891B5C2BEA0057B710 /* Complex.swift */,
+				1BDBD0831B5C22740057B710 /* PoincareDisk.swift */,
+				1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */,
+			);
+			name = Geometry;
+			sourceTree = "<group>";
+		};
+		1B6EB4781CAD798600B08F09 /* Algorithms */ = {
+			isa = PBXGroup;
+			children = (
+				1BA2D5B21CA1E1C90036ACCD /* CenterPoint.swift */,
+				1B740F991C06A2FC0082BC4C /* Extensions.swift */,
+				1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */,
+				1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */,
+				1BDD539E1B7162620054445B /* DynamicProgramming.swift */,
+			);
+			name = Algorithms;
+			sourceTree = "<group>";
+		};
 		1BDBD0501B5C21370057B710 = {
 			isa = PBXGroup;
 			children = (
@@ -97,17 +138,12 @@
 		1BDBD05B1B5C21370057B710 /* CircleLimit */ = {
 			isa = PBXGroup;
 			children = (
-				1BDBD0891B5C2BEA0057B710 /* Complex.swift */,
 				1BDBD0651B5C21370057B710 /* Main.storyboard */,
 				1BDBD08E1B5C43590057B710 /* PoincareView.swift */,
-				1BA2D5B21CA1E1C90036ACCD /* Algorithms.swift */,
 				1BDBD0811B5C21BE0057B710 /* CircleViewController.swift */,
-				1B740F991C06A2FC0082BC4C /* Extensions.swift */,
-				1BDBD0831B5C22740057B710 /* PoincareDisk.swift */,
-				1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */,
-				1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */,
-				1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */,
-				1BDD539E1B7162620054445B /* DynamicProgramming.swift */,
+				1B6EB4761CAD78D900B08F09 /* Geometry */,
+				1B6EB4781CAD798600B08F09 /* Algorithms */,
+				1B6EB4711CAD718A00B08F09 /* HDrawable */,
 				1BDBD0681B5C21370057B710 /* Images.xcassets */,
 				1BDBD05C1B5C21370057B710 /* Supporting Files */,
 			);
@@ -246,14 +282,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BDBD05F1B5C21370057B710 /* AppDelegate.swift in Sources */,
+				1B6EB4731CAD724900B08F09 /* HyperbolicPolygon.swift in Sources */,
 				1BC1B2C41C3D71B400FF17C6 /* GroupGeneration.swift in Sources */,
 				1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */,
+				1B6EB4751CAD727700B08F09 /* HDrawable.swift in Sources */,
 				1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */,
+				1B6EB46E1CAD711D00B08F09 /* HyperbolicDot.swift in Sources */,
 				1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */,
-				1BA2D5B31CA1E1C90036ACCD /* Algorithms.swift in Sources */,
+				1BA2D5B31CA1E1C90036ACCD /* CenterPoint.swift in Sources */,
 				1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */,
 				1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */,
 				1BDBD0821B5C21BE0057B710 /* CircleViewController.swift in Sources */,
+				1B6EB4701CAD716D00B08F09 /* HyperbolicPolyline.swift in Sources */,
 				1BDBD0841B5C22740057B710 /* PoincareDisk.swift in Sources */,
 				1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */,
 				1BDBD0621B5C21370057B710 /* CircleLimit.xcdatamodeld in Sources */,
