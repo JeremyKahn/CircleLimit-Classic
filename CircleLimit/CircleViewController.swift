@@ -163,30 +163,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return poincareView.scale
     }
 
-    // MARK: Get the group you want
-    
-    // Returns all group elements (optionally followed by the mask) that might map the objects to intersect the disk of given radius around the origin
-//    func groupForDistanceCutoff(cutoffDistance: Double, withObjects objects: [HDrawable], withMask useMask: Bool) -> [Action] {
-//        let (center, objectRadius) = centerAndRadiusFor(objects)
-//        let maskOriginDistance = useMask ? mask.distance : 0.0
-//        let totalDistance = center.distanceToOrigin + maskOriginDistance + objectRadius + cutoffDistance
-//        var g = groupForDistance(totalDistance)
-//        
-//        if useMask {
-//            g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
-//        }
-//            
-//        let newRadius = cutoffDistance + objectRadius
-//        g = filterForCenterAndRadius(g, center: center, radius: newRadius)
-//        return g
-//    }
-//    
-//    func groupForMode(mode: Mode, withObjects objects: [HDrawable], withMask useMask: Bool ) -> [Action] {
-//        let myCutoff = cutoff[mode]!
-//        let distance = absToDistance(myCutoff)
-//        return groupForDistanceCutoff(distance, withObjects: objects, withMask: useMask)
-//    }
-    
+    // MARK: - Get the group you want
     func groupSystem(mode: Mode, objects: [HDrawable]) -> GroupSystem {
         let myCutoff = cutoff[mode]!
         let distance = absToDistance(myCutoff)
@@ -202,7 +179,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return groupSystem(cutoffDistance: distance, center: center, objects: objects, useMask: false)
     }
     
-    // TODO: Make a separate version where the center is the origin
     func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable], useMask: Bool) -> GroupSystem {
         let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
         let maskedCenter = useMask ? mask.inverse().appliedTo(center) : center
@@ -226,14 +202,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return result
     }
     
-//    func filterForCenterAndRadius(group: [Action], center: HPoint, radius: Double) -> [Action] {
-//        let startFilter = NSDate()
-//        let absCutoff = distanceToAbs(radius)
-//        let g = group.filter() { $0.motion.appliedTo(center).abs < absCutoff }
-//        let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
-//        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
-//        return g
-//    }
     
     func filterForTwoPointsAndDistance(group: [Action], point1: HPoint, point2: HPoint, distance: Double) -> [Action] {
         let startFilter = NSDate()
@@ -243,12 +211,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return g
     }
     
-//    func filteredByObject(group: [Action], objects: [HDrawable], center: HPoint, distance: Double) -> [(HDrawable, [Action])] {
-//        let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
-//        var prefilteredGroup = filterForTwoPointsAndDistance(group, point1: center, point2: objectsCenter, distance: distance + objectsRadius)
-//        var result: [(HDrawable, [Action])] = []
-//       return result
-//    }
     
     // TODO: Modify the center-and-radius algorithm to find the smallest disk containing a collection of disks, and use it here
     func centerAndRadiusFor(objects: [HDrawable]) -> (HPoint, Double) {
@@ -259,7 +221,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     
-    // MARK: Picture control
+    // MARK: - Picture control
+    // TODO: Undo with a shake, clear picture...with what?
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
         if motion == .MotionShake {
             clearPicture()
