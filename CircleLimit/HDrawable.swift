@@ -8,8 +8,15 @@
 
 import UIKit
 
+protocol Disked {
+    
+    var centerPoint: HPoint {get}
+    
+    var radius: Double {get}
+        
+}
 
-protocol HDrawable : class {
+protocol HDrawable: class, Disked {
     
     func copy() -> HDrawable
     
@@ -39,6 +46,8 @@ protocol HDrawable : class {
     var radius: Double {get}
     
 }
+
+
 
 extension HDrawable {
     

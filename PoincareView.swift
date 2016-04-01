@@ -9,10 +9,8 @@
 import UIKit
 
 protocol PoincareViewDataSource : class {
-    var objectsToDraw : [HDrawable] {get}
-    var groupToDraw : [Action] {get}
+    var groupSystemToDraw: GroupSystem {get}
     var multiplier : CGFloat {get}
-    var mode: CircleViewController.Mode {get}
     var cutoffDistance: Double {get}
 }
 
@@ -51,19 +49,10 @@ class PoincareView: UIView {
     
     let cgturn = CGFloat(2 * M_PI)
     
-    
     weak var dataSource : PoincareViewDataSource!
     
-    var objects: [HDrawable] {
-        return dataSource?.objectsToDraw ?? []
-    }
-    
-    var group: [Action] {
-        return dataSource?.groupToDraw ?? []
-    }
-    
-    var mode: CircleViewController.Mode {
-        return dataSource?.mode ?? CircleViewController.Mode.Usual
+    var groupSystem: GroupSystem {
+        return dataSource?.groupSystemToDraw ?? []
     }
     
     var baseScale : CGFloat {
@@ -87,7 +76,7 @@ class PoincareView: UIView {
     
     var testingIBDesignable = false
     
-    var tracingDrawRect = true
+    var tracingDrawRect = false
     
     var showRedCircle = true
     
@@ -98,24 +87,15 @@ class PoincareView: UIView {
         
         print("\nStarting drawRect", when: tracingDrawRect)
         let startTime = NSDate()
-        var filterTime = 0.0
-        let myGroup = group
-        print("In drawing mode: \(mode) with \(objects.count) objects and a group of size \(myGroup.count)", when: tracingDrawRect)
-        
+ 
         let gcontext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(gcontext, tf)
  
-     
 
-        for object in objects {
+        for (object, group) in groupSystem {
             
-            let startFilterTime = NSDate()
-            let objectGroup = object.filteredGroup(myGroup, cutoffDistance: cutoffDistance)
-            filterTime += 1000 * NSDate().timeIntervalSinceDate(startFilterTime)
-            
-            print("Drawing an object with a group of size \(objectGroup.count)",
-                  when: tracingDrawRect)
-            for action in objectGroup {
+            print("Drawing an object with a group of size \(group.count)", when: tracingDrawRect)
+            for action in group {
                      object.drawWithMaskAndAction(action)
             }
         }
@@ -135,7 +115,5 @@ class PoincareView: UIView {
         
         let timeToDrawInMilliseconds = NSDate().timeIntervalSinceDate(startTime) * 1000
         print("Finished with drawRect.  Time taken: \(timeToDrawInMilliseconds.int) ms", when: tracingDrawRect)
-        print("Filter time: \(filterTime.int) ms",
-              when: tracingDrawRect)
     }
 }

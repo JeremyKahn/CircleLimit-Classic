@@ -21,16 +21,17 @@ struct MatchedPoint {
     var mask: HyperbolicTransformation
 }
 
+typealias GroupSystem = [(HDrawable, [Action])]
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
     
     
     // MARK: Debugging variables
-    var tracingGroupMaking = true
+    var tracingGroupMaking = false
     
-    var tracingGesturesAndTouches = false
+    var tracingGesturesAndTouches = true
     
-    var trivialGroup = false
+    var trivialGroup = true
     
     //
     override func viewDidLoad() {
@@ -63,6 +64,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         // Right now this is just a guess
         let I = ColorNumberPermutation()
         searchingGroup = groupForIntegerDistance[5].filter() { $0.action == I }
+        
     }
     
     func selectElements(group: [Action], cutoff: Double) -> [Action] {
@@ -134,8 +136,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return fullDrawObjects
     }
     
-    var groupToDraw: [Action] {
-        return groupForMode(mode, withObjects: objectsToDraw, withMask: true)
+    var groupSystemToDraw: GroupSystem {
+        return groupSystem(mode, objects: objectsToDraw)
     }
     
     var multiplier = CGFloat(1.0)
@@ -164,35 +166,89 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: Get the group you want
     
     // Returns all group elements (optionally followed by the mask) that might map the objects to intersect the disk of given radius around the origin
-    func groupForDistanceCutoff(cutoffDistance: Double, withObjects objects: [HDrawable], withMask useMask: Bool) -> [Action] {
-        let (center, objectRadius) = centerAndRadiusFor(objects)
-        let maskOriginDistance = useMask ? mask.distance : 0.0
-        let totalDistance = center.distanceToOrigin + maskOriginDistance + objectRadius + cutoffDistance
-        var g = groupForDistance(totalDistance)
-        
-        if useMask {
-            g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
-        }
-            
-        let newRadius = cutoffDistance + objectRadius
-        g = filterForCenterAndRadius(g, center: center, radius: newRadius)
-        return g
-    }
+//    func groupForDistanceCutoff(cutoffDistance: Double, withObjects objects: [HDrawable], withMask useMask: Bool) -> [Action] {
+//        let (center, objectRadius) = centerAndRadiusFor(objects)
+//        let maskOriginDistance = useMask ? mask.distance : 0.0
+//        let totalDistance = center.distanceToOrigin + maskOriginDistance + objectRadius + cutoffDistance
+//        var g = groupForDistance(totalDistance)
+//        
+//        if useMask {
+//            g = g.map() { Action(M: mask.following($0.motion), P: $0.action) }
+//        }
+//            
+//        let newRadius = cutoffDistance + objectRadius
+//        g = filterForCenterAndRadius(g, center: center, radius: newRadius)
+//        return g
+//    }
+//    
+//    func groupForMode(mode: Mode, withObjects objects: [HDrawable], withMask useMask: Bool ) -> [Action] {
+//        let myCutoff = cutoff[mode]!
+//        let distance = absToDistance(myCutoff)
+//        return groupForDistanceCutoff(distance, withObjects: objects, withMask: useMask)
+//    }
     
-    func groupForMode(mode: Mode, withObjects objects: [HDrawable], withMask useMask: Bool ) -> [Action] {
+    func groupSystem(mode: Mode, objects: [HDrawable]) -> GroupSystem {
         let myCutoff = cutoff[mode]!
         let distance = absToDistance(myCutoff)
-        return groupForDistanceCutoff(distance, withObjects: objects, withMask: useMask)
+        return groupSystem(cutoffDistance: distance, objects: objects)
+    }
+
+    
+    func groupSystem(cutoffDistance distance: Double, objects: [HDrawable]) -> GroupSystem {
+        return groupSystem(cutoffDistance: distance, center: HPoint(), objects: objects, useMask: true)
     }
     
-    func filterForCenterAndRadius(group: [Action], center: HPoint, radius: Double) -> [Action] {
+    func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable]) -> GroupSystem {
+        return groupSystem(cutoffDistance: distance, center: center, objects: objects, useMask: false)
+    }
+    
+    // TODO: Make a separate version where the center is the origin
+    func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable], useMask: Bool) -> GroupSystem {
+        let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
+        let maskedCenter = useMask ? mask.inverse().appliedTo(center) : center
+        let totalDistance = objectsRadius + distance + maskedCenter.distanceToOrigin
+        var group = groupForDistance(totalDistance)
+    
+        if useMask {
+            group = group.map() { Action(M: mask.following($0.motion), P: $0.action) }
+        }
+        
+        let newRadius = distance + objectsRadius
+        group = filterForTwoPointsAndDistance(group, point1: center, point2: objectsCenter, distance: newRadius)
+        
+        var result: GroupSystem = []
+        for object in objects {
+            let objectGroup = filterForTwoPointsAndDistance(group, point1: center, point2: object.centerPoint, distance: distance + object.radius)
+            if objectGroup.count > 0 {
+                result.append((object, objectGroup))
+            }
+        }
+        return result
+    }
+    
+//    func filterForCenterAndRadius(group: [Action], center: HPoint, radius: Double) -> [Action] {
+//        let startFilter = NSDate()
+//        let absCutoff = distanceToAbs(radius)
+//        let g = group.filter() { $0.motion.appliedTo(center).abs < absCutoff }
+//        let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
+//        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
+//        return g
+//    }
+    
+    func filterForTwoPointsAndDistance(group: [Action], point1: HPoint, point2: HPoint, distance: Double) -> [Action] {
         let startFilter = NSDate()
-        let absCutoff = distanceToAbs(radius)
-        let g = group.filter() { $0.motion.appliedTo(center).abs < absCutoff }
+        let g = group.filter() { point1.liesWithin(distance)($0.motion.appliedTo(point2)) }
         let prefilterTime = NSDate().timeIntervalSinceDate(startFilter) * 1000
-        print("Prefilter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
+        print("Filter time: \(Int(prefilterTime)) milliseconds", when: tracingGroupMaking)
         return g
     }
+    
+//    func filteredByObject(group: [Action], objects: [HDrawable], center: HPoint, distance: Double) -> [(HDrawable, [Action])] {
+//        let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
+//        var prefilteredGroup = filterForTwoPointsAndDistance(group, point1: center, point2: objectsCenter, distance: distance + objectsRadius)
+//        var result: [(HDrawable, [Action])] = []
+//       return result
+//    }
     
     // TODO: Modify the center-and-radius algorithm to find the smallest disk containing a collection of disks, and use it here
     func centerAndRadiusFor(objects: [HDrawable]) -> (HPoint, Double) {
@@ -219,7 +275,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     
-    // MARK: Adding points and drawing
+    // MARK: - Adding points and drawing
     let drawRadius = 0.99
     
     func hPoint(rawLocation: CGPoint) -> HPoint? {
@@ -290,20 +346,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var printingTouches = true
     
     func nearbyPointsTo(point: HPoint, withinDistance distance: Double) -> [MatchedPoint] {
-        let totalDistance = distance + absToDistance(point.abs)
         let objects = drawObjects.filter() { $0 is HyperbolicPolygon }
-        let g = groupForDistanceCutoff(totalDistance, withObjects: objects, withMask: false)
+        let g = groupSystem(cutoffDistance: distance, center: point, objects: objects)
         var matchedPoints: [MatchedPoint] = []
-        for object in drawObjects {
+        for (object, group)  in g {
             let polygon = object as! HyperbolicPolygon
             
-            // filtering the group by object
-            let cutoffDistance = distance + object.radius
-            let objectGroup = g.filter() { point.liesWithin(cutoffDistance)($0.motion.appliedTo(object.centerPoint)) }
-                
-//                { point.distanceTo($0.motion.appliedTo(object.centerPoint)) < cutoffDistance }
-            
-            for a in objectGroup {
+            for a in group {
                 let indices = polygon.pointsNear(selectedPoint: point, withMask: a.motion, withinDistance: distance)
                 let matched = indices.map() { MatchedPoint(index: $0, polygon: polygon, mask: a.motion) }
                 matchedPoints += matched
@@ -353,7 +402,19 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         poincareView.setNeedsDisplay()
     }
     
-    // MARK: Gesture recognition
+    
+    // MARK: Adding a point to a line
+    func addPointToArcs(z: HPoint) {
+//        let objects = objectsToDraw.filter() { $0 is HyperbolicPolyline }
+//        
+//        let cutoffDistance = touchDistance
+//        let group = groupForDistanceCutoff(<#T##cutoffDistance: Double##Double#>, withObjects: <#T##[HDrawable]#>, withMask: <#T##Bool#>)
+//        let objectsAndGroups = filterForTwoPointsAndDistance(<#T##group: [Action]##[Action]#>, point1: <#T##HPoint#>, point2: <#T##HPoint#>, distance: <#T##Double#>)
+    }
+    
+    
+    
+    // MARK: - Gesture recognition
     
     @IBOutlet var panRecognizer: UIPanGestureRecognizer!
     
@@ -372,6 +433,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     //    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
     //        return gestureRecognizer === swipeRecognizer
     //    }
+    
+    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return gestureRecognizer != longPressRecognizer
+    }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer
@@ -480,7 +545,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     
     @IBAction func longPress(sender: UILongPressGestureRecognizer) {
-        
+        let z = hPoint(sender.locationInView(poincareView))
+        if z != nil {
+            addPointToArcs(z!)
+        }
     }
     
     func recomputeMask() {

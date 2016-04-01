@@ -8,6 +8,8 @@
 
 import UIKit
 
+// TODO: Replace Action with a lookup table with HyperbolicTransformation's as keys
+
 struct Action: Locatable {
     
     var motion: HyperbolicTransformation
