@@ -40,17 +40,17 @@ class HPoint : Equatable {
         return CGPoint(x: z.re, y: z.im)
     }
     
-    lazy var hyperbolicTransformation: HyperbolicTransformation = {
+    lazy var moveSelfToOrigin: HyperbolicTransformation = {
         return HyperbolicTransformation(a: self)
     }()
     
     func distanceTo(z: HPoint) -> Double {
-        return hyperbolicTransformation.appliedTo(z).distanceToOrigin
+        return moveSelfToOrigin.appliedTo(z).distanceToOrigin
     }
     
     func liesWithin(cutoff: Double) -> (HPoint -> Bool) {
         let absCutoff = distanceToAbs(cutoff)
-        let M = hyperbolicTransformation
+        let M = moveSelfToOrigin
         return { return M.appliedTo($0).abs < absCutoff }
     }
     
@@ -61,20 +61,37 @@ class HPoint : Equatable {
     }
     
     func distanceToLineThrough(a: HPoint, _ b: HPoint) -> Double {
-        let newB = a.hyperbolicTransformation.appliedTo(b)
-        return distanceToLineThroughOriginAnd(newB)
+        let newB = a.moveSelfToOrigin.appliedTo(b)
+        let newSelf = a.moveSelfToOrigin.appliedTo(self)
+        return newSelf.distanceToLineThroughOriginAnd(newB)
     }
     
     func distanceToArcThrough(a: HPoint, _ b: HPoint) -> Double {
-        let height = distanceToLineThrough(a, b)
-        let minSideLength = min(distanceTo(a), distanceTo(b))
-        return max(height, minSideLength)
+        if a.angleBetween(self, b).abs > Double.PI / 2 {
+            return distanceTo(a)
+        } else if b.angleBetween(self, a).abs > Double.PI / 2 {
+            return distanceTo(b)
+        }
+            return distanceToLineThrough(a, b)
+        }
+    
+    func angleBetween(a: HPoint, _ b: HPoint) -> Double {
+        let newA = moveSelfToOrigin.appliedTo(a)
+        let newB = moveSelfToOrigin.appliedTo(b)
+        return angleAtOriginBetween(newA, newB)
     }
 
 }
 
 func ==(lhs: HPoint, rhs: HPoint) -> Bool {
     return lhs.z == rhs.z
+}
+
+func angleAtOriginBetween(a: HPoint, _ b: HPoint) -> Double {
+    var theta = a.arg - b.arg
+    theta = theta > Double.PI ? theta - 2 * Double.PI : theta
+    theta = theta < -Double.PI ? theta + 2 * Double.PI : theta
+    return theta
 }
 
 func absToSinhDistance(a: Double) -> Double {

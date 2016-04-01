@@ -69,6 +69,13 @@ class HyperbolicPolygon: HyperbolicPolyline {
         return nearbyPoints
     }
     
+    
+    func sidesNear(selected point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        let maskedPoints = points.map() { mask.appliedTo($0) }
+        let indexArray = [Int](0..<points.count - 1)
+        let nearbySides = indexArray.filter() { point.distanceToArcThrough(maskedPoints[$0], maskedPoints[$0 + 1]) < distance }
+        return nearbySides
+    }
 }
 
 

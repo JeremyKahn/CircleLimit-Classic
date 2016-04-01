@@ -47,6 +47,12 @@ class HyperbolicDot : HDrawable {
         self.size = radius
     }
     
+    init(center: HPoint, radius: Double, color: UIColor) {
+        self.center = center
+        self.size = radius
+        self.color = color
+    }
+    
     init(center: HPoint) {
         self.center = center
     }

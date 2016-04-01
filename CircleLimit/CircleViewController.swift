@@ -29,7 +29,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: Debugging variables
     var tracingGroupMaking = false
     
-    var tracingGesturesAndTouches = true
+    var tracingGesturesAndTouches = false
     
     var trivialGroup = true
     
@@ -327,7 +327,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var matchedPoints: [MatchedPoint] = []
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesBegan") }
+        print("touchesBegan", when: tracingGesturesAndTouches)
         super.touchesBegan(touches, withEvent: event)
         guard touches.count == 1 else {return}
         print("Saving objects", when: tracingGesturesAndTouches)
@@ -337,6 +337,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             if let z = hPoint(touch.locationInView(poincareView)) {
                 let distance = touchDistance
                 matchedPoints = nearbyPointsTo(z, withinDistance: distance)
+                
+                if matchedPoints.count == 0 {
+                    addPointToArcs(z)
+                }
             }
         }
         touchesMoved(touches, withEvent: event)
@@ -357,7 +361,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if printingTouches { print("touchesEnded") }
+        print("touchesEnded", when:  tracingGesturesAndTouches)
         super.touchesEnded(touches, withEvent: event)
         touchesMoved(touches, withEvent: event)
         mode = .Usual
@@ -368,12 +372,23 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     // MARK: Adding a point to a line
     func addPointToArcs(z: HPoint) {
-//        let objects = objectsToDraw.filter() { $0 is HyperbolicPolyline }
-//        
-//        let cutoffDistance = touchDistance
-//        let group = groupForDistanceCutoff(<#T##cutoffDistance: Double##Double#>, withObjects: <#T##[HDrawable]#>, withMask: <#T##Bool#>)
-//        let objectsAndGroups = filterForTwoPointsAndDistance(<#T##group: [Action]##[Action]#>, point1: <#T##HPoint#>, point2: <#T##HPoint#>, distance: <#T##Double#>)
-    }
+        let objects = objectsToDraw.filter() { $0 is HyperbolicPolygon }
+        
+        let g = groupSystem(cutoffDistance: touchDistance, center: z, objects: objects)
+        
+        for (object, group) in g {
+            let polygon = object as! HyperbolicPolygon
+            
+            for a in group {
+                let indices = polygon.sidesNear(selected: z, withMask: a.motion, withinDistance: touchDistance)
+                for i in indices {
+                    polygon.insertPointAfterIndex(i, point: z)
+                    matchedPoints.append(MatchedPoint(index: i+1, polygon: polygon, mask: a.motion))
+                }
+            }
+        }
+        
+     }
     
     
     
@@ -509,8 +524,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     @IBAction func longPress(sender: UILongPressGestureRecognizer) {
         let z = hPoint(sender.locationInView(poincareView))
-        if z != nil {
-            addPointToArcs(z!)
+        if let point = z {
+            if tracingGesturesAndTouches {
+                drawObjects.append(HyperbolicDot(center: point, radius: touchDistance))
+            }
+            addPointToArcs(point)
         }
     }
     

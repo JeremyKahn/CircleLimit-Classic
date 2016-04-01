@@ -32,7 +32,7 @@ func bestSequenceTo(n: Int, toMinimizeSumOf f: (Int, Int) -> Int, withConstraint
         minimalSumTo[i] = bestSumToI
         bestSequenceTo[i] = bestSequenceTo[bestJ] + [i]
     }
-    print(bestSequenceTo[n])
+//    print(bestSequenceTo[n])
     return bestSequenceTo[n]
 }
 

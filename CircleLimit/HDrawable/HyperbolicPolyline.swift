@@ -81,20 +81,26 @@ class HyperbolicPolyline : HDrawable {
     func movePointAtIndex(i: Int, to p: HPoint) {
         assert(p.abs <= 1)
         points[i] = p
-        update()
+        updateAndComplete()
     }
     
     func insertPointAfterIndex(i: Int, point: HPoint) {
         assert(point.abs <= 1)
         assert(points.count > i)
         points.insert(point, atIndex: i + 1)
+        updateAndComplete()
+    }
+    
+    func updateAndComplete() {
         update()
+        complete()
     }
     
     func update() {
         (centerPoint, radius) = centerPointAndRadius(points, delta: 0.1, startingAt: centerPoint)
     }
     
+    // TODO: Remove redundant points from the list of points
     func complete() {
         buildSubsequenceTable()
     }
@@ -272,7 +278,7 @@ class HyperbolicPolyline : HDrawable {
     }
     
     func buildSubsequenceTable() {
-        print(points)
+//        print(points)
         for i in 0...HyperbolicPolyline.maxScaleIndex {
             scaleIndex = i
             subsequenceTable[i] = simplifyingSubsequenceIndices()
@@ -280,7 +286,6 @@ class HyperbolicPolyline : HDrawable {
     }
     
     func simplifyingSubsequenceIndices() -> [Int] {
-        print("distanceTolerance: \(distanceTolerance)")
         return bestSequenceTo(points.count - 1, toMinimizeSumOf: { (x: Int, y: Int) -> Int in
             return 1
             }, withConstraint: canReplaceWithStraightLine)
