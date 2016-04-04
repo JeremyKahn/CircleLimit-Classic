@@ -10,11 +10,17 @@ import UIKit
 
 class HyperbolicPolyline : HDrawable {
     
+    var observingAllChanges = false
+    
     var centerPoint = HPoint()
     
     var radius: Double = 0
     
-    var points: [HPoint] = []
+    var points: [HPoint] = [] {
+        didSet {
+            print("Polygon points now \(points)", when: observingAllChanges)
+        }
+    }
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
@@ -88,6 +94,11 @@ class HyperbolicPolyline : HDrawable {
         assert(point.abs <= 1)
         assert(points.count > i)
         points.insert(point, atIndex: i + 1)
+        updateAndComplete()
+    }
+    
+    func insertPointsAfterIndices(instructions: [(Int, HPoint)]) {
+        points.insertAfterIndices(instructions)
         updateAndComplete()
     }
     
@@ -260,9 +271,10 @@ class HyperbolicPolyline : HDrawable {
         }
         else {
             let M = HyperbolicTransformation(a: points[j])
-            var normalizedPoints : [radialDistanceCache] = []
+            var normalizedPoints: [radialDistanceCache] = []
             for k in 0..<j {
-                normalizedPoints.append(radialDistanceCache(z: M.appliedTo(points[k])))
+                let rDC = radialDistanceCache(z: M.appliedTo(points[k]))
+                normalizedPoints.append(rDC)
             }
             // the next line is an idiom to make the array the correct size
             canReplaceWithStraightLineCache = [Bool](count: j, repeatedValue: true)

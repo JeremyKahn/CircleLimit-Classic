@@ -25,10 +25,16 @@ func print(s: String, when condition: Bool) {
     }
 }
 
-extension Double {
+protocol NicelyPrinting {
     
-    func nice() -> String {
-        return String(format: "%.2f", self)
+    var nice: String {get}
+    
+}
+
+extension Double: NicelyPrinting {
+    
+    var nice: String {
+        return String(format: "%.3f", self)
     }
     
     var int: Int {
@@ -39,4 +45,28 @@ extension Double {
 
 func asinh(y: Double) -> Double {
     return log(y + sqrt(y * y + 1))
+}
+
+extension Array {
+    
+    mutating func insertAtIndices(instructions: [(Int, Element)]) {
+        let sorted = instructions.sort() { $0.0 < $1.0  }
+        for i in 0..<sorted.count {
+            let (j, a) = sorted[i]
+            insert(a, atIndex: j + i)
+        }
+    }
+    
+    mutating func insertAfterIndices(instructions: [(Int, Element)]) {
+        let incremented = instructions.map() { ($0.0 + 1, $0.1) }
+        insertAtIndices(incremented)
+    }
+
+}
+
+extension Complex where T : NicelyPrinting {
+    var nice: String {
+        let plus = im.isSignMinus ? "" : "+"
+        return "(\(re.nice)\(plus)\(im.nice).i)"
+    }
 }

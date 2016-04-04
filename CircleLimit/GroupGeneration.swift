@@ -102,8 +102,8 @@ func pqrGeneratorsAndGuidelines(p: Int, q: Int, r: Int) -> ([HyperbolicTransform
     let RTB = A2.following(TB)
     let RQ = HyperbolicTransformation(rotationInRadians: 2 * qq)
     let RR = HyperbolicTransformation(rotationInRadians: 2 * rr)
-    let B = TC.following(RQ).following(TC.inverse())
-    let C = RTB.following(RR).following(RTB.inverse())
+    let B = TC.following(RQ).following(TC.inverse)
+    let C = RTB.following(RR).following(RTB.inverse)
     let identity = HyperbolicTransformation.identity
     assert(A.toThe(p) == identity)
     assert(B.toThe(q) == identity)

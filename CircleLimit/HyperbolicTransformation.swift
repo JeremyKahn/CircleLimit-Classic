@@ -71,12 +71,15 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         return HPoint(appliedTo(z.z))
     }
     
-    func inverse() -> HyperbolicTransformation {
-        return HyperbolicTransformation(a: -a * lambda, lambda: lambda.conj)
-    }
+    var inverse: HyperbolicTransformation
+        { return HyperbolicTransformation(a: -self.a * self.lambda, lambda: self.lambda.conj) }
+    
+//    func inverse() -> HyperbolicTransformation {
+//        return HyperbolicTransformation(a: -a * lambda, lambda: lambda.conj)
+//    }
     
     func following(B: HyperbolicTransformation) -> HyperbolicTransformation {
-        let tZ = B.inverse().appliedTo(a)
+        let tZ = B.inverse.appliedTo(a)
         var u = Complex64(1.0, 0.0) + a.conj * B.a * B.lambda
         u = u.conj / u
         u *= lambda * B.lambda
@@ -120,7 +123,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     }
     
     func nearTo(B:HyperbolicTransformation, tolerance: Double) -> Bool {
-        let E = self.following(B.inverse())
+        let E = self.following(B.inverse)
         return E.closeToIdentity(tolerance)
     }
     

@@ -8,13 +8,17 @@
 
 import UIKit
 
-class HPoint : Equatable {
+class HPoint : Equatable, CustomStringConvertible {
     
     init() { self.z = 0.i }
     
     init(_ z: Complex64) {self.z = z}
     
     var z: Complex64
+    
+    var description: String {
+        return z.nice
+    }
     
     var abs: Double {
         return z.abs
@@ -134,7 +138,7 @@ extension Double {
 
 func geodesicArcCenterRadiusStartEnd(a: HPoint, b: HPoint) -> (Complex64, Double, Double, Double, Bool) {
     let M = HyperbolicTransformation(a: a)
-    let M_inverse = M.inverse()
+    let M_inverse = M.inverse
     let bPrime = M.appliedTo(b)
     var (u, v) = (-bPrime.z/bPrime.abs, bPrime.z/bPrime.abs)
     (u, v) = (M_inverse.appliedTo(u), M_inverse.appliedTo(v))

@@ -1,4 +1,4 @@
-//  ZOMBIES ARE ENABLED
+//
 //
 //  CircleViewController.swift
 //  CircleLimit
@@ -31,9 +31,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var tracingGesturesAndTouches = false
     
-    var trivialGroup = true
+    var trivialGroup = false
     
-    //
+    // MARK: Basic overrides
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         print("CircleViewController loaded")
@@ -73,6 +77,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return a
     }
     
+    // MARK: - General properties
     var guidelines : [HDrawable] = []
     
     var drawGuidelines = true
@@ -122,7 +127,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var touchDistance: Double {
         let m = Double(multiplier)
         let baseTouchDistance = 0.2
-        let exponent = 0.5
+        let exponent = 0.25
         return baseTouchDistance/pow(m, 1 - exponent)
     }
     
@@ -181,7 +186,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable], useMask: Bool) -> GroupSystem {
         let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
-        let maskedCenter = useMask ? mask.inverse().appliedTo(center) : center
+        let maskedCenter = useMask ? mask.inverse.appliedTo(center) : center
         let totalDistance = objectsRadius + distance + maskedCenter.distanceToOrigin
         var group = groupForDistance(totalDistance)
     
@@ -248,7 +253,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         //        print("New point: " + x.nice() + " " + y.nice())
         if x * x + y * y < drawRadius * drawRadius {
             let z = HPoint(x + y.i)
-            return mask.inverse().appliedTo(z)
+            return mask.inverse.appliedTo(z)
         }
         else {
             return nil
@@ -330,6 +335,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         print("touchesBegan", when: tracingGesturesAndTouches)
         super.touchesBegan(touches, withEvent: event)
         guard touches.count == 1 else {return}
+        if formingPolygon {return}
         print("Saving objects", when: tracingGesturesAndTouches)
         oldDrawObjects = drawObjects.map() { $0.copy() }
         mode = .Moving
@@ -350,10 +356,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         //        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         guard touches.count == 1 else {return}
+        if formingPolygon {return}
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
                 for m in matchedPoints {
-                    m.polygon.movePointAtIndex(m.index, to: m.mask.inverse().appliedTo(z))
+                    m.polygon.movePointAtIndex(m.index, to: m.mask.inverse.appliedTo(z))
                 }
             }
         }
@@ -363,6 +370,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesEnded", when:  tracingGesturesAndTouches)
         super.touchesEnded(touches, withEvent: event)
+        if formingPolygon {return}
         touchesMoved(touches, withEvent: event)
         mode = .Usual
         oldDrawObjects = []
@@ -379,16 +387,23 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         for (object, group) in g {
             let polygon = object as! HyperbolicPolygon
             
+            var instructions: [(Int, HPoint, HyperbolicTransformation)] = []
             for a in group {
                 let indices = polygon.sidesNear(selected: z, withMask: a.motion, withinDistance: touchDistance)
-                for i in indices {
-                    polygon.insertPointAfterIndex(i, point: z)
-                    matchedPoints.append(MatchedPoint(index: i+1, polygon: polygon, mask: a.motion))
+                if indices.count == 0 { continue }
+                if indices.count > 1 {
+                    print("Matched more than one side in a single polygon: \(indices)")
                 }
+                instructions.append((indices[0], a.motion.inverse.appliedTo(z), a.motion))
+            }
+            polygon.insertPointsAfterIndices(instructions.map({($0.0, $0.1)}))
+            instructions.sortInPlace() { $0.0 < $1.0 }
+            for i in 0..<instructions.count {
+                let (index, _ , pointMask) = instructions[i]
+                matchedPoints.append(MatchedPoint(index: index + i + 1, polygon: polygon, mask: pointMask))
             }
         }
-        
-     }
+    }
     
     
     
@@ -541,7 +556,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         repeat {
             foundBetter = false
             for E in searchingGroup  {
-                let newMask = mask.following(E.motion.inverse())  // Let's try it
+                let newMask = mask.following(E.motion.inverse)  // Let's try it
                 if  newMask.a.abs < bestA {
                     foundBetter = true
                     bestA = newMask.a.abs

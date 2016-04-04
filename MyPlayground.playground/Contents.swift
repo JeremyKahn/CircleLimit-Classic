@@ -1,26 +1,9 @@
 //: Playground - noun: a place where people can play
 
-protocol A {}
+var x = [0, 1, 2, 3]
 
-protocol B {}
+x.insert(7, atIndex: 4)
 
-class C: A, B {}
-
-var x: Int = 0
-
-func hello(_: A) {
-    x = 1
-}
-
-hello(C())
-
-x
-
-func hello(_: B) {
-    x = 2
-}
-
-hello(C())
 
 
 

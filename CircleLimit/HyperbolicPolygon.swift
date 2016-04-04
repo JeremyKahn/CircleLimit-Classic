@@ -76,6 +76,8 @@ class HyperbolicPolygon: HyperbolicPolyline {
         let nearbySides = indexArray.filter() { point.distanceToArcThrough(maskedPoints[$0], maskedPoints[$0 + 1]) < distance }
         return nearbySides
     }
+    
+    
 }
 
 

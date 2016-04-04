@@ -30,7 +30,7 @@ func centerPointAndRadius(points: [HPoint], delta: Double, startingAt startPoint
         }
     } while !finished
     //    print("Number of iterations: \(numberOfIterations)")
-    return (M.inverse().appliedTo(HPoint()), radius)
+    return (M.inverse.appliedTo(HPoint()), radius)
 }
 
 
