@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "334"
+            endingLineNumber = "334"
             landmarkName = "CircleViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481498161.50246"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "463"
-            endingLineNumber = "463"
+            startingLineNumber = "465"
+            endingLineNumber = "465"
             landmarkName = "undo(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481498161.50246"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "520"
-            endingLineNumber = "520"
+            startingLineNumber = "522"
+            endingLineNumber = "522"
             landmarkName = "singleTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481498161.50246"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "530"
-            endingLineNumber = "530"
+            startingLineNumber = "532"
+            endingLineNumber = "532"
             landmarkName = "doubleTap(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
+            startingLineNumber = "374"
+            endingLineNumber = "374"
             landmarkName = "touchesEnded(_:withEvent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "nearbyPointsTo(_:withinDistance:)"
             landmarkType = "5">
             <Locations>
@@ -102,30 +102,30 @@
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "CircleLimit.CircleViewController.nearbyPointsTo (CircleLimit.Complex&lt;Swift.Double&gt;, withinDistance : Swift.Double) -&gt; Swift.Array&lt;CircleLimit.MatchedPoint&gt;"
+                  symbolName = "CircleLimit.CircleViewController.nearbyPointsTo (CircleLimit.HPoint, withinDistance : Swift.Double) -&gt; Swift.Array&lt;CircleLimit.MatchedPoint&gt;"
                   moduleName = "CircleLimit"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jkahn/Dropbox/iPhone%20apps/CircleLimit/CircleLimit/CircleViewController.swift"
-                  timestampString = "481061493.271595"
+                  timestampString = "481599297.201003"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "294"
-                  endingLineNumber = "294"
-                  offsetFromSymbolStart = "120">
+                  startingLineNumber = "319"
+                  endingLineNumber = "319"
+                  offsetFromSymbolStart = "44">
                </Location>
                <Location
                   shouldBeEnabled = "No"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
-                  symbolName = "CircleLimit.CircleViewController.(nearbyPointsTo (CircleLimit.Complex&lt;Swift.Double&gt;, withinDistance : Swift.Double) -&gt; Swift.Array&lt;CircleLimit.MatchedPoint&gt;).(closure #1)"
+                  symbolName = "CircleLimit.CircleViewController.(nearbyPointsTo (CircleLimit.HPoint, withinDistance : Swift.Double) -&gt; Swift.Array&lt;CircleLimit.MatchedPoint&gt;).(closure #1)"
                   moduleName = "CircleLimit"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/jkahn/Dropbox/iPhone%20apps/CircleLimit/CircleLimit/CircleViewController.swift"
-                  timestampString = "481061493.271711"
+                  timestampString = "481599297.201254"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "294"
-                  endingLineNumber = "294"
+                  startingLineNumber = "319"
+                  endingLineNumber = "319"
                   offsetFromSymbolStart = "20">
                </Location>
             </Locations>
@@ -142,9 +142,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "77"
-            endingLineNumber = "77"
-            landmarkName = "sidesNear(selected:withMask:withinDistance:)"
-            landmarkType = "5">
+            endingLineNumber = "77">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -154,11 +152,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/PoincareDisk.swift"
-            timestampString = "481486706.601673"
+            timestampString = "481602179.664197"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "74"
-            endingLineNumber = "74"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
             landmarkName = "distanceToArcThrough(_:_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -174,9 +172,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "sidesNear(selected:withMask:withinDistance:)"
-            landmarkType = "5">
+            endingLineNumber = "76">
             <Locations>
                <Location
                   shouldBeEnabled = "No"
@@ -218,11 +214,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/PoincareDisk.swift"
-            timestampString = "481486706.601673"
+            timestampString = "481602179.664197"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "95"
-            endingLineNumber = "95"
+            startingLineNumber = "99"
+            endingLineNumber = "99"
             landmarkName = "angleAtOriginBetween(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -234,11 +230,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/PoincareDisk.swift"
-            timestampString = "481486706.601673"
+            timestampString = "481602179.664197"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
+            startingLineNumber = "89"
+            endingLineNumber = "89"
             landmarkName = "angleBetween(_:_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -250,11 +246,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "394"
-            endingLineNumber = "394"
+            startingLineNumber = "396"
+            endingLineNumber = "396"
             landmarkName = "addPointToArcs(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -266,11 +262,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "347"
-            endingLineNumber = "347"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
             landmarkName = "touchesBegan(_:withEvent:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -282,11 +278,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481490981.157173"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "395"
-            endingLineNumber = "395"
+            startingLineNumber = "397"
+            endingLineNumber = "397"
             landmarkName = "addPointToArcs(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -342,7 +338,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/HDrawable/HyperbolicPolyline.swift"
@@ -366,15 +362,13 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "draw()"
-            landmarkType = "5">
+            endingLineNumber = "34">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/HDrawable/HyperbolicPolyline.swift"
@@ -394,12 +388,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CircleLimit/CircleViewController.swift"
-            timestampString = "481491318.950893"
+            timestampString = "481597006.664911"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
+            startingLineNumber = "337"
+            endingLineNumber = "337"
             landmarkName = "touchesBegan(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "CircleLimit/CircleViewController.swift"
+            timestampString = "481597242.824885"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "320"
+            endingLineNumber = "320"
+            landmarkName = "nearbyPointsTo(_:withinDistance:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

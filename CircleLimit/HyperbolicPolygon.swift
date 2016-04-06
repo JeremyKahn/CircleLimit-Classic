@@ -57,21 +57,21 @@ class HyperbolicPolygon: HyperbolicPolyline {
         }
         totalPath.lineCapStyle = CGLineCap.Round
         totalPath.fill()
-        borderPaths.map() { $0.stroke() }
+        borderPaths.map { $0.stroke() }
         if points.count == 1 { super.draw() }
     }
     
     // Actually returns the indices of the nearby points
-    func pointsNear(selectedPoint point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
-        let maskedPoints = points.map() { mask.appliedTo($0) }
+    func pointsNear(point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        let maskedPoints = points.map { mask.appliedTo($0) }
         let indexArray = [Int](0..<points.count)
         let nearbyPoints = indexArray.filter() { point.distanceTo(maskedPoints[$0]) < distance }
         return nearbyPoints
     }
     
     
-    func sidesNear(selected point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
-        let maskedPoints = points.map() { mask.appliedTo($0) }
+    func sidesNear(point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        let maskedPoints = points.map { mask.appliedTo($0) }
         let indexArray = [Int](0..<points.count - 1)
         let nearbySides = indexArray.filter() { point.distanceToArcThrough(maskedPoints[$0], maskedPoints[$0 + 1]) < distance }
         return nearbySides

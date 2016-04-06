@@ -58,7 +58,7 @@ extension Array {
     }
     
     mutating func insertAfterIndices(instructions: [(Int, Element)]) {
-        let incremented = instructions.map() { ($0.0 + 1, $0.1) }
+        let incremented = instructions.map { ($0.0 + 1, $0.1) }
         insertAtIndices(incremented)
     }
 

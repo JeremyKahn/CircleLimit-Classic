@@ -71,6 +71,10 @@ class HPoint : Equatable, CustomStringConvertible {
     }
     
     func distanceToArcThrough(a: HPoint, _ b: HPoint) -> Double {
+        let accuracy = 0.000001
+        if a.distanceTo(b) < accuracy {
+            return distanceTo(a)
+        }
         if a.angleBetween(self, b).abs > Double.PI / 2 {
             return distanceTo(a)
         } else if b.angleBetween(self, a).abs > Double.PI / 2 {

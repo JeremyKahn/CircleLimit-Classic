@@ -170,8 +170,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
 
     // MARK: - Get the group you want
     func groupSystem(mode: Mode, objects: [HDrawable]) -> GroupSystem {
-        let myCutoff = cutoff[mode]!
-        let distance = absToDistance(myCutoff)
+        let zoomAbs = 2.0 / Double(multiplier)
+        let cutoffAbs = min(zoomAbs, cutoff[mode]!)
+        let distance = absToDistance(cutoffAbs)
         return groupSystem(cutoffDistance: distance, objects: objects)
     }
 
@@ -180,18 +181,19 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return groupSystem(cutoffDistance: distance, center: HPoint(), objects: objects, useMask: true)
     }
     
+    // This one is intended for touch matching
     func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable]) -> GroupSystem {
         return groupSystem(cutoffDistance: distance, center: center, objects: objects, useMask: false)
     }
     
     func groupSystem(cutoffDistance distance: Double, center: HPoint, objects: [HDrawable], useMask: Bool) -> GroupSystem {
         let (objectsCenter, objectsRadius) = centerAndRadiusFor(objects)
-        let maskedCenter = useMask ? mask.inverse.appliedTo(center) : center
-        let totalDistance = objectsRadius + distance + maskedCenter.distanceToOrigin
+        let maskDistance = useMask ? mask.distance : 0.0
+        let totalDistance = objectsRadius + distance + center.distanceToOrigin + objectsCenter.distanceToOrigin + maskDistance
         var group = groupForDistance(totalDistance)
     
         if useMask {
-            group = group.map() { Action(M: mask.following($0.motion), P: $0.action) }
+            group = group.map { Action(M: mask.following($0.motion), P: $0.action) }
         }
         
         let newRadius = distance + objectsRadius
@@ -219,7 +221,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     // TODO: Modify the center-and-radius algorithm to find the smallest disk containing a collection of disks, and use it here
     func centerAndRadiusFor(objects: [HDrawable]) -> (HPoint, Double) {
-        let centers = objects.map() {$0.centerPoint}
+        let centers = objects.map {$0.centerPoint}
         let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
         let totalRadius = objects.reduce(0) {max($0, $1.centerPoint.distanceTo(center) + $1.radius ) }
         return (center, totalRadius)
@@ -321,8 +323,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             let polygon = object as! HyperbolicPolygon
             
             for a in group {
-                let indices = polygon.pointsNear(selectedPoint: point, withMask: a.motion, withinDistance: distance)
-                let matched = indices.map() { MatchedPoint(index: $0, polygon: polygon, mask: a.motion) }
+                let indices = polygon.pointsNear(point, withMask: a.motion, withinDistance: distance)
+                let matched = indices.map { MatchedPoint(index: $0, polygon: polygon, mask: a.motion) }
                 matchedPoints += matched
             }
         }
@@ -337,7 +339,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         guard touches.count == 1 else {return}
         if formingPolygon {return}
         print("Saving objects", when: tracingGesturesAndTouches)
-        oldDrawObjects = drawObjects.map() { $0.copy() }
+        oldDrawObjects = drawObjects.map { $0.copy() }
         mode = .Moving
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
@@ -389,7 +391,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             
             var instructions: [(Int, HPoint, HyperbolicTransformation)] = []
             for a in group {
-                let indices = polygon.sidesNear(selected: z, withMask: a.motion, withinDistance: touchDistance)
+                let indices = polygon.sidesNear(z, withMask: a.motion, withinDistance: touchDistance)
                 if indices.count == 0 { continue }
                 if indices.count > 1 {
                     print("Matched more than one side in a single polygon: \(indices)")

@@ -10,7 +10,7 @@ import UIKit
 
 class HyperbolicPolyline : HDrawable {
     
-    var observingAllChanges = false
+    var observingAllChanges = true
     
     var centerPoint = HPoint()
     

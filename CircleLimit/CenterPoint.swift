@@ -13,14 +13,14 @@ func centerPointAndRadius(points: [HPoint], delta: Double, startingAt startPoint
         return (HPoint(), 0.0)
     }
     var M = HyperbolicTransformation(a: startPoint)
-    var movingPoints = points.map() { M.appliedTo($0) }
+    var movingPoints = points.map { M.appliedTo($0) }
     var finished = false
     var motion: HyperbolicTransformation
     var radius: Double
     var numberOfIterations = 0
     repeat {
         (motion, finished, radius) = wayToShiftFinishedAndRadius(movingPoints, delta: delta)
-        movingPoints = movingPoints.map() { motion.appliedTo($0) }
+        movingPoints = movingPoints.map { motion.appliedTo($0) }
         M = motion.following(M)
         numberOfIterations += 1
         if numberOfIterations > 1000 {

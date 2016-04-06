@@ -42,10 +42,10 @@
 /* Begin PBXFileReference section */
 		1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicDot.swift; sourceTree = "<group>"; };
 		1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HyperbolicPolyline.swift; path = HDrawable/HyperbolicPolyline.swift; sourceTree = "<group>"; };
-		1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicPolygon.swift; sourceTree = "<group>"; };
+		1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HyperbolicPolygon.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1B6EB4741CAD727700B08F09 /* HDrawable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HDrawable.swift; sourceTree = "<group>"; };
-		1B740F991C06A2FC0082BC4C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		1BA2D5B21CA1E1C90036ACCD /* CenterPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterPoint.swift; sourceTree = "<group>"; };
+		1B740F991C06A2FC0082BC4C /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Extensions.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1BA2D5B21CA1E1C90036ACCD /* CenterPoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CenterPoint.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1BC1B2BF1C3D702D00FF17C6 /* LocationTable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTable.swift; sourceTree = "<group>"; };
 		1BC1B2C11C3D713300FF17C6 /* HyperbolicTransformation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicTransformation.swift; sourceTree = "<group>"; };
 		1BC1B2C31C3D71B400FF17C6 /* GroupGeneration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupGeneration.swift; sourceTree = "<group>"; };
@@ -59,7 +59,7 @@
 		1BDBD0711B5C21370057B710 /* CircleLimitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CircleLimitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BDBD0761B5C21370057B710 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1BDBD0771B5C21370057B710 /* CircleLimitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleLimitTests.swift; sourceTree = "<group>"; };
-		1BDBD0811B5C21BE0057B710 /* CircleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleViewController.swift; sourceTree = "<group>"; };
+		1BDBD0811B5C21BE0057B710 /* CircleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CircleViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1BDBD0831B5C22740057B710 /* PoincareDisk.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PoincareDisk.swift; sourceTree = "<group>"; };
 		1BDBD0891B5C2BEA0057B710 /* Complex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Complex.swift; path = ../Complex.swift; sourceTree = "<group>"; };
 		1BDBD08E1B5C43590057B710 /* PoincareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PoincareView.swift; path = ../PoincareView.swift; sourceTree = "<group>"; };
