@@ -396,7 +396,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                 if indices.count > 1 {
                     print("Matched more than one side in a single polygon: \(indices)")
                 }
-                instructions.append((indices[0], a.motion.inverse.appliedTo(z), a.motion))
+                for index in indices {
+                    instructions.append((index, a.motion.inverse.appliedTo(z), a.motion))
+                }
             }
             polygon.insertPointsAfterIndices(instructions.map({($0.0, $0.1)}))
             instructions.sortInPlace() { $0.0 < $1.0 }
