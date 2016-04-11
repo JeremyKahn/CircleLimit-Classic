@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="eRu-5p-QEF">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Color View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="sixyFour" useStoryboardIdentifierAsRestorationIdentifier="YES" id="BYZ-38-t0r" customClass="ColorViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uri-TI-j4Z" customClass="ColorView" customModule="CircleLimit" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="20" width="375" height="647"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="lhR-dK-Epb" appends="YES" id="Voy-2Q-aAS"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="Uri-TI-j4Z" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="0X6-O8-30a"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Uri-TI-j4Z" secondAttribute="trailing" constant="-16" id="1D7-Cw-SaZ"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="Uri-TI-j4Z" secondAttribute="bottom" id="76h-3l-A7X"/>
+                            <constraint firstItem="Uri-TI-j4Z" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="WrW-BR-zbX"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="lhR-dK-Epb" appends="YES" id="yE7-js-aFp"/>
+                        </connections>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="colorView" destination="Uri-TI-j4Z" id="HtT-pw-fR3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="lhR-dK-Epb">
+                    <connections>
+                        <segue destination="cE9-vf-sdA" kind="presentation" id="3kT-29-La3"/>
+                    </connections>
+                </swipeGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="947.5" y="363.5"/>
+        </scene>
+        <!--Gradient View Controller-->
+        <scene sceneID="mtH-cD-Osa">
+            <objects>
+                <viewController storyboardIdentifier="gradientOne" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cE9-vf-sdA" customClass="GradientViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ji1-cZ-SgA"/>
+                        <viewControllerLayoutGuide type="bottom" id="1RK-k5-a4v"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="ezi-Qh-0v5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HDr-8t-hfi">
+                                <rect key="frame" x="54" y="45" width="276" height="258"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="258" id="9gG-aP-48k"/>
+                                </constraints>
+                            </view>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="lJ8-ah-hse">
+                                <rect key="frame" x="52" y="361" width="280" height="31"/>
+                                <connections>
+                                    <action selector="adjustBrightness:" destination="cE9-vf-sdA" eventType="valueChanged" id="FDU-H6-EGZ"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="HDr-8t-hfi" firstAttribute="top" secondItem="ji1-cZ-SgA" secondAttribute="bottom" constant="25" id="397-UA-xut"/>
+                            <constraint firstItem="lJ8-ah-hse" firstAttribute="leading" secondItem="HDr-8t-hfi" secondAttribute="leading" id="Po9-pa-P8W"/>
+                            <constraint firstItem="lJ8-ah-hse" firstAttribute="trailing" secondItem="HDr-8t-hfi" secondAttribute="trailing" id="aic-1U-24x"/>
+                            <constraint firstItem="lJ8-ah-hse" firstAttribute="top" secondItem="HDr-8t-hfi" secondAttribute="bottom" constant="58" id="bMH-3a-Yi8"/>
+                            <constraint firstItem="HDr-8t-hfi" firstAttribute="leading" secondItem="ezi-Qh-0v5" secondAttribute="leadingMargin" constant="38" id="rC8-Xf-vAs"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="HDr-8t-hfi" secondAttribute="trailing" constant="29" id="vrc-vl-FLI"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="gradientView" destination="HDr-8t-hfi" id="OlB-2G-0Dm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="04Q-2P-NiU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1439.5" y="363.5"/>
+        </scene>
+        <!--Triangle View Controller-->
+        <scene sceneID="dB1-bZ-ig9">
+            <objects>
+                <viewController storyboardIdentifier="colorPickerController" id="eRu-5p-QEF" customClass="TriangleViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="6GU-Mx-Xbi"/>
+                        <viewControllerLayoutGuide type="bottom" id="lfI-KD-cLg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tt6-gS-hRc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="daU-Ur-wRt" customClass="TriangleView" customModule="CircleLimit" customModuleProvider="target">
+                                <rect key="frame" x="16" y="28" width="343" height="343"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="daU-Ur-wRt" secondAttribute="height" multiplier="1:1" id="xCv-6b-PRT"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="sizeMultiplier">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0zN-4b-rwE" customClass="LightnessGradientView" customModule="CircleLimit" customModuleProvider="target">
+                                <rect key="frame" x="16" y="389" width="343" height="60"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="vAU-5x-hAr"/>
+                                </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="GKQ-I7-Zdd" appends="YES" id="KFe-MQ-PXS"/>
+                                </connections>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rpi-8L-59N">
+                                <rect key="frame" x="12" y="469" width="347" height="178"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="EUT-1s-5xg" appends="YES" id="n8u-p9-X8B"/>
+                                    <outletCollection property="gestureRecognizers" destination="4SC-Lm-Udm" appends="YES" id="96i-19-aBp"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="daU-Ur-wRt" firstAttribute="leading" secondItem="tt6-gS-hRc" secondAttribute="leadingMargin" id="09G-SY-Cob"/>
+                            <constraint firstItem="Rpi-8L-59N" firstAttribute="top" secondItem="0zN-4b-rwE" secondAttribute="bottom" constant="20" id="1FT-cP-qhI"/>
+                            <constraint firstItem="daU-Ur-wRt" firstAttribute="top" secondItem="6GU-Mx-Xbi" secondAttribute="bottom" constant="8" id="2ca-Ch-rsG"/>
+                            <constraint firstItem="Rpi-8L-59N" firstAttribute="trailing" secondItem="tt6-gS-hRc" secondAttribute="trailingMargin" id="8j9-hC-0iu"/>
+                            <constraint firstItem="lfI-KD-cLg" firstAttribute="top" secondItem="Rpi-8L-59N" secondAttribute="bottom" constant="20" id="9ou-Bf-JLK"/>
+                            <constraint firstItem="0zN-4b-rwE" firstAttribute="trailing" secondItem="tt6-gS-hRc" secondAttribute="trailingMargin" id="BLM-Xj-Dph"/>
+                            <constraint firstItem="0zN-4b-rwE" firstAttribute="leading" secondItem="tt6-gS-hRc" secondAttribute="leadingMargin" id="DTy-9t-z8W"/>
+                            <constraint firstItem="0zN-4b-rwE" firstAttribute="top" secondItem="daU-Ur-wRt" secondAttribute="bottom" constant="18" id="EXU-QN-lVE"/>
+                            <constraint firstItem="Rpi-8L-59N" firstAttribute="leading" secondItem="tt6-gS-hRc" secondAttribute="leadingMargin" constant="-4" id="K5q-pz-7Mb"/>
+                            <constraint firstItem="daU-Ur-wRt" firstAttribute="trailing" secondItem="tt6-gS-hRc" secondAttribute="trailingMargin" id="xlC-e2-69m"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="lightnessGradientView" destination="0zN-4b-rwE" id="0zy-Zi-kdA"/>
+                        <outlet property="previewContainer" destination="Rpi-8L-59N" id="3Ng-2d-SmH"/>
+                        <outlet property="triangleView" destination="daU-Ur-wRt" id="49r-zJ-3Ed"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hlB-Dh-sx5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="GKQ-I7-Zdd">
+                    <connections>
+                        <action selector="changeLightnessCenter:" destination="eRu-5p-QEF" id="M3N-7e-anO"/>
+                    </connections>
+                </panGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="EUT-1s-5xg">
+                    <connections>
+                        <action selector="sendChosenColor:" destination="eRu-5p-QEF" id="DyS-Cm-hi7"/>
+                    </connections>
+                </pongPressGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="4SC-Lm-Udm">
+                    <connections>
+                        <action selector="cancelChosenColor:" destination="eRu-5p-QEF" id="Lrq-MT-8XO"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="-167.5" y="330.5"/>
+        </scene>
+    </scenes>
+</document>

@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1B5979EF1CBB17A400CEAEA7 /* ColorPicker.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1B5979DC1CBB17A400CEAEA7 /* ColorPicker.storyboard */; };
+		1B5979F11CBB17A400CEAEA7 /* ColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979E01CBB17A400CEAEA7 /* ColorExtensions.swift */; };
+		1B5979F21CBB17A400CEAEA7 /* ColorProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979E11CBB17A400CEAEA7 /* ColorProtocols.swift */; };
+		1B5979F61CBB17A400CEAEA7 /* GradientColorTriangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979E61CBB17A400CEAEA7 /* GradientColorTriangle.swift */; };
+		1B5979F91CBB17A400CEAEA7 /* LightnessGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979E91CBB17A400CEAEA7 /* LightnessGradientView.swift */; };
+		1B5979FB1CBB17A400CEAEA7 /* TriangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979EB1CBB17A400CEAEA7 /* TriangleView.swift */; };
+		1B5979FC1CBB17A400CEAEA7 /* TriangleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5979EC1CBB17A400CEAEA7 /* TriangleViewController.swift */; };
 		1B6EB46E1CAD711D00B08F09 /* HyperbolicDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */; };
 		1B6EB4701CAD716D00B08F09 /* HyperbolicPolyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */; };
 		1B6EB4731CAD724900B08F09 /* HyperbolicPolygon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */; };
@@ -40,6 +47,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1B5979DD1CBB17A400CEAEA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ColorPicker.storyboard; sourceTree = "<group>"; };
+		1B5979E01CBB17A400CEAEA7 /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
+		1B5979E11CBB17A400CEAEA7 /* ColorProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorProtocols.swift; sourceTree = "<group>"; };
+		1B5979E61CBB17A400CEAEA7 /* GradientColorTriangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GradientColorTriangle.swift; sourceTree = "<group>"; };
+		1B5979E91CBB17A400CEAEA7 /* LightnessGradientView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LightnessGradientView.swift; sourceTree = "<group>"; };
+		1B5979EB1CBB17A400CEAEA7 /* TriangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleView.swift; sourceTree = "<group>"; };
+		1B5979EC1CBB17A400CEAEA7 /* TriangleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TriangleViewController.swift; sourceTree = "<group>"; };
 		1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HyperbolicDot.swift; sourceTree = "<group>"; };
 		1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HyperbolicPolyline.swift; path = HDrawable/HyperbolicPolyline.swift; sourceTree = "<group>"; };
 		1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = HyperbolicPolygon.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -84,6 +98,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1B5979D91CBB17A400CEAEA7 /* ColorStudent */ = {
+			isa = PBXGroup;
+			children = (
+				1B5979DC1CBB17A400CEAEA7 /* ColorPicker.storyboard */,
+				1B5979EC1CBB17A400CEAEA7 /* TriangleViewController.swift */,
+				1B5979EB1CBB17A400CEAEA7 /* TriangleView.swift */,
+				1B5979E91CBB17A400CEAEA7 /* LightnessGradientView.swift */,
+				1B5979E61CBB17A400CEAEA7 /* GradientColorTriangle.swift */,
+				1B5979E01CBB17A400CEAEA7 /* ColorExtensions.swift */,
+				1B5979E11CBB17A400CEAEA7 /* ColorProtocols.swift */,
+			);
+			path = ColorStudent;
+			sourceTree = "<group>";
+		};
 		1B6EB4711CAD718A00B08F09 /* HDrawable */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +172,7 @@
 				1B6EB4761CAD78D900B08F09 /* Geometry */,
 				1B6EB4781CAD798600B08F09 /* Algorithms */,
 				1B6EB4711CAD718A00B08F09 /* HDrawable */,
+				1B5979D91CBB17A400CEAEA7 /* ColorStudent */,
 				1BDBD0681B5C21370057B710 /* Images.xcassets */,
 				1BDBD05C1B5C21370057B710 /* Supporting Files */,
 			);
@@ -263,6 +292,7 @@
 			files = (
 				1BDBD0671B5C21370057B710 /* Main.storyboard in Resources */,
 				1BDBD06C1B5C21370057B710 /* LaunchScreen.xib in Resources */,
+				1B5979EF1CBB17A400CEAEA7 /* ColorPicker.storyboard in Resources */,
 				1BDBD0691B5C21370057B710 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,20 +312,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BDBD05F1B5C21370057B710 /* AppDelegate.swift in Sources */,
+				1B5979F21CBB17A400CEAEA7 /* ColorProtocols.swift in Sources */,
 				1B6EB4731CAD724900B08F09 /* HyperbolicPolygon.swift in Sources */,
 				1BC1B2C41C3D71B400FF17C6 /* GroupGeneration.swift in Sources */,
 				1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */,
+				1B5979FB1CBB17A400CEAEA7 /* TriangleView.swift in Sources */,
 				1B6EB4751CAD727700B08F09 /* HDrawable.swift in Sources */,
+				1B5979F11CBB17A400CEAEA7 /* ColorExtensions.swift in Sources */,
 				1BC1B2C01C3D702D00FF17C6 /* LocationTable.swift in Sources */,
 				1B6EB46E1CAD711D00B08F09 /* HyperbolicDot.swift in Sources */,
 				1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */,
 				1BA2D5B31CA1E1C90036ACCD /* CenterPoint.swift in Sources */,
+				1B5979F91CBB17A400CEAEA7 /* LightnessGradientView.swift in Sources */,
 				1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */,
 				1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */,
 				1BDBD0821B5C21BE0057B710 /* CircleViewController.swift in Sources */,
 				1B6EB4701CAD716D00B08F09 /* HyperbolicPolyline.swift in Sources */,
 				1BDBD0841B5C22740057B710 /* PoincareDisk.swift in Sources */,
+				1B5979F61CBB17A400CEAEA7 /* GradientColorTriangle.swift in Sources */,
 				1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */,
+				1B5979FC1CBB17A400CEAEA7 /* TriangleViewController.swift in Sources */,
 				1BDBD0621B5C21370057B710 /* CircleLimit.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,6 +355,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1B5979DC1CBB17A400CEAEA7 /* ColorPicker.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1B5979DD1CBB17A400CEAEA7 /* Base */,
+			);
+			name = ColorPicker.storyboard;
+			sourceTree = "<group>";
+		};
 		1BDBD0651B5C21370057B710 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

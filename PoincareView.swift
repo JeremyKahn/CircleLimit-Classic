@@ -76,7 +76,7 @@ class PoincareView: UIView {
     
     var testingIBDesignable = false
     
-    var tracingDrawRect = true
+    var tracingDrawRect = false
     
     var showRedCircle = true
     

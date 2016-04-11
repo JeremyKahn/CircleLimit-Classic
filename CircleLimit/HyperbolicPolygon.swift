@@ -29,11 +29,8 @@ class HyperbolicPolygon: HyperbolicPolyline {
     
     var borderColor = UIColor.blackColor()
     
-    // Right now this makes the border by calling super
-    override func draw() {
+    var polygonAndCurves: (UIBezierPath, [UIBezierPath]) {
         let points = maskedPointsToDraw
-        color.setFill()
-        borderColor.setStroke()
         //        print("Fill color: \(color)")
         let totalPath = UIBezierPath()
         totalPath.moveToPoint(points[0].cgPoint)
@@ -55,9 +52,17 @@ class HyperbolicPolygon: HyperbolicPolyline {
             
             totalPath.addCurveToPoint(endPoint, controlPoint1: startHControl, controlPoint2: endHControl)
         }
+        return (totalPath, borderPaths)
+    }
+    
+    // Right now this makes the border by calling super
+    override func draw() {
+        let (totalPath, borderPaths) = polygonAndCurves
+        color.setFill()
+        borderColor.setStroke()
         totalPath.lineCapStyle = CGLineCap.Round
         totalPath.fill()
-        borderPaths.map { $0.stroke() }
+        _ = borderPaths.map { $0.stroke() }
         if points.count == 1 { super.draw() }
     }
     
@@ -77,7 +82,11 @@ class HyperbolicPolygon: HyperbolicPolyline {
         return nearbySides
     }
     
-    
+    func containsPoint(point: HPoint, withMask mask: HyperbolicTransformation) -> Bool {
+        self.mask = mask
+        let (polygon, _) = polygonAndCurves
+        return polygon.containsPoint(point.cgPoint)
+    }
 }
 
 

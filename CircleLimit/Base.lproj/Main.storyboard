@@ -37,6 +37,7 @@
                         <outlet property="redoRecognizer" destination="dlP-0b-g3q" id="lB4-gf-ej4"/>
                         <outlet property="singleTapRecognizer" destination="HoZ-7h-xGw" id="fdr-5g-8uE"/>
                         <outlet property="undoRecognizer" destination="tEX-jU-Njj" id="7ka-P0-UUX"/>
+                        <segue destination="Ljh-JV-o78" kind="presentation" identifier="chooseColor" id="0j0-eS-miu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -83,7 +84,15 @@
                     </connections>
                 </pongPressGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="212" y="266"/>
+            <point key="canvasLocation" x="-284" y="-49"/>
+        </scene>
+        <!--ColorPicker-->
+        <scene sceneID="186-nX-BHi">
+            <objects>
+                <viewControllerPlaceholder storyboardName="ColorPicker" id="Ljh-JV-o78" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3gi-6R-xuW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="438.5" y="-49"/>
         </scene>
     </scenes>
 </document>

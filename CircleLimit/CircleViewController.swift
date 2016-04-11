@@ -23,7 +23,7 @@ struct MatchedPoint {
 
 typealias GroupSystem = [(HDrawable, [Action])]
 
-class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate {
+class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate, ColorPickerDelegate {
     
     
     // MARK: Debugging variables
@@ -337,7 +337,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         print("touchesBegan", when: tracingGesturesAndTouches)
         super.touchesBegan(touches, withEvent: event)
         guard touches.count == 1 else {return}
-        if formingPolygon {return}
+        if formingPolygon || changingColor {return}
         print("Saving objects", when: tracingGesturesAndTouches)
         oldDrawObjects = drawObjects.map { $0.copy() }
         mode = .Moving
@@ -358,7 +358,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         //        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         guard touches.count == 1 else {return}
-        if formingPolygon {return}
+        if formingPolygon || changingColor {return}
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
                 for m in matchedPoints {
@@ -372,7 +372,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesEnded", when:  tracingGesturesAndTouches)
         super.touchesEnded(touches, withEvent: event)
-        if formingPolygon {return}
+        if formingPolygon || changingColor {return}
         touchesMoved(touches, withEvent: event)
         mode = .Usual
         oldDrawObjects = []
@@ -409,7 +409,42 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
     }
     
+    // MARK: - Color Picker Preview Source and Delegate
+    var colorToStartWith: UIColor = UIColor.blueColor()
     
+    var changingColor = false
+    
+    struct ColorChangeInformation {
+        var polygon: HyperbolicPolygon
+        var colorNumber: ColorNumber
+        var changeColorTableEntry: Bool
+    }
+    
+    // Slightly naughty to use an implicitly unwrapped optional
+    var colorChangeInformation: ColorChangeInformation!
+    
+    func applyColor(color: UIColor) {
+        let polygon = colorChangeInformation.polygon
+        if colorChangeInformation.changeColorTableEntry {
+            polygon.colorTable[colorChangeInformation.colorNumber] = color
+        } else {
+            polygon.borderColor = color
+        }
+    }
+    
+    func applyColorAndReturn(color: UIColor) {
+        applyColor(color)
+        dismissViewControllerAnimated(true, completion: nil)
+        changingColor = false
+        poincareView.setNeedsDisplay()
+    }
+    
+    func setColor(polygon: HyperbolicPolygon, withAction action: Action) {
+        let colorNumber = action.action.mapping[ColorNumber.baseNumber]!
+        colorToStartWith = polygon.colorTable[colorNumber]!
+        colorChangeInformation = ColorChangeInformation(polygon: polygon, colorNumber: colorNumber, changeColorTableEntry: true)
+        performSegueWithIdentifier("chooseColor", sender: self)
+    }
     
     // MARK: - Gesture recognition
     
@@ -432,7 +467,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     //    }
     
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer != longPressRecognizer
+        return true
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -477,13 +512,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawing = false
             //            newCurve = nil
             mode = mode == .Drawing ? .Drawing :  .Moving
-            if oldDrawObjects.count > 0 {
-                print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
-                drawObjects = oldDrawObjects
-                matchedPoints = []
-            }
-            
-            
+            cancelEffectOfTouches()
         case .Changed:
             let translation = gesture.translationInView(poincareView)
             //            println("Raw translation: \(translation.x, translation.y)")
@@ -547,7 +576,22 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             if tracingGesturesAndTouches {
                 drawObjects.append(HyperbolicDot(center: point, radius: touchDistance))
             }
-            addPointToArcs(point)
+            cancelEffectOfTouches()
+//            addPointToArcs(point)
+            let polygons = drawObjects.filter({$0 is HyperbolicPolygon})
+            let g = groupSystem(cutoffDistance: touchDistance, center: point, objects: polygons).reverse()
+            // As constructed this just sets the color of the first polygon that matches
+            // So if you touch overlapping polygons, or between two polygons, the result is unpredictable
+            // It makes some effort to change the highest polygon
+            OUTER: for (object, group) in g {
+                let polygon = object as! HyperbolicPolygon
+                for action in group {
+                    if polygon.containsPoint(point, withMask: action.motion) {
+                        setColor(polygon, withAction: action)
+                        break OUTER
+                    }
+                }
+            }
         }
     }
     
@@ -579,11 +623,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             mode = Mode.Moving
             drawing = false
             //            newCurve = nil
-            if oldDrawObjects.count > 0 {
-                print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
-                drawObjects = oldDrawObjects
-                matchedPoints = []
-            }
+            cancelEffectOfTouches()
         case .Changed:
             let newMultiplier = multiplier * gesture.scale
             multiplier = newMultiplier >= 1 ? newMultiplier : 1
@@ -596,6 +636,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         poincareView.setNeedsDisplay()
     }
     
+    
+    func cancelEffectOfTouches() {
+        if oldDrawObjects.count > 0 {
+            print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
+            drawObjects = oldDrawObjects
+            matchedPoints = []
+        }
+    }
     // MARK: Outlets to other views
     
     @IBOutlet weak var poincareView: PoincareView! {
@@ -604,14 +652,18 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
     }
     
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
+ 
+//      MARK: - Navigation
      override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
-     // Pass the selected object to the new view controller.
+        switch segue.identifier! {
+        case "chooseColor":
+            changingColor = true
+            let triangleViewController = segue.destinationViewController as! TriangleViewController
+            triangleViewController.delegate = self
+        default:
+            break
+        }
      }
-     */
+
     
 }
