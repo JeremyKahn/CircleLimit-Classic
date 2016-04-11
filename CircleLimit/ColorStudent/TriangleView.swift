@@ -160,7 +160,7 @@ class TriangleView: UIView {
     }
     
     override func drawRect(rect: CGRect) {
-        let start = NSDate()
+//        let start = NSDate()
         let currentContext = UIGraphicsGetCurrentContext()
         CGContextConcatCTM(currentContext, currentTransform)
         //        print("Drawing:")
@@ -169,7 +169,7 @@ class TriangleView: UIView {
             let triangle = colorTriangle(i)
             triangle.draw()
         }
-        let time = Int(1000 * NSDate().timeIntervalSinceDate(start))
+//        let time = Int(1000 * NSDate().timeIntervalSinceDate(start))
         //        print("Drawing takes \(time) milliseconds")
     }
     

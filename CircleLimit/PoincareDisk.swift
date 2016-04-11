@@ -115,6 +115,14 @@ func distanceToAbs(d: Double) -> Double {
     return (e-1)/(e+1)
 }
 
+func isocelesAltitudeFromSideLength(l: Double, andAngle angle: Double) -> Double {
+    // u is sinh the half-length of opposite side
+    let shL = sinh(l)
+    let (c, s) = (cos(angle/2), sin(angle/2))
+    let sinhAltitude =  c * shL / sqrt(1 + s * s * shL * shL)
+    return asinh(sinhAltitude)
+}
+
 //func distanceFromOrigin(z: HPoint) -> Double {
 //    return absToDistance(z.abs)
 //}

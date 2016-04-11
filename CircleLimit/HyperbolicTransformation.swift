@@ -128,7 +128,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     }
     
     var description : String {
-        return "\(lambda, a)"
+        return "\(lambda.nice, a.nice)"
     }
     
     // MARK: Random generation

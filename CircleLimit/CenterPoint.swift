@@ -56,7 +56,8 @@ func wayToShiftFinishedAndRadius(points: [HPoint], delta: Double) -> (Hyperbolic
     if maxDistance < delta {
         return (HyperbolicTransformation(), true, maxDistance)
     }
-    let cutoff = distanceToAbs(maxDistance - delta)
+    let cutoffDistance = maxDistance - delta/2
+    let cutoff = distanceToAbs(cutoffDistance)
     var closePoints = points.filter() { $0.abs > cutoff }
     let argMax = points[indexMax].arg
     var shiftedArgs = Array<Double>(count: closePoints.count, repeatedValue: 0)
@@ -68,12 +69,16 @@ func wayToShiftFinishedAndRadius(points: [HPoint], delta: Double) -> (Hyperbolic
     }
     let maxArg = shiftedArgs.reduce(-Double.PI) { max($0, $1) }
     let minArg = shiftedArgs.reduce(Double.PI) { min($0, $1) }
-    if maxArg - minArg < 0.9 * Double.PI {
-        let avgArg = argMax + (maxArg + minArg)/2
-        let a = Complex<Double>(abs: delta/4, arg: avgArg)
-        let M = HyperbolicTransformation(a: a)
-        return (M, false, 0)
+    let argDiff = maxArg - minArg
+    let distance1 = isocelesAltitudeFromSideLength(maxDistance, andAngle: argDiff)
+    if distance1 <  delta {
+        return (HyperbolicTransformation(), true, maxDistance)
     }
-    return (HyperbolicTransformation(), true, maxDistance)
+    let distance2 = isocelesAltitudeFromSideLength(cutoffDistance, andAngle: argDiff)
+    let distanceToMove = min(distance2, delta/4)
+    let avgArg = argMax + (maxArg + minArg)/2
+    let a = Complex<Double>(abs: distanceToAbs(distanceToMove), arg: avgArg)
+    let M = HyperbolicTransformation(a: a)
+    return (M, false, 0)    
 }
 

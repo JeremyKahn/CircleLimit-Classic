@@ -43,9 +43,7 @@ extension Double: NicelyPrinting {
     
 }
 
-func asinh(y: Double) -> Double {
-    return log(y + sqrt(y * y + 1))
-}
+
 
 extension Array {
     
