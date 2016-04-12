@@ -480,6 +480,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         poincareView.setNeedsDisplay()
     }
     
+    // TODO: Fix the problem with the segue
     func setColor(polygon: HyperbolicPolygon, withAction action: Action) {
         changingColor = true
         cancelEffectOfTouches()
@@ -514,13 +515,24 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        var answer = false
-        answer = answer || gestureRecognizer == singleTapRecognizer && otherGestureRecognizer == doubleTapRecognizer
-        answer = answer || (gestureRecognizer == singleTapRecognizer) && (otherGestureRecognizer == pinchRecognizer || otherGestureRecognizer == panRecognizer)
-        //        answer = answer || (gestureRecognizer == pinchRecognizer || gestureRecognizer == panRecognizer) && (otherGestureRecognizer == singleTapRecognizer || otherGestureRecognizer == doubleTapRecognizer)
-        answer = answer || (gestureRecognizer == longPressRecognizer) && (otherGestureRecognizer == pinchRecognizer || otherGestureRecognizer == panRecognizer)
-        return answer
+        switch gestureRecognizer {
+        case singleTapRecognizer:
+            switch otherGestureRecognizer {
+            case doubleTapRecognizer, pinchRecognizer, panRecognizer:
+                return true
+            default: return false
+            }
+        case longPressRecognizer:
+            switch otherGestureRecognizer {
+            case pinchRecognizer, panRecognizer:
+                return true
+            default: return false
+            }
+        default:
+            return false
+        }
     }
+
     
     
     @IBAction func simplePan(gesture: UIPanGestureRecognizer) {
