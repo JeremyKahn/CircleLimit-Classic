@@ -29,17 +29,19 @@ protocol HDrawable: class, Disked {
     
     func drawWithMaskAndAction(_: Action)
     
-    var size: Double { get set}
+    var lineColor: UIColor { get set}
     
-    var color: UIColor { get set}
+    var intrinsicLineWidth: Double {get set}
     
-    var colorTable: ColorTable {get set}
+    var fillColorTable: ColorTable {get set}
+    
+    var fillColor: UIColor {get set}
     
     var mask: HyperbolicTransformation { get set}
     
-    var baseNumber: ColorNumber {get set}
-    
-    var useColorTable: Bool {get set}
+    var fillColorBaseNumber: ColorNumber {get set}
+   
+    var useFillColorTable: Bool {get set}
     
     var centerPoint: HPoint {get}
     
@@ -66,8 +68,8 @@ extension HDrawable {
     }
     
     func drawWithMaskAndAction(A: Action) {
-        if useColorTable {
-            color = colorTable[A.action.mapping[baseNumber]!]!
+        if useFillColorTable {
+            fillColor = fillColorTable[A.action.mapping[fillColorBaseNumber]!]!
         }
         drawWithMask(A.motion)
     }

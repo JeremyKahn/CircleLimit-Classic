@@ -28,18 +28,22 @@ class HyperbolicDot : HDrawable {
     
     var size = 0.03
     
-    var color: UIColor = UIColor.purpleColor()
+    var intrinsicLineWidth: Double = 0
     
-    var colorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
+    var lineColor: UIColor = UIColor.blackColor()
     
-    var baseNumber = ColorNumber.baseNumber
+    var fillColorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
     
-    var useColorTable = true
+    var fillColor: UIColor = UIColor.purpleColor()
+    
+    var fillColorBaseNumber = ColorNumber.baseNumber
+    
+    var useFillColorTable = true
     
     init(dot: HyperbolicDot) {
         self.center = dot.center
         self.size  = dot.size
-        self.color = dot.color
+        self.lineColor = dot.lineColor
     }
     
     init(center: HPoint, radius: Double) {
@@ -47,10 +51,10 @@ class HyperbolicDot : HDrawable {
         self.size = radius
     }
     
-    init(center: HPoint, radius: Double, color: UIColor) {
+    init(center: HPoint, radius: Double, lineColor: UIColor) {
         self.center = center
         self.size = radius
-        self.color = color
+        self.lineColor = lineColor
     }
     
     init(center: HPoint) {
@@ -66,8 +70,10 @@ class HyperbolicDot : HDrawable {
         let (x, y, r) = poincareDiskCenterRadius()
         let euclDotCenter = CGPoint(x: x, y: y)
         let c = circlePath(euclDotCenter, radius: CGFloat(r))
-        color.set()
+        fillColor.set()
         c.fill()
+//        lineColor.set()
+//        c.stroke()
     }
     
     func poincareDiskCenterRadius() -> (centerX: Double, centerY: Double, radius: Double) {

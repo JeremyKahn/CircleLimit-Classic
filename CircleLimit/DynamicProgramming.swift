@@ -13,6 +13,8 @@ func bestSequenceTo(n: Int, toMinimizeSumOf f: (Int, Int) -> Int, withConstraint
     
     var bestSequenceTo : [[Int]] = [[Int]](count: n+1, repeatedValue: [])
     bestSequenceTo[0] = [0]
+    if n == 0 { return bestSequenceTo[0] }
+    
     var minimalSumTo : [Int] = [Int](count: n+1, repeatedValue: 0)
     
     // This uses storage that is quadratic in n, which is lazy

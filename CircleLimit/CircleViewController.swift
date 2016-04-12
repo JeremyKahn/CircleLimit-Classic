@@ -17,14 +17,13 @@ enum TouchType {
 
 struct MatchedPoint {
     var index: Int
-    var polygon: HyperbolicPolygon
+    var polyline: HyperbolicPolyline
     var mask: HyperbolicTransformation
 }
 
 typealias GroupSystem = [(HDrawable, [Action])]
 
 class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureRecognizerDelegate, ColorPickerDelegate {
-    
     
     // MARK: Debugging variables
     var tracingGroupMaking = false
@@ -47,9 +46,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if !trivialGroup {
             (generators, guidelines) = pqrGeneratorsAndGuidelines(3, q: 3, r: 4)
             for object in guidelines {
-                object.size = 0.005
-                object.color = UIColor.grayColor()
-                object.useColorTable = false
+                object.intrinsicLineWidth = 0.005
+                object.lineColor = UIColor.grayColor()
+                object.useFillColorTable = false
             }
             
             let (A, B, C) = (generators[0], generators[1], generators[2])
@@ -77,12 +76,17 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return a
     }
     
+    // MARK: - Flags
+    var drawing = true
+    
+    var suppressTouches: Bool {
+        return !drawing || changingColor || formingPolygon
+    }
+
     // MARK: - General properties
     var guidelines : [HDrawable] = []
     
     var drawGuidelines = true
-    
-    var drawing = true
     
     var drawObjects: [HDrawable] = []
     
@@ -118,8 +122,9 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case Moving
      }
     
-    // Right now this is not used for anything and so can be removed
-    var formingPolygon = false
+    var formingPolygon: Bool {
+        return newCurve != nil
+    }
     
     var mask: HyperbolicTransformation = HyperbolicTransformation()
     
@@ -228,15 +233,42 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     
-    // MARK: - Picture control
+    // MARK: - Undo and redo
     // TODO: Undo with a shake, clear picture...with what?
+    struct State {
+        var completedObjects: [HDrawable]?
+        var newCurve: HyperbolicPolyline?
+    }
+    
+    var stateStack: [State] = []
+    
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
         if motion == .MotionShake {
-            clearPicture()
+            undo()
         }
     }
     
+    func undo() {
+        print("undo!")
+        mode = .Usual
+        guard stateStack.count > 0 else { return }
+        let lastState = stateStack.removeLast()
+        if let previousObjects = lastState.completedObjects {
+            drawObjects = previousObjects
+        }
+        newCurve = lastState.newCurve
+        poincareView.setNeedsDisplay()
+    }
     
+    func redo() {
+        print("redo")
+        mode = .Usual
+        guard undoneObjects.count > 0 else {return}
+        drawObjects.append(undoneObjects.removeLast())
+        poincareView.setNeedsDisplay()
+    }
+    
+ 
     func clearPicture() {
         print("In clearPicture with \(guidelines.count) guidelines")
         drawObjects = []
@@ -273,7 +305,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var touchPoints : [CGPoint] = []
     
-    var newCurve : HyperbolicPolygon?
+    var newCurve : HyperbolicPolyline?
     
     //    var newPolygon: HyperbolicPolygon
     
@@ -303,28 +335,30 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     func returnToUsualMode() {
         guard drawing else { return }
+        mode = .Usual
+        undoneObjects = []
         guard let curve = newCurve else { return }
         curve.complete()
         print("Appending a curve with \(curve.points.count) points")
-        drawObjects.append(curve)
+        stateStack = stateStack.filter {$0.completedObjects != nil}
+        stateStack.append(State(completedObjects: drawObjects, newCurve: nil))
         newCurve = nil
-        mode = .Usual
-        undoneObjects = []
+        drawObjects.append(curve)
         poincareView.setNeedsDisplay()
     }
     
     var printingTouches = true
     
     func nearbyPointsTo(point: HPoint, withinDistance distance: Double) -> [MatchedPoint] {
-        let objects = drawObjects.filter() { $0 is HyperbolicPolygon }
+        let objects = drawObjects.filter() { $0 is HyperbolicPolyline }
         let g = groupSystem(cutoffDistance: distance, center: point, objects: objects)
         var matchedPoints: [MatchedPoint] = []
         for (object, group)  in g {
-            let polygon = object as! HyperbolicPolygon
+            let polyline = object as! HyperbolicPolyline
             
             for a in group {
-                let indices = polygon.pointsNear(point, withMask: a.motion, withinDistance: distance)
-                let matched = indices.map { MatchedPoint(index: $0, polygon: polygon, mask: a.motion) }
+                let indices = polyline.pointsNear(point, withMask: a.motion, withinDistance: distance)
+                let matched = indices.map { MatchedPoint(index: $0, polyline: polyline, mask: a.motion) }
                 matchedPoints += matched
             }
         }
@@ -337,7 +371,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         print("touchesBegan", when: tracingGesturesAndTouches)
         super.touchesBegan(touches, withEvent: event)
         guard touches.count == 1 else {return}
-        if formingPolygon || changingColor {return}
+        if suppressTouches {return}
         print("Saving objects", when: tracingGesturesAndTouches)
         oldDrawObjects = drawObjects.map { $0.copy() }
         mode = .Moving
@@ -358,11 +392,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         //        if printingTouches { print("touchesMoved") }
         super.touchesMoved(touches, withEvent: event)
         guard touches.count == 1 else {return}
-        if formingPolygon || changingColor {return}
+        if suppressTouches {return}
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
                 for m in matchedPoints {
-                    m.polygon.movePointAtIndex(m.index, to: m.mask.inverse.appliedTo(z))
+                    m.polyline.movePointAtIndex(m.index, to: m.mask.inverse.appliedTo(z))
                 }
             }
         }
@@ -371,10 +405,12 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesEnded", when:  tracingGesturesAndTouches)
+        guard touches.count == 1 else {return}
         super.touchesEnded(touches, withEvent: event)
-        if formingPolygon || changingColor {return}
+        if suppressTouches {return}
         touchesMoved(touches, withEvent: event)
         mode = .Usual
+        stateStack.append(State(completedObjects: oldDrawObjects, newCurve: nil))
         oldDrawObjects = []
         poincareView.setNeedsDisplay()
     }
@@ -382,29 +418,29 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     // MARK: Adding a point to a line
     func addPointToArcs(z: HPoint) {
-        let objects = objectsToDraw.filter() { $0 is HyperbolicPolygon }
+        let objects = objectsToDraw.filter() { $0 is HyperbolicPolyline }
         
         let g = groupSystem(cutoffDistance: touchDistance, center: z, objects: objects)
         
         for (object, group) in g {
-            let polygon = object as! HyperbolicPolygon
+            let polyline = object as! HyperbolicPolyline
             
             var instructions: [(Int, HPoint, HyperbolicTransformation)] = []
             for a in group {
-                let indices = polygon.sidesNear(z, withMask: a.motion, withinDistance: touchDistance)
+                let indices = polyline.sidesNear(z, withMask: a.motion, withinDistance: touchDistance)
                 if indices.count == 0 { continue }
                 if indices.count > 1 {
-                    print("Matched more than one side in a single polygon: \(indices)")
+                    print("Matched more than one side in a single polyline: \(indices)")
                 }
                 for index in indices {
                     instructions.append((index, a.motion.inverse.appliedTo(z), a.motion))
                 }
             }
-            polygon.insertPointsAfterIndices(instructions.map({($0.0, $0.1)}))
+            polyline.insertPointsAfterIndices(instructions.map({($0.0, $0.1)}))
             instructions.sortInPlace() { $0.0 < $1.0 }
             for i in 0..<instructions.count {
                 let (index, _ , pointMask) = instructions[i]
-                matchedPoints.append(MatchedPoint(index: index + i + 1, polygon: polygon, mask: pointMask))
+                matchedPoints.append(MatchedPoint(index: index + i + 1, polyline: polyline, mask: pointMask))
             }
         }
     }
@@ -426,7 +462,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     func applyColor(color: UIColor) {
         let polygon = colorChangeInformation.polygon
         if colorChangeInformation.changeColorTableEntry {
-            polygon.colorTable[colorChangeInformation.colorNumber] = color
+            polygon.fillColorTable[colorChangeInformation.colorNumber] = color
         } else {
             polygon.borderColor = color
         }
@@ -441,7 +477,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     func setColor(polygon: HyperbolicPolygon, withAction action: Action) {
         let colorNumber = action.action.mapping[ColorNumber.baseNumber]!
-        colorToStartWith = polygon.colorTable[colorNumber]!
+        colorToStartWith = polygon.fillColorTable[colorNumber]!
         colorChangeInformation = ColorChangeInformation(polygon: polygon, colorNumber: colorNumber, changeColorTableEntry: true)
         performSegueWithIdentifier("chooseColor", sender: self)
     }
@@ -451,10 +487,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     @IBOutlet var panRecognizer: UIPanGestureRecognizer!
     
     @IBOutlet var pinchRecognizer: UIPinchGestureRecognizer!
-    
-    @IBOutlet var undoRecognizer: UISwipeGestureRecognizer!
-    
-    @IBOutlet var redoRecognizer: UISwipeGestureRecognizer!
     
     @IBOutlet var longPressRecognizer: UILongPressGestureRecognizer!
     
@@ -467,43 +499,21 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     //    }
     
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+        if gestureRecognizer == longPressRecognizer {
+            return gestureRecognizer.numberOfTouches() == 1
+        } else {
+            return true
+        }
     }
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWithGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer
-    }
-    
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOfGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         var answer = false
         answer = answer || gestureRecognizer == singleTapRecognizer && otherGestureRecognizer == doubleTapRecognizer
         answer = answer || (gestureRecognizer == singleTapRecognizer) && (otherGestureRecognizer == pinchRecognizer || otherGestureRecognizer == panRecognizer)
         //        answer = answer || (gestureRecognizer == pinchRecognizer || gestureRecognizer == panRecognizer) && (otherGestureRecognizer == singleTapRecognizer || otherGestureRecognizer == doubleTapRecognizer)
+        answer = answer || (gestureRecognizer == longPressRecognizer) && (otherGestureRecognizer == pinchRecognizer || otherGestureRecognizer == panRecognizer)
         return answer
     }
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailByGestureRecognizer otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return otherGestureRecognizer == pinchRecognizer && (gestureRecognizer == undoRecognizer || gestureRecognizer == redoRecognizer)
-    }
-    
-    @IBAction func redo(sender: UISwipeGestureRecognizer) {
-        print("redo")
-        mode = .Usual
-        guard undoneObjects.count > 0 else {return}
-        drawObjects.append(undoneObjects.removeLast())
-        poincareView.setNeedsDisplay()
-    }
-    
-    
-    @IBAction func undo(sender: UISwipeGestureRecognizer) {
-        print("undo!")
-        mode = .Usual
-        guard drawObjects.count > 0 else { return }
-        undoneObjects.append(drawObjects.removeLast())
-        poincareView.setNeedsDisplay()
-    }
-    
     
     
     @IBAction func simplePan(gesture: UIPanGestureRecognizer) {
@@ -545,9 +555,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawGuidelines = !drawGuidelines
             mode = .Usual
         } else if newCurve != nil {
+            stateStack.append(State(completedObjects: nil, newCurve: (newCurve!.copy() as! HyperbolicPolyline)))
             newCurve!.addPoint(z!)
-            formingPolygon = true
-            mode = .Drawing
         }
         poincareView.setNeedsDisplay()
     }
@@ -558,17 +567,22 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             let z = hPoint(sender.locationInView(poincareView))
             guard z != nil else { return }
             newCurve = HyperbolicPolygon(z!)
-            formingPolygon = true
+            stateStack.append(State(completedObjects: nil, newCurve: nil))
             mode = .Drawing
+            poincareView.setNeedsDisplay()
         } else  {
-            newCurve!.addPoint(newCurve!.points[0])
-            newCurve!.complete()
-            formingPolygon = false
+            switch newCurve!.points.count {
+            case 0, 1:
+                newCurve = nil
+            case 2:
+                newCurve = HyperbolicPolyline(newCurve!.points)
+            default:
+                newCurve!.addPoint(newCurve!.points[0])
+            }
             returnToUsualMode()
+            poincareView.setNeedsDisplay()
         }
-        poincareView.setNeedsDisplay()
     }
-    
     
     @IBAction func longPress(sender: UILongPressGestureRecognizer) {
         let z = hPoint(sender.locationInView(poincareView))
@@ -578,12 +592,20 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             }
             cancelEffectOfTouches()
 //            addPointToArcs(point)
-            let polygons = drawObjects.filter({$0 is HyperbolicPolygon})
-            let g = groupSystem(cutoffDistance: touchDistance, center: point, objects: polygons).reverse()
+            let polylines = drawObjects.filter({$0 is HyperbolicPolyline})
+            let g = groupSystem(cutoffDistance: touchDistance, center: point, objects: polylines).reverse()
             // As constructed this just sets the color of the first polygon that matches
             // So if you touch overlapping polygons, or between two polygons, the result is unpredictable
             // It makes some effort to change the highest polygon
-            OUTER: for (object, group) in g {
+            for (object, group) in g {
+                let polyline = object as! HyperbolicPolyline
+                for action in group {
+                    if polyline.sidesNear(point, withMask: action.motion, withinDistance: touchDistance).count > 0 {
+                        return
+                    }
+                }
+            }
+            OUTER: for (object, group) in g.filter({$0.0 is HyperbolicPolygon}) {
                 let polygon = object as! HyperbolicPolygon
                 for action in group {
                     if polygon.containsPoint(point, withMask: action.motion) {

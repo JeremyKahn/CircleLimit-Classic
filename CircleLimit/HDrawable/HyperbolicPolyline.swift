@@ -33,19 +33,19 @@ class HyperbolicPolyline : HDrawable {
         return maskedPoints
     }
     
-    var intrinsicLineWidth : Double {
-        return size
-    }
+    var intrinsicLineWidth = 0.015
     
-    var size = 0.015
+    var lineColor: UIColor = UIColor.blackColor()
     
-    var color: UIColor = UIColor.purpleColor()
+    // Feels a little weird to include these in Hyperbolic Polyline: right now they're just included in order to comform to HDrawable
+    // TODO: Put these in a separate protocol?
+    var fillColorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
     
-    var colorTable: ColorTable = [1: UIColor.blueColor(), 2: UIColor.greenColor(), 3: UIColor.redColor(), 4: UIColor.yellowColor()]
+    var fillColorBaseNumber = ColorNumber.baseNumber
     
-    var baseNumber = ColorNumber.baseNumber
+    var fillColor: UIColor = UIColor.clearColor()
     
-    var useColorTable = true
+    var useFillColorTable = true
     
     // MARK: Initializers
     
@@ -64,11 +64,11 @@ class HyperbolicPolyline : HDrawable {
     
     init(_ a: HyperbolicPolyline) {
         self.points = a.points
-        self.color = a.color
-        self.size  = a.size
-        self.colorTable = a.colorTable
-        self.baseNumber = a.baseNumber
-        self.useColorTable = a.useColorTable
+        self.lineColor = a.lineColor
+        self.intrinsicLineWidth  = a.intrinsicLineWidth
+//        self.colorTable = a.colorTable
+//        self.baseNumber = a.baseNumber
+//        self.useColorTable = a.useColorTable
         update()
         complete()
     }
@@ -115,6 +115,28 @@ class HyperbolicPolyline : HDrawable {
     func complete() {
         buildSubsequenceTable()
     }
+    
+    // MARK: Searching
+    var touchable = true
+    
+    // Actually returns the indices of the nearby points
+    func pointsNear(point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        guard touchable else { return [] }
+        let maskedPoints = points.map { mask.appliedTo($0) }
+        let indexArray = [Int](0..<points.count)
+        let nearbyPoints = indexArray.filter() { point.distanceTo(maskedPoints[$0]) < distance }
+        return nearbyPoints
+    }
+    
+    
+    func sidesNear(point: HPoint, withMask mask: HyperbolicTransformation, withinDistance distance: Double) -> [Int] {
+        guard touchable else { return [] }
+        let maskedPoints = points.map { mask.appliedTo($0) }
+        let indexArray = [Int](0..<points.count - 1)
+        let nearbySides = indexArray.filter() { point.distanceToArcThrough(maskedPoints[$0], maskedPoints[$0 + 1]) < distance }
+        return nearbySides
+    }
+    
 
     // MARK:  Drawing
     
@@ -145,15 +167,15 @@ class HyperbolicPolyline : HDrawable {
     // This is a tricky problem...really the line width should vary
     func suitableLineWidth(a: HPoint, _ b: HPoint) -> CGFloat {
         let t = ((a.z + b.z)/2).abs
-        return CGFloat(intrinsicLineWidth * (1 - t * t) / 2)
+        return CGFloat(intrinsicLineWidth * (1.0 - t * t) / 2)
     }
     
     func draw() {
         //        println("Drawing path for points \(points)")
-        color.set()
+        lineColor.set()
         let points = maskedPointsToDraw
         if points.count == 1 {
-            let dot = HyperbolicDot(center: points[0], radius: size)
+            let dot = HyperbolicDot(center: points[0], radius: intrinsicLineWidth)
             dot.draw()
         }
         for i in 0..<(points.count - 1) {
@@ -199,7 +221,7 @@ class HyperbolicPolyline : HDrawable {
     static var initialDistanceToleranceMultiplier = 0.2
     
     var initialDistanceTolerance : Double {
-        return size * HyperbolicPolyline.initialDistanceToleranceMultiplier
+        return intrinsicLineWidth * HyperbolicPolyline.initialDistanceToleranceMultiplier
     }
     
     var distanceTolerance : Double {

@@ -114,8 +114,10 @@ func pqrGeneratorsAndGuidelines(p: Int, q: Int, r: Int) -> ([HyperbolicTransform
     let Q = TC.appliedTo(P)
     let R = RTB.appliedTo(P)
     
-    let guidelines : [HDrawable] = [HyperbolicPolyline([P, Q]), HyperbolicPolyline([Q, R]), HyperbolicPolyline([R, P])]
-    return ([A, B, C], guidelines)
+    let guidelines = [HyperbolicPolyline([P, Q]), HyperbolicPolyline([Q, R]), HyperbolicPolyline([R, P])]
+    guidelines.forEach({$0.touchable = false})
+    let g2 = guidelines.map {$0 as HDrawable}
+    return ([A, B, C], g2)
 }
 
 typealias ColorTable = Dictionary<ColorNumber, UIColor>

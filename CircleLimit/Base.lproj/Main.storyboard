@@ -22,8 +22,6 @@
                             <outletCollection property="gestureRecognizers" destination="n2t-D8-Sa6" appends="YES" id="KrR-We-dCg"/>
                             <outletCollection property="gestureRecognizers" destination="tDE-AL-ekJ" appends="YES" id="X4N-UW-Nl6"/>
                             <outletCollection property="gestureRecognizers" destination="HoZ-7h-xGw" appends="YES" id="s05-IJ-8UN"/>
-                            <outletCollection property="gestureRecognizers" destination="tEX-jU-Njj" appends="YES" id="rvG-Fz-8If"/>
-                            <outletCollection property="gestureRecognizers" destination="dlP-0b-g3q" appends="YES" id="pR1-B6-bzT"/>
                             <outletCollection property="gestureRecognizers" destination="hu9-Fi-Roa" appends="YES" id="a9e-jV-RWX"/>
                             <outletCollection property="gestureRecognizers" destination="gF1-Pd-QVY" appends="YES" id="guv-kw-ib4"/>
                         </connections>
@@ -34,9 +32,7 @@
                         <outlet property="panRecognizer" destination="n2t-D8-Sa6" id="7Cy-3r-lFY"/>
                         <outlet property="pinchRecognizer" destination="tDE-AL-ekJ" id="ayW-em-yko"/>
                         <outlet property="poincareView" destination="IBq-aQ-8NE" id="eiR-RU-w03"/>
-                        <outlet property="redoRecognizer" destination="dlP-0b-g3q" id="lB4-gf-ej4"/>
                         <outlet property="singleTapRecognizer" destination="HoZ-7h-xGw" id="fdr-5g-8uE"/>
-                        <outlet property="undoRecognizer" destination="tEX-jU-Njj" id="7ka-P0-UUX"/>
                         <segue destination="Ljh-JV-o78" kind="presentation" identifier="chooseColor" id="0j0-eS-miu"/>
                     </connections>
                 </viewController>
@@ -59,18 +55,6 @@
                         <outlet property="delegate" destination="vXZ-lx-hvc" id="BAI-7s-7fK"/>
                     </connections>
                 </tapGestureRecognizer>
-                <swipeGestureRecognizer direction="left" numberOfTouchesRequired="3" id="tEX-jU-Njj" userLabel="Undo Recognizer">
-                    <connections>
-                        <action selector="undo:" destination="vXZ-lx-hvc" id="VKh-fF-Dya"/>
-                        <outlet property="delegate" destination="vXZ-lx-hvc" id="Fjr-Zp-oD4"/>
-                    </connections>
-                </swipeGestureRecognizer>
-                <swipeGestureRecognizer direction="right" numberOfTouchesRequired="3" id="dlP-0b-g3q">
-                    <connections>
-                        <action selector="redo:" destination="vXZ-lx-hvc" id="oJc-Ey-gp7"/>
-                        <outlet property="delegate" destination="vXZ-lx-hvc" id="4WU-L6-3L1"/>
-                    </connections>
-                </swipeGestureRecognizer>
                 <tapGestureRecognizer numberOfTapsRequired="2" id="hu9-Fi-Roa">
                     <connections>
                         <action selector="doubleTap:" destination="vXZ-lx-hvc" id="XjK-mu-hya"/>
