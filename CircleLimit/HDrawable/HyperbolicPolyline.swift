@@ -66,9 +66,9 @@ class HyperbolicPolyline : HDrawable {
         self.points = a.points
         self.lineColor = a.lineColor
         self.intrinsicLineWidth  = a.intrinsicLineWidth
-//        self.colorTable = a.colorTable
-//        self.baseNumber = a.baseNumber
-//        self.useColorTable = a.useColorTable
+        self.fillColorTable = a.fillColorTable
+        self.fillColorBaseNumber = a.fillColorBaseNumber
+        self.useFillColorTable = a.useFillColorTable
         update()
         complete()
     }

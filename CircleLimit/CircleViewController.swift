@@ -90,7 +90,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var drawObjects: [HDrawable] = []
     
-    var oldDrawObjects: [HDrawable] = []
+    var oldDrawObjects: [HDrawable] = [] {
+        didSet {
+//            print("There are now \(oldDrawObjects.count) old draw objects")
+        }
+    }
     
     var undoneObjects: [HDrawable] = []
     
@@ -464,18 +468,21 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if colorChangeInformation.changeColorTableEntry {
             polygon.fillColorTable[colorChangeInformation.colorNumber] = color
         } else {
-            polygon.borderColor = color
+            polygon.fillColor = color
         }
     }
     
     func applyColorAndReturn(color: UIColor) {
         applyColor(color)
         dismissViewControllerAnimated(true, completion: nil)
+        cancelEffectOfTouches()
         changingColor = false
         poincareView.setNeedsDisplay()
     }
     
     func setColor(polygon: HyperbolicPolygon, withAction action: Action) {
+        changingColor = true
+        cancelEffectOfTouches()
         let colorNumber = action.action.mapping[ColorNumber.baseNumber]!
         colorToStartWith = polygon.fillColorTable[colorNumber]!
         colorChangeInformation = ColorChangeInformation(polygon: polygon, colorNumber: colorNumber, changeColorTableEntry: true)
@@ -663,6 +670,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if oldDrawObjects.count > 0 {
             print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
             drawObjects = oldDrawObjects
+            oldDrawObjects = []
             matchedPoints = []
         }
     }

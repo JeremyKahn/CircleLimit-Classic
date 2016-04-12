@@ -16,7 +16,6 @@ class HyperbolicPolygon: HyperbolicPolyline {
     
     init(_ a: HyperbolicPolygon) {
         super.init(a)
-        self.borderColor = a.borderColor
     }
     
     override init(_ z: HPoint) {
@@ -26,8 +25,6 @@ class HyperbolicPolygon: HyperbolicPolyline {
     override init(_ pp: [HPoint]) {
         super.init(pp)
     }
-    
-    var borderColor = UIColor.blackColor()
     
     var polygonAndCurves: (UIBezierPath, [UIBezierPath]) {
         let points = maskedPointsToDraw
@@ -55,11 +52,10 @@ class HyperbolicPolygon: HyperbolicPolyline {
         return (totalPath, borderPaths)
     }
     
-    // Right now this makes the border by calling super
     override func draw() {
         let (totalPath, borderPaths) = polygonAndCurves
         fillColor.setFill()
-        borderColor.setStroke()
+        lineColor.setStroke()
         totalPath.lineCapStyle = CGLineCap.Round
         totalPath.fill()
         _ = borderPaths.map { $0.stroke() }
