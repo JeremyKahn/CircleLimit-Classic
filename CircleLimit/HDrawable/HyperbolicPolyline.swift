@@ -81,7 +81,7 @@ class HyperbolicPolyline : HDrawable {
     func addPoint(p: HPoint) {
         assert(p.abs <= 1)
         points.append(p)
-        update()
+        updateAndComplete()
     }
     
     func movePointAtIndex(i: Int, to p: HPoint) {
