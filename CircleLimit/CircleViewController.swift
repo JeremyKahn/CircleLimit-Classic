@@ -156,7 +156,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var multiplier = CGFloat(1.0)
     
-    var mode : Mode = .Usual
+    var mode : Mode = .Usual {
+        didSet {
+            print("Mode changed to \(mode)")
+        }
+    }
     
     func cutOffDistanceForAbsoluteCutoff(cutoffAbs: Double) -> Double {
         let scaleCutoff = Double(2/multiplier)
@@ -637,7 +641,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     }
     
     func recomputeMask() {
-        if mode == .Drawing { return }
+        if formingPolygon { return }
         var bestA = mask.a.abs
         var bestMask = mask
         //        println("Trying to improve : \(bestA)")
