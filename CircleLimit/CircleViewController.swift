@@ -15,10 +15,15 @@ enum TouchType {
     case Ended
 }
 
+// The mask is being applied to the point on the polygon
 struct MatchedPoint {
     var index: Int
     var polyline: HyperbolicPolyline
     var mask: HyperbolicTransformation
+    
+    func moveTo(z: HPoint) {
+        polyline.movePointAtIndex(index, to: mask.inverse.appliedTo(z))
+    }
 }
 
 typealias GroupSystem = [(HDrawable, [Action])]
@@ -50,6 +55,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
                 object.lineColor = UIColor.grayColor()
                 object.useFillColorTable = false
             }
+            
+            // This will show the fixed points of all the elliptic elements
+            guidelines.append(HyperbolicDot(center: HPoint()))
+            for g in generators {
+                let fixedPointDot = HyperbolicDot(center: g.fixedPoint!)
+                guidelines.append(fixedPointDot)
+            }
+            
             
             let (A, B, C) = (generators[0], generators[1], generators[2])
             let a = ColorNumberPermutation(mapping: [1: 2, 2: 3, 3: 1, 4: 4])
@@ -404,7 +417,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if let touch = touches.first {
             if let z = hPoint(touch.locationInView(poincareView)) {
                 for m in matchedPoints {
-                    m.polyline.movePointAtIndex(m.index, to: m.mask.inverse.appliedTo(z))
+                    m.moveTo(z)
                 }
             }
         }

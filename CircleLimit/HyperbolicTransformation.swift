@@ -74,6 +74,16 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     var inverse: HyperbolicTransformation
         { return HyperbolicTransformation(a: -self.a * self.lambda, lambda: self.lambda.conj) }
     
+    var fixedPoint: HPoint? {
+        let num = 4 * a.abs * a.abs * lambda
+        let denom = (1 - lambda) * (1 - lambda)
+        let thingInside = 1 + num/denom
+        // we should have thingInside.im == 0
+        guard thingInside.re > 0 else {return nil}
+        let mult = (1 - lambda)/(2 * a.conj)
+        return HPoint(mult * (1 - sqrt(thingInside.re)))
+    }
+    
 //    func inverse() -> HyperbolicTransformation {
 //        return HyperbolicTransformation(a: -a * lambda, lambda: lambda.conj)
 //    }
