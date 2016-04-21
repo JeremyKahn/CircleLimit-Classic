@@ -57,7 +57,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             }
             
             // This will show the fixed points of all the elliptic elements
-            guidelines.append(HyperbolicDot(center: HPoint()))
+//            guidelines.append(HyperbolicDot(center: HPoint()))
             for g in generators {
                 let fixedPointDot = HyperbolicDot(center: g.fixedPoint!)
                 guidelines.append(fixedPointDot)
