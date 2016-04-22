@@ -10,7 +10,7 @@ import UIKit
 
 class HyperbolicPolyline : HDrawable {
     
-    var observingAllChanges = true
+    var observingAllChanges = false
     
     var centerPoint = HPoint()
     
@@ -18,7 +18,7 @@ class HyperbolicPolyline : HDrawable {
     
     var points: [HPoint] = [] {
         didSet {
-            print("Polygon points now \(points)", when: observingAllChanges)
+          print("Polygon points now \(points)", when: observingAllChanges)
         }
     }
     

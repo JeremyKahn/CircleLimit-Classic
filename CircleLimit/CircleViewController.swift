@@ -60,9 +60,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
 //            guidelines.append(HyperbolicDot(center: HPoint()))
             for g in generators {
                 let fixedPointDot = HyperbolicDot(center: g.fixedPoint!)
-                guidelines.append(fixedPointDot)
+                self.fixedPoints.append(fixedPointDot)
             }
-            
             
             let (A, B, C) = (generators[0], generators[1], generators[2])
             let a = ColorNumberPermutation(mapping: [1: 2, 2: 3, 3: 1, 4: 4])
@@ -98,6 +97,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
 
     // MARK: - General properties
     var guidelines : [HDrawable] = []
+    
+    var fixedPoints: [HDrawable] = []
     
     var drawGuidelines = true
     
@@ -424,12 +425,29 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         poincareView.setNeedsDisplay()
     }
     
+    // TODO: Make points nearby the last touch jump to it
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         print("touchesEnded", when:  tracingGesturesAndTouches)
         guard touches.count == 1 else {return}
         super.touchesEnded(touches, withEvent: event)
         if suppressTouches {return}
         touchesMoved(touches, withEvent: event)
+        if let touch = touches.first {
+            if let z = hPoint(touch.locationInView(poincareView)) {
+                let nearbyPointsToEndpoint = nearbyPointsTo(z, withinDistance: touchDistance)
+                for m in nearbyPointsToEndpoint {
+                    m.moveTo(z)
+                }
+                let g = groupSystem(cutoffDistance: touchDistance, center: z, objects: fixedPoints)
+                for (object, group) in g {
+                    for action in group {
+                        for m in matchedPoints {
+                            m.moveTo(action.motion.appliedTo(object.centerPoint))
+                        }
+                    }
+                }
+            }
+        }
         mode = .Usual
         stateStack.append(State(completedObjects: oldDrawObjects, newCurve: nil))
         oldDrawObjects = []
