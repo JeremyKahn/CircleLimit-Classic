@@ -12,7 +12,9 @@ class HPoint : Equatable, CustomStringConvertible {
     
     init() { self.z = 0.i }
     
-    init(_ z: Complex64) {self.z = z}
+    init(_ z: Complex64) {
+        self.z = z
+    }
     
     var z: Complex64
     
@@ -183,10 +185,30 @@ func approximatingCubicBezierToCircularArc(center: Complex64, radius: Double, st
     return swapped ? (endControl, startControl) : (startControl, endControl)
 }
 
+// THIS FAILS when a == 0 or b == 0
 func controlPointsForApproximatingCubicBezierToGeodesic(a: HPoint, b: HPoint) -> (Complex64, Complex64) {
     let (center, radius, start, end, swapped) = geodesicArcCenterRadiusStartEnd(a, b: b)
     let (startControl, endControl) = approximatingCubicBezierToCircularArc(center, radius: radius, start: start, end: end, swapped: swapped)
     return (startControl, endControl)
+}
+
+func addGeodesicFrom(a: HPoint, to b: HPoint) -> (UIBezierPath -> ()) {
+    let threshhold = 0.001
+    var makeLine = false
+    if a.abs < threshhold || b.abs < threshhold {
+        makeLine = true
+    } else {
+        let r = a.z/b.z
+        let rr = r/r.abs
+        makeLine = ((rr - 1).abs) < threshhold || ((rr + 1).abs < threshhold)
+    }
+    if makeLine {
+        return { $0.addLineToPoint(b.cgPoint) }
+    } else {
+        let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(a, b: b)
+        let (startHControl, endHControl) = (pointForComplex(startControl), pointForComplex(endControl))
+        return { $0.addCurveToPoint(b.cgPoint, controlPoint1: startHControl, controlPoint2: endHControl) }
+    }
 }
 
 func magicNumber(theta: Double) -> Double {

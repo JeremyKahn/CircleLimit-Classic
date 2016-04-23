@@ -26,6 +26,7 @@ class HyperbolicPolygon: HyperbolicPolyline {
         super.init(pp)
     }
     
+    
     var polygonAndCurves: (UIBezierPath, [UIBezierPath]) {
         let points = maskedPointsToDraw
         //        print("Fill color: \(color)")
@@ -33,21 +34,17 @@ class HyperbolicPolygon: HyperbolicPolyline {
         totalPath.moveToPoint(points[0].cgPoint)
         var borderPaths: [UIBezierPath] = []
         for i in 0..<(points.count - 1) {
-            let (startControl, endControl) = controlPointsForApproximatingCubicBezierToGeodesic(points[i], b: points[i+1])
-            let (startPoint, endPoint, startHControl, endHControl) =
-                (points[i].cgPoint,
-                 points[i+1].cgPoint,
-                 pointForComplex(startControl),
-                 pointForComplex(endControl))
+            let (a, b) = (points[i], points[i+1])
+            let addGeodesicTo = addGeodesicFrom(a, to: b)
+            addGeodesicTo(totalPath)
             
             let borderPath = UIBezierPath()
-            borderPath.moveToPoint(startPoint)
-            borderPath.addCurveToPoint(endPoint, controlPoint1: startHControl, controlPoint2: endHControl)
-            borderPath.lineWidth = suitableLineWidth(points[i], points[i+1])
+            borderPath.moveToPoint(a.cgPoint)
+            addGeodesicTo(borderPath)
+ 
+            borderPath.lineWidth = suitableLineWidth(a, b)
             borderPath.lineCapStyle = CGLineCap.Round
             borderPaths.append(borderPath)
-            
-            totalPath.addCurveToPoint(endPoint, controlPoint1: startHControl, controlPoint2: endHControl)
         }
         return (totalPath, borderPaths)
     }

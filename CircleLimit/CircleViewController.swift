@@ -172,7 +172,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     var mode : Mode = .Usual {
         didSet {
-            print("Mode changed to \(mode)")
+            print("Mode changed to \(mode)", when: tracingGroupMaking)
         }
     }
     
