@@ -24,6 +24,15 @@ struct MatchedPoint {
     func moveTo(z: HPoint) {
         polyline.movePointAtIndex(index, to: mask.inverse.appliedTo(z))
     }
+    
+    var matchingPoint: HPoint {
+        return mask.appliedTo(polyline.points[index])
+    }
+    
+    func cleanUp() {
+        polyline.removeRepeatedPoints()
+        polyline.updateAndComplete()
+    }
 }
 
 typealias GroupSystem = [(HDrawable, [Action])]
@@ -433,20 +442,26 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         if suppressTouches {return}
         touchesMoved(touches, withEvent: event)
         if let touch = touches.first {
-            if let z = hPoint(touch.locationInView(poincareView)) {
+            if var z = hPoint(touch.locationInView(poincareView)) {
+                let g = groupSystem(cutoffDistance: touchDistance, center: z, objects: fixedPoints)
+                // THIS WILL BE UNDEFINED if g has more than one element
+                for (object, group) in g {
+                    for action in group {
+                        z = action.motion.appliedTo(object.centerPoint)
+                        for m in matchedPoints {
+                            m.moveTo(z)
+                        }
+                    }
+                }
+                
                 let nearbyPointsToEndpoint = nearbyPointsTo(z, withinDistance: touchDistance)
                 for m in nearbyPointsToEndpoint {
                     m.moveTo(z)
                 }
-                let g = groupSystem(cutoffDistance: touchDistance, center: z, objects: fixedPoints)
-                for (object, group) in g {
-                    for action in group {
-                        for m in matchedPoints {
-                            m.moveTo(action.motion.appliedTo(object.centerPoint))
-                        }
-                    }
-                }
-            }
+              }
+        }
+        for m in matchedPoints {
+            m.cleanUp()
         }
         mode = .Usual
         stateStack.append(State(completedObjects: oldDrawObjects, newCurve: nil))

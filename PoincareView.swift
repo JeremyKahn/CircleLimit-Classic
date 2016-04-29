@@ -24,13 +24,13 @@ func circlePath(center: CGPoint, radius: CGFloat) -> UIBezierPath {
 class PoincareView: UIView {
     
     
-    var viewCenter: CGPoint {
-        return convertPoint(center, fromView: superview)
-    }
     
     @IBInspectable
     var circleColor = UIColor.blueColor()
     
+    var viewCenter: CGPoint {
+        return convertPoint(center, fromView: superview)
+    }
     
     var viewRadius: CGFloat {
         return min(bounds.size.width, bounds.size.height)/2

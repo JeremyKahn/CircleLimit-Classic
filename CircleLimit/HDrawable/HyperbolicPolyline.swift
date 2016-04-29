@@ -112,6 +112,17 @@ class HyperbolicPolyline : HDrawable {
     }
     
     // TODO: Remove redundant points from the list of points
+    func removeRepeatedPoints() {
+        var i = 0
+        while i < points.count - 1 {
+            if points[i] == points[i + 1] {
+                points.removeAtIndex(i + 1)
+            } else {
+                i += 1
+            }
+        }
+    }
+    
     func complete() {
         buildSubsequenceTable()
     }

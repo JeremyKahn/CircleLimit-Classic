@@ -101,7 +101,7 @@
         <!--Triangle View Controller-->
         <scene sceneID="dB1-bZ-ig9">
             <objects>
-                <viewController storyboardIdentifier="colorPickerController" id="eRu-5p-QEF" customClass="TriangleViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="colorPickerController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="eRu-5p-QEF" customClass="TriangleViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6GU-Mx-Xbi"/>
                         <viewControllerLayoutGuide type="bottom" id="lfI-KD-cLg"/>

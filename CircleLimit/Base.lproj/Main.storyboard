@@ -8,7 +8,7 @@
         <!--Circle View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="CircleViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="circleViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="vXZ-lx-hvc" customClass="CircleViewController" customModule="CircleLimit" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zxx-7v-Lrg"/>
                         <viewControllerLayoutGuide type="bottom" id="6pp-E5-pjF"/>
