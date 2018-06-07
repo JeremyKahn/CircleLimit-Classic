@@ -89,6 +89,11 @@ extension Array {
 
 extension UIColor {
     
+    var data: ColorData {
+        let (r, g, b, a) = rgba
+        return ColorData(red: r, green: g, blue: b, alpha: a)
+    }
+    
     var rgba: (CGFloat, CGFloat, CGFloat, CGFloat) {
         var r: CGFloat = 0
         var g: CGFloat = 0
@@ -109,7 +114,23 @@ extension UIColor {
     }
 }
 
-class Color:UIColor, Codable {
+class Color: UIColor, Codable {
+    
+    convenience init(data: ColorData) {
+        self.init(red: data.red, green: data.green, blue: data.blue, alpha: data.alpha)
+    }
+    
+    convenience init(up: UIColor) {
+        self.init(data: up.data)
+    }
+    
+}
+
+struct ColorData: Codable {
+    var red: CGFloat
+    var green: CGFloat
+    var blue: CGFloat
+    var alpha: CGFloat
     
 }
 
