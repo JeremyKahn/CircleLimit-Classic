@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:CircleLimit.xcodeproj">
+      location = "self:/Users/kahn/Dropbox/iPhone apps/CircleLimit Classic/CircleLimitClassic.xcodeproj">
    </FileRef>
 </Workspace>

@@ -16,7 +16,7 @@ protocol Disked {
         
 }
 
-protocol HDrawable: class, Disked {
+protocol HDrawable: class, Disked, Codable {
     
     func copy() -> HDrawable
     
@@ -53,7 +53,7 @@ protocol HDrawable: class, Disked {
 
 extension HDrawable {
     
-    func filteredGroup(group: [Action], cutoffDistance: Double) -> [Action] {
+    func filteredGroup(_ group: [Action], cutoffDistance: Double) -> [Action] {
         
         let objectCutoffAbs = distanceToAbs(cutoffDistance + radius)
         
@@ -62,12 +62,12 @@ extension HDrawable {
         return objectGroup
     }
     
-    func drawWithMask(mask: HyperbolicTransformation) {
+    func drawWithMask(_ mask: HyperbolicTransformation) {
         self.mask = mask
         draw()
     }
     
-    func drawWithMaskAndAction(A: Action) {
+    func drawWithMaskAndAction(_ A: Action) {
         if useFillColorTable {
             fillColor = fillColorTable[A.action.mapping[fillColorBaseNumber]!]!
         }

@@ -22,7 +22,7 @@ struct Action: Locatable {
         return motion.location
     }
     
-    static func neighbors(location: Location)->  [Location] {
+    static func neighbors(_ location: Location)->  [Location] {
         return HyperbolicTransformation.neighbors(location)
     }
     
@@ -47,8 +47,8 @@ struct Action: Locatable {
 
 // right now we're using _semigroup_ generators
 // this generates all elements of the semigroup which can be realized as a path of words in the generators, each meeting the cutoff
-func generatedGroup(generators: [Action], bigCutoff: Double) -> [Action] {
-    let startTime = NSDate()
+func generatedGroup(_ generators: [Action], bigCutoff: Double) -> [Action] {
+    let startTime = Date()
     let bigGroup = LocationTable<Action>()
     bigGroup.add(Action())
     bigGroup.add(generators)
@@ -77,19 +77,19 @@ func generatedGroup(generators: [Action], bigCutoff: Double) -> [Action] {
         frontier = newFrontier
     }
     print("Found \(bigGroup.count) elements in the big group")
-    let timeTaken = 1000 * NSDate().timeIntervalSinceDate(startTime)
+    let timeTaken = 1000 * Date().timeIntervalSince(startTime)
     print("Time taken: \(timeTaken) ms")
     return bigGroup.arrayForm
 }
 
 // the hyperbolic length of c in triangle ABC
-func lengthFromAngles(A: Double, B: Double, C:Double) -> Double {
+func lengthFromAngles(_ A: Double, B: Double, C:Double) -> Double {
     return acosh((cos(A) * cos(B) + cos(C)) / (sin(A) * sin(B)))
 }
 
 
 // produces the standard three (redundant) generators for an orientable pqr triangle group
-func pqrGeneratorsAndGuidelines(p: Int, q: Int, r: Int) -> ([HyperbolicTransformation], [HDrawable]) {
+func pqrGeneratorsAndGuidelines(_ p: Int, q: Int, r: Int) -> ([HyperbolicTransformation], [HDrawable]) {
     let pi = Double.PI
     let (pp, qq, rr) = (pi / Double(p), pi / Double(q), pi / Double(r))
     assert(pp + qq + rr < pi)
@@ -175,7 +175,7 @@ class Permutation<Element: HasUniverse>: Equatable {
         self.mapping = mapping
     }
     
-    func following(y: Permutation<Element>) -> Permutation<Element> {
+    func following(_ y: Permutation<Element>) -> Permutation<Element> {
         var newMapping = [Element: Element]()
         for i in Element.universe {
             newMapping[i] = mapping[y.mapping[i]!]!

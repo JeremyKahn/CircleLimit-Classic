@@ -9,7 +9,7 @@
 import Foundation
 
 // representation is z -> lambda * (z - a)/(1 - a.bar * z)
-struct HyperbolicTransformation : CustomStringConvertible, Locatable {
+struct HyperbolicTransformation : CustomStringConvertible, Locatable, Codable {
     
     var a: Complex64 = Complex64()
     
@@ -61,13 +61,13 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     // MARK: Group operations
     static let identity = HyperbolicTransformation()
     
-    func appliedTo(z: Complex64) -> Complex64 {
+    func appliedTo(_ z: Complex64) -> Complex64 {
         var w = (z - a) / (1 - a.conj * z)
         w *= lambda
         return w
     }
     
-    func appliedTo(z: HPoint) -> HPoint {
+    func appliedTo(_ z: HPoint) -> HPoint {
         return HPoint(appliedTo(z.z))
     }
     
@@ -91,7 +91,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
 //        return HyperbolicTransformation(a: -a * lambda, lambda: lambda.conj)
 //    }
     
-    func following(B: HyperbolicTransformation) -> HyperbolicTransformation {
+    func following(_ B: HyperbolicTransformation) -> HyperbolicTransformation {
         let tZ = B.inverse.appliedTo(a)
         var u = Complex64(1.0, 0.0) + a.conj * B.a * B.lambda
         u = u.conj / u
@@ -99,7 +99,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         return  HyperbolicTransformation(a: tZ, lambda: u)
     }
     
-    func toThe(n: Int) -> HyperbolicTransformation {
+    func toThe(_ n: Int) -> HyperbolicTransformation {
         assert(n >= 0)
         var M = HyperbolicTransformation()
         for _ in 0..<n {
@@ -117,7 +117,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         return Int(1/(1-a.abs)) // should always be at least 1
     }
     
-    static func neighbors(l: Location) -> [Location] {
+    static func neighbors(_ l: Location) -> [Location] {
         return [l-1, l, l+1]
     }
     
@@ -127,15 +127,15 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
         return closeToIdentity(HyperbolicTransformation.tolerance)
     }
     
-    func closeToIdentity(tolerance: Double) -> Bool {
+    func closeToIdentity(_ tolerance: Double) -> Bool {
         return a.abs < tolerance && (lambda - 1).abs < tolerance
     }
     
-    func nearTo(B:HyperbolicTransformation) -> Bool {
+    func nearTo(_ B:HyperbolicTransformation) -> Bool {
         return nearTo(B, tolerance: HyperbolicTransformation.tolerance)
     }
     
-    func nearTo(B:HyperbolicTransformation, tolerance: Double) -> Bool {
+    func nearTo(_ B:HyperbolicTransformation, tolerance: Double) -> Bool {
         let E = self.following(B.inverse)
         return E.closeToIdentity(tolerance)
     }
@@ -148,7 +148,7 @@ struct HyperbolicTransformation : CustomStringConvertible, Locatable {
     
     static func randomDouble() -> Double {
         let n = 1000000
-        return Double(random() % n) / Double(n)
+        return Double(Int(arc4random()) % n) / Double(n)
     }
     
     static func randomHyperbolicTransformation() -> HyperbolicTransformation {

@@ -31,7 +31,7 @@ class HyperbolicPolygon: HyperbolicPolyline {
         let points = maskedPointsToDraw
         //        print("Fill color: \(color)")
         let totalPath = UIBezierPath()
-        totalPath.moveToPoint(points[0].cgPoint)
+        totalPath.move(to: points[0].cgPoint)
         var borderPaths: [UIBezierPath] = []
         for i in 0..<(points.count - 1) {
             let (a, b) = (points[i], points[i+1])
@@ -39,11 +39,11 @@ class HyperbolicPolygon: HyperbolicPolyline {
             addGeodesicTo(totalPath)
             
             let borderPath = UIBezierPath()
-            borderPath.moveToPoint(a.cgPoint)
+            borderPath.move(to: a.cgPoint)
             addGeodesicTo(borderPath)
  
             borderPath.lineWidth = suitableLineWidth(a, b)
-            borderPath.lineCapStyle = CGLineCap.Round
+            borderPath.lineCapStyle = CGLineCap.round
             borderPaths.append(borderPath)
         }
         return (totalPath, borderPaths)
@@ -53,16 +53,16 @@ class HyperbolicPolygon: HyperbolicPolyline {
         let (totalPath, borderPaths) = polygonAndCurves
         fillColor.setFill()
         lineColor.setStroke()
-        totalPath.lineCapStyle = CGLineCap.Round
+        totalPath.lineCapStyle = CGLineCap.round
         totalPath.fill()
         _ = borderPaths.map { $0.stroke() }
         if points.count == 1 { super.draw() }
     }
     
-    func containsPoint(point: HPoint, withMask mask: HyperbolicTransformation) -> Bool {
+    func containsPoint(_ point: HPoint, withMask mask: HyperbolicTransformation) -> Bool {
         self.mask = mask
         let (polygon, _) = polygonAndCurves
-        return polygon.containsPoint(point.cgPoint)
+        return polygon.contains(point.cgPoint)
     }
 }
 

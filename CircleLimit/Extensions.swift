@@ -8,18 +8,18 @@
 
 import UIKit
 
-extension NSTimer {
+extension Timer {
     
 
     
 }
 
-func timeInMillisecondsSince(date: NSDate) -> Int {
-    return (1000 * NSDate().timeIntervalSinceDate(date)).int
+func timeInMillisecondsSince(_ date: Date) -> Int {
+    return (1000 * Date().timeIntervalSince(date)).int
 }
 
 
-func print(s: String, when condition: Bool) {
+func print(_ s: String, when condition: Bool) {
     if condition {
         print(s)
     }
@@ -47,15 +47,15 @@ extension Double: NicelyPrinting {
 
 extension Array {
     
-    mutating func insertAtIndices(instructions: [(Int, Element)]) {
-        let sorted = instructions.sort() { $0.0 < $1.0  }
+    mutating func insertAtIndices(_ instructions: [(Int, Element)]) {
+        let sorted = instructions.sorted() { $0.0 < $1.0  }
         for i in 0..<sorted.count {
             let (j, a) = sorted[i]
-            insert(a, atIndex: j + i)
+            insert(a, at: j + i)
         }
     }
     
-    mutating func insertAfterIndices(instructions: [(Int, Element)]) {
+    mutating func insertAfterIndices(_ instructions: [(Int, Element)]) {
         let incremented = instructions.map { ($0.0 + 1, $0.1) }
         insertAtIndices(incremented)
     }

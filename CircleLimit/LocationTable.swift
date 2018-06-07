@@ -21,7 +21,7 @@ public protocol Locatable {
 
 // You can look up a Locatable object in a LocationTable, and it will only search for it in its Location or neighboring Location's
 // This works well for a dictionary where the keys are points in a manifold, and there may have been slight errors in the keys introduced by computation
-public class LocationTable<T: Locatable> {
+open class LocationTable<T: Locatable> {
     
     var simpleArray : [T] = []
     
@@ -31,14 +31,14 @@ public class LocationTable<T: Locatable> {
     
     public init() {}
     
-    public func add(entries: [T]) {
+    open func add(_ entries: [T]) {
         for E in entries {
             add(E)
         }
         count += entries.count
     }
     
-    public func add(E : T) {
+    open func add(_ E : T) {
         let l = E.location
         if var tempArray = table[l] {
             tempArray.append(E)
@@ -49,7 +49,7 @@ public class LocationTable<T: Locatable> {
         count += 1
     }
     
-    public func arrayForNearLocation(l: T.Location) -> [T] {
+    open func arrayForNearLocation(_ l: T.Location) -> [T] {
         var array : [T] = []
         for l in  T.neighbors(l) {
             if let newArray = table[l] {
@@ -59,7 +59,7 @@ public class LocationTable<T: Locatable> {
         return array
     }
     
-    public var arrayForm : [T] {
+    open var arrayForm : [T] {
         var array : [T] = []
         for (_, list) in table {
             array += list
