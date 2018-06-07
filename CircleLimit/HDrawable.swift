@@ -33,6 +33,8 @@ protocol HDrawable: class, Disked, Codable {
     
     var intrinsicLineWidth: Double {get set}
     
+    var colorInfo: ColorInfo {get set}
+    
     var fillColorTable: ColorTable {get set}
     
     var fillColor: UIColor {get set}
@@ -52,6 +54,37 @@ protocol HDrawable: class, Disked, Codable {
 
 
 extension HDrawable {
+    
+    var fillColorTable: ColorTable {
+        get {
+            return colorInfo.fillColorTable
+        }
+        
+        set(newValue) {
+            colorInfo.fillColorTable = newValue
+        }
+    }
+    
+    var fillColor: UIColor {
+        get {
+            return colorInfo.fillColor
+        }
+        
+        set(newValue) {
+            colorInfo.fillColor = newValue
+        }
+    }
+    
+    var lineColor: UIColor {
+        get {
+            return colorInfo.lineColor
+        }
+        
+        set(newValue) {
+            colorInfo.lineColor = newValue
+        }
+    }
+
     
     func filteredGroup(_ group: [Action], cutoffDistance: Double) -> [Action] {
         

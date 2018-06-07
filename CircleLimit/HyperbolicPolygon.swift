@@ -14,17 +14,17 @@ class HyperbolicPolygon: HyperbolicPolyline {
         return HyperbolicPolygon(self)
     }
     
-    init(_ a: HyperbolicPolygon) {
-        super.init(a)
-    }
-    
-    override init(_ z: HPoint) {
-        super.init(z)
-    }
-    
-    override init(_ pp: [HPoint]) {
-        super.init(pp)
-    }
+//    init(_ a: HyperbolicPolygon) {
+//        super.init(a)
+//    }
+//
+//    override init(_ z: HPoint) {
+//        super.init(z)
+//    }
+//
+//    override init(_ pp: [HPoint]) {
+//        super.init(pp)
+//    }
     
     
     var polygonAndCurves: (UIBezierPath, [UIBezierPath]) {

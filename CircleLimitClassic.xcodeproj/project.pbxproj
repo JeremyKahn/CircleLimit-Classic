@@ -35,6 +35,7 @@
 		1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDBD08E1B5C43590057B710 /* PoincareView.swift */; };
 		1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD539E1B7162620054445B /* DynamicProgramming.swift */; };
 		907208B420BCD7690069468E /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907208B320BCD7690069468E /* HelpViewController.swift */; };
+		9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782D20C9D30800F3C36A /* ColorInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		1BDBD08E1B5C43590057B710 /* PoincareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PoincareView.swift; path = ../PoincareView.swift; sourceTree = "<group>"; };
 		1BDD539E1B7162620054445B /* DynamicProgramming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProgramming.swift; sourceTree = "<group>"; };
 		907208B320BCD7690069468E /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
+		9088782D20C9D30800F3C36A /* ColorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				1B6EB4741CAD727700B08F09 /* HDrawable.swift */,
+				9088782D20C9D30800F3C36A /* ColorInfo.swift */,
 				1B6EB46F1CAD716D00B08F09 /* HyperbolicPolyline.swift */,
 				1B6EB4721CAD724900B08F09 /* HyperbolicPolygon.swift */,
 				1B6EB46D1CAD711D00B08F09 /* HyperbolicDot.swift */,
@@ -337,6 +340,7 @@
 				1B5979F61CBB17A400CEAEA7 /* GradientColorTriangle.swift in Sources */,
 				1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */,
 				1B5979FC1CBB17A400CEAEA7 /* TriangleViewController.swift in Sources */,
+				9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */,
 				907208B420BCD7690069468E /* HelpViewController.swift in Sources */,
 				1BDBD0621B5C21370057B710 /* CircleLimit.xcdatamodeld in Sources */,
 			);

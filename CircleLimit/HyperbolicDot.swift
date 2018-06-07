@@ -30,11 +30,7 @@ class HyperbolicDot : HDrawable, Codable {
     
     var intrinsicLineWidth: Double = 0
     
-    var lineColor: UIColor = UIColor.black
-    
-    var fillColorTable: ColorTable = [1: UIColor.blue, 2: UIColor.green, 3: UIColor.red, 4: UIColor.yellow]
-    
-    var fillColor: UIColor = UIColor.purple
+    var colorInfo: ColorInfo = ColorInfo(fillColor: UIColor.purple)
     
     var fillColorBaseNumber = ColorNumber.baseNumber
     

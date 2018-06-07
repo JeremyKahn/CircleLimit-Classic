@@ -35,16 +35,10 @@ class HyperbolicPolyline : HDrawable, Codable {
     
     var intrinsicLineWidth = 0.015
     
-    var lineColor: UIColor = UIColor.black
-    
-    // Feels a little weird to include these in Hyperbolic Polyline: right now they're just included in order to comform to HDrawable
-    // TODO: Put these in a separate protocol?
-    var fillColorTable: ColorTable = [1: UIColor.blue, 2: UIColor.green, 3: UIColor.red, 4: UIColor.yellow]
+    var colorInfo: ColorInfo = ColorInfo()
     
     var fillColorBaseNumber = ColorNumber.baseNumber
-    
-    var fillColor: UIColor = UIColor.clear
-    
+        
     var useFillColorTable = true
     
     // MARK: Initializers

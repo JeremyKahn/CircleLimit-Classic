@@ -89,6 +89,10 @@ extension Array {
 
 extension UIColor {
     
+    convenience init(data: ColorData) {
+        self.init(red: data.red, green: data.green, blue: data.blue, alpha: data.alpha)
+    }
+    
     var data: ColorData {
         let (r, g, b, a) = rgba
         return ColorData(red: r, green: g, blue: b, alpha: a)
@@ -114,17 +118,21 @@ extension UIColor {
     }
 }
 
-class Color: UIColor, Codable {
-    
-    convenience init(data: ColorData) {
-        self.init(red: data.red, green: data.green, blue: data.blue, alpha: data.alpha)
-    }
-    
-    convenience init(up: UIColor) {
-        self.init(data: up.data)
-    }
-    
-}
+//class Color: UIColor, Codable {
+//    
+//    convenience init(data: ColorData) {
+//        self.init(red: data.red, green: data.green, blue: data.blue, alpha: data.alpha)
+//    }
+//    
+//    convenience init(up: UIColor) {
+//        self.init(data: up.data)
+//    }
+//    
+//    func test() {
+//        let joe = Color.blue
+//        let sam = joe.test()
+//    }
+//}
 
 struct ColorData: Codable {
     var red: CGFloat
