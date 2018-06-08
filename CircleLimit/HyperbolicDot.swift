@@ -10,6 +10,8 @@ import UIKit
 
 class HyperbolicDot : HDrawable, Codable {
     
+    var type: HDrawableType {return .dot}
+    
     func copy() -> HDrawable {
         return HyperbolicDot(dot: self)
     }

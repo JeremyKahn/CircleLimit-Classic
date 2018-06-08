@@ -8,7 +8,9 @@
 
 import UIKit
 
-class HyperbolicPolyline : HDrawable, Codable {
+class HyperbolicPolyline : HDrawable, Codable {    
+    
+    var type: HDrawableType {return .polyline}
     
     var observingAllChanges = false
     

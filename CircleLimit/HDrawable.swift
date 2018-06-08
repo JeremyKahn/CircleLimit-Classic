@@ -16,7 +16,51 @@ protocol Disked {
         
 }
 
+enum HDrawableType: String, Codable {
+    
+    case polyline
+    case polygon
+    case dot
+    
+    var metatype: HDrawable.Type {
+        switch self {
+        case .polyline: return HyperbolicPolyline.self
+        case .polygon: return HyperbolicPolygon.self
+        case .dot: return HyperbolicDot.self
+        }
+    }
+}
+
+struct HDWrapper: Codable {
+    var object: HDrawable
+    
+    init(_ object: HDrawable) {
+        self.object = object
+    }
+    
+    private enum CodingKeys : CodingKey {
+        case type
+        case object
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(object.type, forKey: .type)
+        try object.encode(to: encoder)
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        let type = try container.decode(HDrawableType.self, forKey: .type)
+        self.object = try type.metatype.init(from: decoder)
+    }
+}
+
 protocol HDrawable: class, Disked, Codable {
+    
+    var type: HDrawableType {get}
     
     func copy() -> HDrawable
     

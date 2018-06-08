@@ -10,6 +10,8 @@ import UIKit
 
 class HyperbolicPolygon: HyperbolicPolyline {
     
+    override var type: HDrawableType {return .polygon}
+    
     override func copy() -> HDrawable {
         return HyperbolicPolygon(self)
     }

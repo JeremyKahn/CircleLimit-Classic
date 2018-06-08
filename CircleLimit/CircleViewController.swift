@@ -89,12 +89,48 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         let I = ColorNumberPermutation()
         searchingGroup = groupForIntegerDistance[5].filter() { $0.action == I }
         
+        load()
     }
     
     func selectElements(_ group: [Action], cutoff: Double) -> [Action] {
         let a = group.filter { (M: Action) in M.motion.a.abs < cutoff }
         print("Selected \(a.count) elements with cutoff \(cutoff)")
         return a
+    }
+    
+    // MARK: - Save and Load
+    var persistenceURL = filePath(fileName: "basic")
+    
+    func save() {
+        let file = persistenceURL
+        print("Saving to file")
+        let jse = JSONEncoder()
+        let stuff: [HDWrapper] = drawObjects.map() {HDWrapper($0)}
+        do {
+            let data = try jse.encode(stuff)
+            let jsonString = String(data: data, encoding: .utf8)
+            print(jsonString)
+            try data.write(to: file)
+        } catch {
+            print(error.localizedDescription)
+            print(error)
+        }
+    }
+    
+    func load() {
+        let file = persistenceURL
+        print("Loading from file")
+        let jsd = JSONDecoder()
+        do {
+            let data = try Data.init(contentsOf: file)
+            let jsonString = String(data: data, encoding: .utf8)
+            print(jsonString)
+            let stuff = try jsd.decode([HDWrapper].self, from: data)
+            drawObjects = stuff.map() {$0.object}
+        } catch {
+            print(error.localizedDescription)
+            print(error)
+        }
     }
     
     // MARK: - Flags
@@ -297,6 +333,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawObjects = previousObjects
         }
         newCurve = lastState.newCurve
+        save()
         poincareView.setNeedsDisplay()
     }
     
@@ -310,6 +347,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawObjects = previousObjects
         }
         newCurve = lastState.newCurve
+        save()
         poincareView.setNeedsDisplay()
     }
     
@@ -390,6 +428,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         stateStack.append(State(completedObjects: drawObjects, newCurve: nil))
         newCurve = nil
         drawObjects.append(curve)
+        save()
         poincareView.setNeedsDisplay()
     }
     
@@ -481,6 +520,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         mode = .usual
         stateStack.append(State(completedObjects: oldDrawObjects, newCurve: nil))
         oldDrawObjects = []
+        save()
         poincareView.setNeedsDisplay()
     }
     

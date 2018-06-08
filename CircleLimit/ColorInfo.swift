@@ -14,7 +14,7 @@ class ColorInfo: Codable {
     
     var fillColorTable: ColorTable = [1: UIColor.blue, 2: UIColor.green, 3: UIColor.red, 4: UIColor.yellow]
     
-    var fillColor: UIColor = UIColor.clear
+    var fillColor: UIColor = UIColor.purple
     
     init() {}
     
@@ -31,16 +31,14 @@ class ColorInfo: Codable {
 
     
     func encode(to encoder: Encoder) throws {
-        func encode(to encoder: Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(lineColor.data, forKey: .lineColor)
-            try container.encode(fillColor.data, forKey: .fillColor)
-            var dataTable: [ColorNumber: ColorData] = [:]
-            for i in fillColorTable.keys {
-                dataTable[i] = fillColorTable[i]!.data
-            }
-            try container.encode(dataTable, forKey: .fillColorTable)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(lineColor.data, forKey: .lineColor)
+        try container.encode(fillColor.data, forKey: .fillColor)
+        var dataTable: [ColorNumber: ColorData] = [:]
+        for i in fillColorTable.keys {
+            dataTable[i] = fillColorTable[i]!.data
         }
+        try container.encode(dataTable, forKey: .fillColorTable)
     }
     
     required init(from decoder: Decoder) throws {
@@ -54,6 +52,7 @@ class ColorInfo: Codable {
         for i in dataTable.keys {
             fillColorTable[i] = UIColor(data: dataTable[i]!)
         }
+        print(fillColorTable)
     }
 
 
