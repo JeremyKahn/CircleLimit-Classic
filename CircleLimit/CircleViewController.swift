@@ -42,7 +42,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: Debugging variables
     var tracingGroupMaking = false
     
-    var tracingGesturesAndTouches = false
+    var tracingGesturesAndTouches = true
     
     var trivialGroup = false
     
@@ -136,8 +136,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: - Flags
     var drawing = true
     
+    var doNothing = false
+    
     var suppressTouches: Bool {
-        return !drawing || changingColor || formingPolygon
+        return !drawing || changingColor || formingPolygon || doNothing
     }
 
     // MARK: - General properties
@@ -784,11 +786,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     
     func cancelEffectOfTouches() {
+        doNothing = false
         if oldDrawObjects.count > 0 {
             print("Restoring objects and cancelling move points", when: tracingGesturesAndTouches)
             drawObjects = oldDrawObjects
             oldDrawObjects = []
             matchedPoints = []
+            save()
+            poincareView.setNeedsDisplay()
         }
     }
     // MARK: Outlets to other views
@@ -807,6 +812,10 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             changingColor = true
             let triangleViewController = segue.destination as! TriangleViewController
             triangleViewController.delegate = self
+        case "help":
+            print("Saving old objects", when: tracingGesturesAndTouches)
+            doNothing = true
+            oldDrawObjects = drawObjects
         default:
             break
         }

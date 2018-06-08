@@ -9,6 +9,8 @@
 import UIKit
 
 class HelpViewController: UIViewController {
+    
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +24,9 @@ class HelpViewController: UIViewController {
     }
     
     @IBAction func returnToMain(_ sender: Any) {
+        print("Returning to the main view")
+        let cvc = presentingViewController as! CircleViewController
+        cvc.cancelEffectOfTouches()
         dismiss(animated: true, completion: nil)
     }
     
