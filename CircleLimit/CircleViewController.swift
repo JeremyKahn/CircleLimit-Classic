@@ -639,6 +639,15 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             return false
         }
     }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if gestureRecognizer.name == "gallery" {
+            let z = hPoint(touch.location(in: poincareView))
+            return z == nil
+        } else {
+            return true
+        }
+    }
 
     
     
@@ -815,6 +824,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case "help":
             print("Saving old objects", when: tracingGesturesAndTouches)
             doNothing = true
+            // the next line is probably ineffective and unnecessary
             oldDrawObjects = drawObjects
         default:
             break

@@ -37,6 +37,7 @@
 		907208B420BCD7690069468E /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907208B320BCD7690069468E /* HelpViewController.swift */; };
 		9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782D20C9D30800F3C36A /* ColorInfo.swift */; };
 		9088783020CA0C5700F3C36A /* FileMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782F20CA0C5700F3C36A /* FileMaster.swift */; };
+		90C3DFFF20CAD74B00CD73ED /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		907208B320BCD7690069468E /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		9088782D20C9D30800F3C36A /* ColorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorInfo.swift; sourceTree = "<group>"; };
 		9088782F20CA0C5700F3C36A /* FileMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMaster.swift; sourceTree = "<group>"; };
+		90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,6 +175,7 @@
 		1BDBD05B1B5C21370057B710 /* CircleLimit */ = {
 			isa = PBXGroup;
 			children = (
+				90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */,
 				907208B320BCD7690069468E /* HelpViewController.swift */,
 				1BDBD0651B5C21370057B710 /* Main.storyboard */,
 				1BDBD08E1B5C43590057B710 /* PoincareView.swift */,
@@ -327,6 +330,7 @@
 				1B6EB4731CAD724900B08F09 /* HyperbolicPolygon.swift in Sources */,
 				1BC1B2C41C3D71B400FF17C6 /* GroupGeneration.swift in Sources */,
 				1BC1B2C21C3D713300FF17C6 /* HyperbolicTransformation.swift in Sources */,
+				90C3DFFF20CAD74B00CD73ED /* GalleryViewController.swift in Sources */,
 				1B5979FB1CBB17A400CEAEA7 /* TriangleView.swift in Sources */,
 				1B6EB4751CAD727700B08F09 /* HDrawable.swift in Sources */,
 				1B5979F11CBB17A400CEAEA7 /* ColorExtensions.swift in Sources */,
