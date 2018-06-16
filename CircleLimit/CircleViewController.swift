@@ -120,36 +120,15 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     var persistenceURL: URL {return filePath(fileName: CircleViewController.filenameStem + String(pageviewIndex))}
     
     func save() {
-        let file = persistenceURL
-        let filename = persistenceURL.absoluteString
-        print("Saving to file: \(filename)")
-        let jse = JSONEncoder()
         let stuff: [HDWrapper] = drawObjects.map() {HDWrapper($0)}
-        do {
-            let data = try jse.encode(stuff)
-            let jsonString = String(data: data, encoding: .utf8)
-            print(jsonString ?? "No string!")
-            try data.write(to: file)
-        } catch {
-            print(error.localizedDescription)
-            print(error)
-        }
+        saveStuff(stuff, location: persistenceURL)
     }
     
     func load() {
         let file = persistenceURL
-        let filename = persistenceURL.absoluteString
-        print("Loading from file: \(filename)")
-        let jsd = JSONDecoder()
-        do {
-            let data = try Data.init(contentsOf: file)
-            let jsonString = String(data: data, encoding: .utf8)
-            print(jsonString ?? "No string!")
-            let stuff = try jsd.decode([HDWrapper].self, from: data)
+        if let stuff = loadStuff(location: file, type: [HDWrapper].self) {
+            print("Successfully loaded from disk")
             drawObjects = stuff.map() {$0.object}
-        } catch {
-            print(error.localizedDescription)
-            print(error)
         }
     }
     

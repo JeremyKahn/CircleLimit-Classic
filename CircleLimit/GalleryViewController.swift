@@ -35,14 +35,11 @@ class GalleryContext {
 
 class GalleryViewController: UIPageViewController
 {
-    var numberOfPagesToMake = 5
+    var defaultNumberOfPagesToMake = 5
     
-    fileprivate var pages: [UIViewController] = []
+    fileprivate var numberOfPagesLocation = filePath(fileName: "numberOfPages")
     
-    fileprivate func getViewController(withIdentifier identifier: String) -> UIViewController
-    {
-        return UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
-    }
+    fileprivate var pages: [CircleViewController] = []
     
     var scrollView: UIScrollView {
         return view.subviews[0] as! UIScrollView
@@ -51,10 +48,15 @@ class GalleryViewController: UIPageViewController
     var galleryContext: GalleryContext?
     
     func newCircleViewController() -> CircleViewController {
-        //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let storyboard = self.storyboard!
-        let vc = storyboard.instantiateViewController(withIdentifier:"circleViewController") as! CircleViewController
+        let vc = storyboard!.instantiateViewController(withIdentifier: "circleViewController") as! CircleViewController
         vc.galleryContext = galleryContext
+        return vc
+    }
+    
+    func newCircleViewController(withIndex index: Int) -> CircleViewController {
+        let vc = newCircleViewController()
+        vc.pageviewIndex = index
+        vc.load()
         return vc
     }
     
@@ -65,10 +67,16 @@ class GalleryViewController: UIPageViewController
         self.delegate   = self
         self.galleryContext = GalleryContext(gallery: self)
         
-        for _ in 0..<numberOfPagesToMake {
-            pages.append(newCircleViewController())
+        let numberOfPagesToMake: Int
+        if let savedNumber = loadStuff(location: numberOfPagesLocation, type: [Int].self)?[0] {
+            numberOfPagesToMake = savedNumber
+        } else {
+            numberOfPagesToMake = defaultNumberOfPagesToMake
         }
-        giveEachPageItsIndex()
+        
+        for i in 0..<numberOfPagesToMake {
+            pages.append(newCircleViewController(withIndex: i))
+        }
         
         if let firstVC = pages.first
         {
@@ -82,12 +90,15 @@ class GalleryViewController: UIPageViewController
     
     func giveEachPageItsIndex() {
         for i in 0..<pages.count {
-            let cvc = pages[i] as! CircleViewController
+            let cvc = pages[i]
             cvc.pageviewIndex = i
+            cvc.save()
         }
+        saveStuff([pages.count], location: numberOfPagesLocation) // Save the array because of the JSON bug
     }
     
     func deleteCurrentPage(_ currentPage: CircleViewController) {
+        guard pages.count > 1 else {return}
         let currentIndex = pages.index(of: currentPage)!
         let newPage = dataSource!.pageViewController(self, viewControllerAfter: currentPage)
         if let newPage = newPage {
@@ -100,6 +111,7 @@ class GalleryViewController: UIPageViewController
     func cloneCurrentPage(_ currentPage: CircleViewController) {
         let newPage = newCircleViewController()
         let currentIndex = pages.index(of: currentPage)!
+        // TODO: Move the cloning to CircleViewController
         newPage.drawObjects = currentPage.drawObjects.map() {$0.copy()}
         pages.insert(newPage, at: currentIndex + 1)
         giveEachPageItsIndex()
@@ -110,7 +122,7 @@ extension GalleryViewController: UIPageViewControllerDataSource
 {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
-        guard let viewControllerIndex = pages.index(of: viewController) else { return nil }
+        guard let viewControllerIndex = pages.index(of: viewController as! CircleViewController) else { return nil }
         
         let previousIndex = viewControllerIndex - 1
         
@@ -123,7 +135,7 @@ extension GalleryViewController: UIPageViewControllerDataSource
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController?
     {
-        guard let viewControllerIndex = pages.index(of: viewController) else { return nil }
+        guard let viewControllerIndex = pages.index(of: viewController as! CircleViewController) else { return nil }
         
         let nextIndex = viewControllerIndex + 1
         
