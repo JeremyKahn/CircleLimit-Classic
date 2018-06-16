@@ -115,6 +115,7 @@ class GalleryViewController: UIPageViewController
         newPage.drawObjects = currentPage.drawObjects.map() {$0.copy()}
         pages.insert(newPage, at: currentIndex + 1)
         giveEachPageItsIndex()
+        setViewControllers([newPage], direction: .forward, animated: true, completion: nil)
     }
 }
 
