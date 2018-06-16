@@ -98,18 +98,37 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         return a
     }
     
+    // MARK: - Delete and Clone
+    
+    @IBAction func deletePage(_ sender: UIButton) {
+        galleryContext!.deletePage(currentPage: self)
+    }    
+    
+    @IBAction func clonePage(_ sender: UIButton) {
+        galleryContext!.clonePage(currentPage: self)
+    }
+    
+
+    // MARK: - Location and Context in PageView
+    var pageviewIndex = 0
+    
+    var galleryContext: GalleryContext?
+
     // MARK: - Save and Load
-    var persistenceURL = filePath(fileName: "basic")
+    static var filenameStem = "CircleViewController"
+    
+    var persistenceURL: URL {return filePath(fileName: CircleViewController.filenameStem + String(pageviewIndex))}
     
     func save() {
         let file = persistenceURL
-        print("Saving to file")
+        let filename = persistenceURL.absoluteString
+        print("Saving to file: \(filename)")
         let jse = JSONEncoder()
         let stuff: [HDWrapper] = drawObjects.map() {HDWrapper($0)}
         do {
             let data = try jse.encode(stuff)
             let jsonString = String(data: data, encoding: .utf8)
-            print(jsonString)
+            print(jsonString ?? "No string!")
             try data.write(to: file)
         } catch {
             print(error.localizedDescription)
@@ -119,12 +138,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     
     func load() {
         let file = persistenceURL
-        print("Loading from file")
+        let filename = persistenceURL.absoluteString
+        print("Loading from file: \(filename)")
         let jsd = JSONDecoder()
         do {
             let data = try Data.init(contentsOf: file)
             let jsonString = String(data: data, encoding: .utf8)
-            print(jsonString)
+            print(jsonString ?? "No string!")
             let stuff = try jsd.decode([HDWrapper].self, from: data)
             drawObjects = stuff.map() {$0.object}
         } catch {
@@ -296,7 +316,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // TODO: Modify the center-and-radius algorithm to find the smallest disk containing a collection of disks, and use it here
     func centerAndRadiusFor(_ objects: [HDrawable]) -> (HPoint, Double) {
         let centers = objects.map {$0.centerPoint}
-        let (center, radius) = centerPointAndRadius(centers, delta: 0.1)
+        let (center, _) = centerPointAndRadius(centers, delta: 0.1)
         let totalRadius = objects.reduce(0) {max($0, $1.centerPoint.distanceTo(center) + $1.radius ) }
         return (center, totalRadius)
     }
@@ -788,6 +808,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case .ended:
             drawing = true
             mode = Mode.usual
+            galleryContext?.canSwitchPage = (multiplier == 1)
         default: break
         }
         poincareView.setNeedsDisplay()
@@ -833,3 +854,4 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
 
     
 }
+
