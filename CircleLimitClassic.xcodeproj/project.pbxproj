@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 48;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,6 +37,10 @@
 		907208B420BCD7690069468E /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907208B320BCD7690069468E /* HelpViewController.swift */; };
 		9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782D20C9D30800F3C36A /* ColorInfo.swift */; };
 		9088783020CA0C5700F3C36A /* FileMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782F20CA0C5700F3C36A /* FileMaster.swift */; };
+		90A598542139D5490031A743 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598502139D5450031A743 /* Bolts.framework */; };
+		90A598552139D5490031A743 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598512139D5470031A743 /* FBSDKCoreKit.framework */; };
+		90A598562139D5490031A743 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598522139D5480031A743 /* FBSDKShareKit.framework */; };
+		90A598572139D5490031A743 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598532139D5480031A743 /* FBSDKLoginKit.framework */; };
 		90C3DFFF20CAD74B00CD73ED /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -85,6 +89,10 @@
 		907208B320BCD7690069468E /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		9088782D20C9D30800F3C36A /* ColorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorInfo.swift; sourceTree = "<group>"; };
 		9088782F20CA0C5700F3C36A /* FileMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMaster.swift; sourceTree = "<group>"; };
+		90A598502139D5450031A743 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		90A598512139D5470031A743 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		90A598522139D5480031A743 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		90A598532139D5480031A743 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -93,6 +101,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90A598542139D5490031A743 /* Bolts.framework in Frameworks */,
+				90A598552139D5490031A743 /* FBSDKCoreKit.framework in Frameworks */,
+				90A598572139D5490031A743 /* FBSDKLoginKit.framework in Frameworks */,
+				90A598562139D5490031A743 /* FBSDKShareKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,6 +188,10 @@
 			isa = PBXGroup;
 			children = (
 				90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */,
+				90A598502139D5450031A743 /* Bolts.framework */,
+				90A598512139D5470031A743 /* FBSDKCoreKit.framework */,
+				90A598532139D5480031A743 /* FBSDKLoginKit.framework */,
+				90A598522139D5480031A743 /* FBSDKShareKit.framework */,
 				907208B320BCD7690069468E /* HelpViewController.swift */,
 				1BDBD0651B5C21370057B710 /* Main.storyboard */,
 				1BDBD08E1B5C43590057B710 /* PoincareView.swift */,
@@ -281,7 +297,7 @@
 				};
 			};
 			buildConfigurationList = 1BDBD0541B5C21370057B710 /* Build configuration list for PBXProject "CircleLimitClassic" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -510,15 +526,19 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = ZAM623LJPU;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CircleLimit",
+				);
 				INFOPLIST_FILE = CircleLimit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cuny.gc.jkahn.CircleLimitClassic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -529,15 +549,19 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = ZAM623LJPU;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/CircleLimit",
+				);
 				INFOPLIST_FILE = CircleLimit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cuny.gc.jkahn.CircleLimitClassic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_SWIFT3_OBJC_INFERENCE = On;
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
