@@ -187,6 +187,7 @@
 		1BDBD05B1B5C21370057B710 /* CircleLimit */ = {
 			isa = PBXGroup;
 			children = (
+				90A598582139E0640031A743 /* New Group */,
 				90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */,
 				90A598502139D5450031A743 /* Bolts.framework */,
 				90A598512139D5470031A743 /* FBSDKCoreKit.framework */,
@@ -233,6 +234,13 @@
 				1BDBD0761B5C21370057B710 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		90A598582139E0640031A743 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

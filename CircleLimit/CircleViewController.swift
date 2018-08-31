@@ -132,6 +132,13 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         }
     }
     
+    // MARK: - Share
+    
+    @IBAction func shareOnFacebook(_ sender: UIButton) {
+        let image = poincareView.asImage()
+        
+    }
+    
     // MARK: - Flags
     var drawing = true
     

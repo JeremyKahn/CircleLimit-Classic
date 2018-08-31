@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sXx-p2-xOg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sXx-p2-xOg">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -53,32 +54,45 @@
                                     <action selector="undoFromButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="7Cx-zt-XHH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kaz-VR-0iR">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kaz-VR-0iR">
                                 <rect key="frame" x="189" y="729" width="80" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="O-&gt;OO"/>
                                 <connections>
                                     <action selector="clonePage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="J1v-Ml-k2c"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv0-3e-6pY">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fv0-3e-6pY">
                                 <rect key="frame" x="127" y="729" width="30" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="X"/>
                                 <connections>
                                     <action selector="deletePage:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="QYh-UK-gKh"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ERd-T5-32B">
+                                <rect key="frame" x="68" y="729.66666666666663" width="30" height="41"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                <state key="normal" title="FB"/>
+                                <connections>
+                                    <action selector="shareOnFacebook:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="k6L-sH-Jet"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="Dx7-OZ-nKl" firstAttribute="leading" secondItem="Kaz-VR-0iR" secondAttribute="trailing" constant="22" id="CNl-E0-u3Y"/>
+                            <constraint firstItem="ERd-T5-32B" firstAttribute="centerY" secondItem="Fv0-3e-6pY" secondAttribute="centerY" id="Fl8-Ed-1sa"/>
                             <constraint firstItem="3B7-75-9cH" firstAttribute="trailing" secondItem="IBq-aQ-8NE" secondAttribute="trailingMargin" id="Fpn-Mv-Xkz"/>
                             <constraint firstItem="6pp-E5-pjF" firstAttribute="top" secondItem="3B7-75-9cH" secondAttribute="bottom" constant="8" id="Oqz-BN-DTp"/>
+                            <constraint firstItem="Fv0-3e-6pY" firstAttribute="leading" secondItem="ERd-T5-32B" secondAttribute="trailing" constant="29" id="aG7-LQ-EjH"/>
+                            <constraint firstItem="ERd-T5-32B" firstAttribute="leading" secondItem="lkK-3B-Mse" secondAttribute="trailing" constant="22" id="dpq-aH-WXv"/>
+                            <constraint firstItem="ERd-T5-32B" firstAttribute="centerY" secondItem="Kaz-VR-0iR" secondAttribute="centerY" id="kZT-hI-bG4"/>
+                            <constraint firstItem="ERd-T5-32B" firstAttribute="centerY" secondItem="lkK-3B-Mse" secondAttribute="centerY" id="m5L-4I-Nq2"/>
                             <constraint firstItem="lkK-3B-Mse" firstAttribute="leading" secondItem="IBq-aQ-8NE" secondAttribute="leadingMargin" id="ohn-ER-103"/>
                             <constraint firstItem="3B7-75-9cH" firstAttribute="leading" secondItem="Dx7-OZ-nKl" secondAttribute="trailing" constant="8" id="p4b-ex-ASV"/>
+                            <constraint firstItem="Kaz-VR-0iR" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="IBq-aQ-8NE" secondAttribute="leading" constant="20" symbolic="YES" id="pBO-Fw-EA7"/>
                             <constraint firstItem="6pp-E5-pjF" firstAttribute="top" secondItem="lkK-3B-Mse" secondAttribute="bottom" constant="8" id="rhB-Iq-VvL"/>
                             <constraint firstItem="6pp-E5-pjF" firstAttribute="top" secondItem="Dx7-OZ-nKl" secondAttribute="bottom" constant="8" id="uSP-uh-ATg"/>
                         </constraints>
