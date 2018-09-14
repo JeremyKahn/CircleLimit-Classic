@@ -34,6 +34,7 @@
 		1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDBD0891B5C2BEA0057B710 /* Complex.swift */; };
 		1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDBD08E1B5C43590057B710 /* PoincareView.swift */; };
 		1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD539E1B7162620054445B /* DynamicProgramming.swift */; };
+		7BAA2E94FC6BCACA72213BB9 /* Pods_CircleLimitClassic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63866ED85587F182F36F6FFA /* Pods_CircleLimitClassic.framework */; };
 		907208B420BCD7690069468E /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907208B320BCD7690069468E /* HelpViewController.swift */; };
 		9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782D20C9D30800F3C36A /* ColorInfo.swift */; };
 		9088783020CA0C5700F3C36A /* FileMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782F20CA0C5700F3C36A /* FileMaster.swift */; };
@@ -42,6 +43,7 @@
 		90A598562139D5490031A743 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598522139D5480031A743 /* FBSDKShareKit.framework */; };
 		90A598572139D5490031A743 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90A598532139D5480031A743 /* FBSDKLoginKit.framework */; };
 		90C3DFFF20CAD74B00CD73ED /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */; };
+		B32D96E14536CF83B3F54224 /* Pods_CircleLimitClassicTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEA97C06FA3C7A7C03893B1D /* Pods_CircleLimitClassicTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +57,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0DF9FA8F1A7716BC258F078A /* Pods-CircleLimitClassicTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CircleLimitClassicTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-CircleLimitClassicTests/Pods-CircleLimitClassicTests.release.xcconfig"; sourceTree = "<group>"; };
+		16AB4B36D0D6274771AC31FB /* Pods-CircleLimitClassic.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CircleLimitClassic.release.xcconfig"; path = "Pods/Target Support Files/Pods-CircleLimitClassic/Pods-CircleLimitClassic.release.xcconfig"; sourceTree = "<group>"; };
 		1B5979DD1CBB17A400CEAEA7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ColorPicker.storyboard; sourceTree = "<group>"; };
 		1B5979E01CBB17A400CEAEA7 /* ColorExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorExtensions.swift; sourceTree = "<group>"; };
 		1B5979E11CBB17A400CEAEA7 /* ColorProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorProtocols.swift; sourceTree = "<group>"; };
@@ -86,6 +90,8 @@
 		1BDBD0891B5C2BEA0057B710 /* Complex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Complex.swift; path = ../Complex.swift; sourceTree = "<group>"; };
 		1BDBD08E1B5C43590057B710 /* PoincareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PoincareView.swift; path = ../PoincareView.swift; sourceTree = "<group>"; };
 		1BDD539E1B7162620054445B /* DynamicProgramming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProgramming.swift; sourceTree = "<group>"; };
+		441D7C8C14401C5FFFA2D8C9 /* Pods-CircleLimitClassic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CircleLimitClassic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CircleLimitClassic/Pods-CircleLimitClassic.debug.xcconfig"; sourceTree = "<group>"; };
+		63866ED85587F182F36F6FFA /* Pods_CircleLimitClassic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CircleLimitClassic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		907208B320BCD7690069468E /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		9088782D20C9D30800F3C36A /* ColorInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorInfo.swift; sourceTree = "<group>"; };
 		9088782F20CA0C5700F3C36A /* FileMaster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileMaster.swift; sourceTree = "<group>"; };
@@ -94,6 +100,8 @@
 		90A598522139D5480031A743 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
 		90A598532139D5480031A743 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		AEA97C06FA3C7A7C03893B1D /* Pods_CircleLimitClassicTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CircleLimitClassicTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5FEAAE93649B833B82C7AF1 /* Pods-CircleLimitClassicTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CircleLimitClassicTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CircleLimitClassicTests/Pods-CircleLimitClassicTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +113,7 @@
 				90A598552139D5490031A743 /* FBSDKCoreKit.framework in Frameworks */,
 				90A598572139D5490031A743 /* FBSDKLoginKit.framework in Frameworks */,
 				90A598562139D5490031A743 /* FBSDKShareKit.framework in Frameworks */,
+				7BAA2E94FC6BCACA72213BB9 /* Pods_CircleLimitClassic.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +121,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B32D96E14536CF83B3F54224 /* Pods_CircleLimitClassicTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +182,8 @@
 				1BDBD05B1B5C21370057B710 /* CircleLimit */,
 				1BDBD0741B5C21370057B710 /* CircleLimitTests */,
 				1BDBD05A1B5C21370057B710 /* Products */,
+				86D1AEDF03819845CE0E38C1 /* Pods */,
+				EE48F9D48C3D8ED2866C75CD /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -187,7 +199,6 @@
 		1BDBD05B1B5C21370057B710 /* CircleLimit */ = {
 			isa = PBXGroup;
 			children = (
-				90A598582139E0640031A743 /* New Group */,
 				90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */,
 				90A598502139D5450031A743 /* Bolts.framework */,
 				90A598512139D5470031A743 /* FBSDKCoreKit.framework */,
@@ -236,11 +247,24 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		90A598582139E0640031A743 /* New Group */ = {
+		86D1AEDF03819845CE0E38C1 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
+				441D7C8C14401C5FFFA2D8C9 /* Pods-CircleLimitClassic.debug.xcconfig */,
+				16AB4B36D0D6274771AC31FB /* Pods-CircleLimitClassic.release.xcconfig */,
+				D5FEAAE93649B833B82C7AF1 /* Pods-CircleLimitClassicTests.debug.xcconfig */,
+				0DF9FA8F1A7716BC258F078A /* Pods-CircleLimitClassicTests.release.xcconfig */,
 			);
-			path = "New Group";
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		EE48F9D48C3D8ED2866C75CD /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				63866ED85587F182F36F6FFA /* Pods_CircleLimitClassic.framework */,
+				AEA97C06FA3C7A7C03893B1D /* Pods_CircleLimitClassicTests.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,9 +274,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1BDBD07B1B5C21370057B710 /* Build configuration list for PBXNativeTarget "CircleLimitClassic" */;
 			buildPhases = (
+				1C3201B7256D3E9353EE4F6C /* [CP] Check Pods Manifest.lock */,
 				1BDBD0551B5C21370057B710 /* Sources */,
 				1BDBD0561B5C21370057B710 /* Frameworks */,
 				1BDBD0571B5C21370057B710 /* Resources */,
+				3424111A7C410101A16FAEFC /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -267,6 +293,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1BDBD07E1B5C21370057B710 /* Build configuration list for PBXNativeTarget "CircleLimitClassicTests" */;
 			buildPhases = (
+				DBB7798284CA3324276901AC /* [CP] Check Pods Manifest.lock */,
 				1BDBD06D1B5C21370057B710 /* Sources */,
 				1BDBD06E1B5C21370057B710 /* Frameworks */,
 				1BDBD06F1B5C21370057B710 /* Resources */,
@@ -343,6 +370,75 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1C3201B7256D3E9353EE4F6C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CircleLimitClassic-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3424111A7C410101A16FAEFC /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-CircleLimitClassic/Pods-CircleLimitClassic-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Bolts/Bolts.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKCoreKit/FBSDKCoreKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKLoginKit/FBSDKLoginKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FBSDKShareKit/FBSDKShareKit.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookCore/FacebookCore.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookLogin/FacebookLogin.framework",
+				"${BUILT_PRODUCTS_DIR}/FacebookShare/FacebookShare.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bolts.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKCoreKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKLoginKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSDKShareKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookLogin.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FacebookShare.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CircleLimitClassic/Pods-CircleLimitClassic-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DBB7798284CA3324276901AC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CircleLimitClassicTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1BDBD0551B5C21370057B710 /* Sources */ = {
@@ -471,7 +567,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -519,7 +615,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -529,6 +625,7 @@
 		};
 		1BDBD07C1B5C21370057B710 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 441D7C8C14401C5FFFA2D8C9 /* Pods-CircleLimitClassic.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Blown-up-crosses";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -552,6 +649,7 @@
 		};
 		1BDBD07D1B5C21370057B710 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 16AB4B36D0D6274771AC31FB /* Pods-CircleLimitClassic.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Blown-up-crosses";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -575,6 +673,7 @@
 		};
 		1BDBD07F1B5C21370057B710 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D5FEAAE93649B833B82C7AF1 /* Pods-CircleLimitClassicTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -594,6 +693,7 @@
 		};
 		1BDBD0801B5C21370057B710 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0DF9FA8F1A7716BC258F078A /* Pods-CircleLimitClassicTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = CircleLimitTests/Info.plist;

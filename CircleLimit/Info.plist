@@ -40,25 +40,26 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>fb240678739979383</string>
-            </array>
-        </dict>
-    </array>
-    <key>FacebookAppID</key>
-    <string>240678739979383</string>
-    <key>FacebookDisplayName</key>
-    <string>CircleLimit</string>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>fbapi</string>
-        <string>fb-messenger-api</string>
-        <string>fbauth2</string>
-        <string>fbshareextension</string>
-    </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb240678739979383</string>
+			</array>
+		</dict>
+	</array>
+	<key>FacebookAppID</key>
+	<string>240678739979383</string>
+	<key>FacebookDisplayName</key>
+	<string>CircleLimit</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fbapi20150629</string>
+		<string>fb-messenger-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 </dict>
 </plist>

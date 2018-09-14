@@ -8,6 +8,9 @@
 //
 
 import UIKit
+import FacebookCore
+import FacebookShare
+import FacebookLogin
 
 enum TouchType {
     case began
@@ -135,8 +138,37 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: - Share
     
     @IBAction func shareOnFacebook(_ sender: UIButton) {
-        let image = poincareView.asImage()
-        
+        print("Touched the share button")
+//        if let accessToken = AccessToken.current {
+//            print("Already have access token")
+//        } else {
+//            let loginManager = LoginManager()
+////            loginManager.logIn()
+//
+//            loginManager.logIn(publishPermissions: [], viewController: self) { loginResult in
+//                switch loginResult {
+//                case .failed(let error):
+//                    print("There was an error with the FB login")
+//                    print(error)
+//                case .cancelled:
+//                    print("User cancelled login.")
+//                case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+//                    print("Logged in!")
+//                }
+//            }
+//        }
+        let image = poincareView.asSquareImage()
+        let photo = Photo(image: image, userGenerated: true)
+        let content = PhotoShareContent(photos: [photo])
+        do {
+            print("Now trying to share")
+//            let dialog = ShareDialog(content: content)
+//            try ShareDialog.validate(dialog)()
+//            try ShareDialog.show(dialog)()
+            try ShareDialog.show(from: self, content: content)
+        } catch  {
+            print("Something went wrong.")
+        }
     }
     
     // MARK: - Flags

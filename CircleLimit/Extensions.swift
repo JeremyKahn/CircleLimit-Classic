@@ -43,15 +43,35 @@ extension Double: NicelyPrinting {
     
 }
 
+extension CGRect {
+    
+    var centralSquare: CGRect {
+        if width <= height {
+            return CGRect(x: minX, y: minY + (height - width)/2, width: width, height: width)
+        } else {
+            return CGRect(x: minX + (width - height)/2, y: minY, width: height, height: height)
+        }
+    }
+    
+}
+
 extension UIView {
     
     // Using a function since `var image` might conflict with an existing variable
     // (like on `UIImageView`)
     func asImage() -> UIImage {
-        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        return asImageWithBounds(bounds)
+    }
+    
+    func asImageWithBounds(_ newBounds: CGRect) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(bounds: newBounds)
         return renderer.image { rendererContext in
             layer.render(in: rendererContext.cgContext)
         }
+    }
+    
+    func asSquareImage() -> UIImage {
+        return asImageWithBounds(bounds.centralSquare)
     }
 }
 
