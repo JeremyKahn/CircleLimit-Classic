@@ -863,6 +863,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         case "help":
             print("Saving old objects", when: tracingGesturesAndTouches)
             doNothing = true
+            let helpVC = segue.destination as! HelpViewController
+            helpVC.presentingCVC = self
             // the next line is probably ineffective and unnecessary
             oldDrawObjects = drawObjects
         default:

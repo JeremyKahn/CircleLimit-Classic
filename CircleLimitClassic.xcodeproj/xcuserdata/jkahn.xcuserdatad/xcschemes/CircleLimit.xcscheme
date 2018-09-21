@@ -34,6 +34,20 @@
                ReferencedContainer = "container:CircleLimit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1BDBD0581B5C21370057B710"
+               BuildableName = "CircleLimitClassic.app"
+               BlueprintName = "CircleLimitClassic"
+               ReferencedContainer = "container:CircleLimitClassic.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -80,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1BDBD0581B5C21370057B710"
-            BuildableName = "CircleLimit.app"
-            BlueprintName = "CircleLimit"
-            ReferencedContainer = "container:CircleLimit.xcodeproj">
+            BuildableName = "CircleLimitClassic.app"
+            BlueprintName = "CircleLimitClassic"
+            ReferencedContainer = "container:CircleLimitClassic.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>

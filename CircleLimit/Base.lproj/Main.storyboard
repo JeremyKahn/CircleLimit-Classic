@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sXx-p2-xOg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="sXx-p2-xOg">
     <device id="retina5_9" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -71,7 +70,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ERd-T5-32B">
-                                <rect key="frame" x="68" y="729.66666666666663" width="30" height="41"/>
+                                <rect key="frame" x="68" y="729" width="30" height="41"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="FB"/>
                                 <connections>
@@ -169,20 +168,33 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XFM-9i-Q4g">
-                                <rect key="frame" x="29" y="44" width="330" height="311"/>
+                                <rect key="frame" x="29" y="44" width="330" height="430"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <string key="text">To make and edit a polygon: double tap in the hyperbolic plane to make the first point. Single tap to make subsequent points. Double tap to close the polygon. 
+                                <mutableString key="text">To make and edit a polygon: double tap in the hyperbolic plane to make the first point. Single tap to make subsequent points. Double tap to close the polygon. 
 To change a polygon's color: long press inside the polygon.
 To zoom in/out: pinch fingers together or apart.
 To pan: push or pull with two fingers together.
-To undo or redo: tap the arrows at the bottom.
-To erase your drawing: shake!</string>
+To undo or redo: tap the arrows at the bottom right.
+To move to another picture: swipe left or right below the picture
+To toggle the gray guidelines: tap outside the circle
+
+BUTTONS:
+?: These instructions
+FB: Post your picture to Facebook
+X: Delete the current picture
+O-&gt;OO: Clone the picture (and put the new copy right after the current one)
+Circular arrows: Redo and Undo
+
+TIPS:
+-Zoom in before moving points: this gives you more control, and prevents accidentally swiping to the next picture. 
+-The picture is much easier to control and understand when the polygons do not overlap. 
+</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VOm-2n-3gs">
-                                <rect key="frame" x="39" y="386" width="63" height="41"/>
+                                <rect key="frame" x="29" y="496" width="63" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Got it!"/>

@@ -34,6 +34,7 @@
 		1BDBD08A1B5C2BEA0057B710 /* Complex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDBD0891B5C2BEA0057B710 /* Complex.swift */; };
 		1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDBD08E1B5C43590057B710 /* PoincareView.swift */; };
 		1BDD539F1B7162620054445B /* DynamicProgramming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDD539E1B7162620054445B /* DynamicProgramming.swift */; };
+		1BE3632221559D1600FA59A9 /* Examples.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE3632121559D1600FA59A9 /* Examples.swift */; };
 		7BAA2E94FC6BCACA72213BB9 /* Pods_CircleLimitClassic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63866ED85587F182F36F6FFA /* Pods_CircleLimitClassic.framework */; };
 		907208B420BCD7690069468E /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907208B320BCD7690069468E /* HelpViewController.swift */; };
 		9088782E20C9D30800F3C36A /* ColorInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9088782D20C9D30800F3C36A /* ColorInfo.swift */; };
@@ -90,6 +91,7 @@
 		1BDBD0891B5C2BEA0057B710 /* Complex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Complex.swift; path = ../Complex.swift; sourceTree = "<group>"; };
 		1BDBD08E1B5C43590057B710 /* PoincareView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PoincareView.swift; path = ../PoincareView.swift; sourceTree = "<group>"; };
 		1BDD539E1B7162620054445B /* DynamicProgramming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DynamicProgramming.swift; sourceTree = "<group>"; };
+		1BE3632121559D1600FA59A9 /* Examples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Examples.swift; sourceTree = "<group>"; };
 		441D7C8C14401C5FFFA2D8C9 /* Pods-CircleLimitClassic.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CircleLimitClassic.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CircleLimitClassic/Pods-CircleLimitClassic.debug.xcconfig"; sourceTree = "<group>"; };
 		63866ED85587F182F36F6FFA /* Pods_CircleLimitClassic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CircleLimitClassic.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		907208B320BCD7690069468E /* HelpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +133,7 @@
 		1B5979D91CBB17A400CEAEA7 /* ColorStudent */ = {
 			isa = PBXGroup;
 			children = (
+				1BDBD0681B5C21370057B710 /* Images.xcassets */,
 				1B5979DC1CBB17A400CEAEA7 /* ColorPicker.storyboard */,
 				1B5979EC1CBB17A400CEAEA7 /* TriangleViewController.swift */,
 				1B5979EB1CBB17A400CEAEA7 /* TriangleView.swift */,
@@ -200,6 +203,7 @@
 			isa = PBXGroup;
 			children = (
 				90C3DFFE20CAD74B00CD73ED /* GalleryViewController.swift */,
+				1BE3632121559D1600FA59A9 /* Examples.swift */,
 				90A598502139D5450031A743 /* Bolts.framework */,
 				90A598512139D5470031A743 /* FBSDKCoreKit.framework */,
 				90A598532139D5480031A743 /* FBSDKLoginKit.framework */,
@@ -213,7 +217,6 @@
 				1B6EB4781CAD798600B08F09 /* Algorithms */,
 				1B6EB4711CAD718A00B08F09 /* HDrawable */,
 				1B5979D91CBB17A400CEAEA7 /* ColorStudent */,
-				1BDBD0681B5C21370057B710 /* Images.xcassets */,
 				1BDBD05C1B5C21370057B710 /* Supporting Files */,
 			);
 			path = CircleLimit;
@@ -461,6 +464,7 @@
 				1B5979F91CBB17A400CEAEA7 /* LightnessGradientView.swift in Sources */,
 				1BDBD08F1B5C43590057B710 /* PoincareView.swift in Sources */,
 				1B740F9A1C06A2FC0082BC4C /* Extensions.swift in Sources */,
+				1BE3632221559D1600FA59A9 /* Examples.swift in Sources */,
 				1BDBD0821B5C21BE0057B710 /* CircleViewController.swift in Sources */,
 				1B6EB4701CAD716D00B08F09 /* HyperbolicPolyline.swift in Sources */,
 				1BDBD0841B5C22740057B710 /* PoincareDisk.swift in Sources */,

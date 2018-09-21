@@ -41,6 +41,8 @@ class GalleryViewController: UIPageViewController
     
     fileprivate var pages: [CircleViewController] = []
     
+    fileprivate var virgin = true
+    
     var scrollView: UIScrollView {
         return view.subviews[0] as! UIScrollView
     }
@@ -70,12 +72,19 @@ class GalleryViewController: UIPageViewController
         let numberOfPagesToMake: Int
         if let savedNumber = loadStuff(location: numberOfPagesLocation, type: [Int].self)?[0] {
             numberOfPagesToMake = savedNumber
+            virgin = false
         } else {
             numberOfPagesToMake = defaultNumberOfPagesToMake
         }
         
         for i in 0..<numberOfPagesToMake {
             pages.append(newCircleViewController(withIndex: i))
+        }
+        
+        // Puts a simple example in the first two pages
+        if virgin {
+            pages[0].drawObjects = [Examples.getQuad334()]
+            pages[2].drawObjects = [Examples.getQuad334()]
         }
         
         if let firstVC = pages.first
