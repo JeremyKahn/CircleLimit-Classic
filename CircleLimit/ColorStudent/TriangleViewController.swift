@@ -29,6 +29,8 @@ class TriangleViewController: UIViewController {
         previewSource.preview.frame = CGRect(origin: CGPoint.zero, size: previewContainer.frame.size)
         previewContainer.addSubview(previewSource.preview)
         previewSource.applyColorToPreview(chosenFuckingColor)
+        
+        switch41.isOn = delegate.useColorTable
     }
     
     let maxSlidingDotProduct: CGFloat = 0.9 * sqrt(3)/2
@@ -135,6 +137,12 @@ class TriangleViewController: UIViewController {
     
     @IBAction func sendChosenColor(_ sender: UILongPressGestureRecognizer) {
         delegate.applyColorAndReturn(chosenFuckingColor)
+    }
+    
+    @IBOutlet weak var switch41: UISwitch!
+    
+    @IBAction func update41switch(_ sender: UISwitch) {
+        delegate.useColorTable = sender.isOn
     }
     
     // Is there an easy way to make this animated?

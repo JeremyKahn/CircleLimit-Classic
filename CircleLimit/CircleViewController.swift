@@ -45,7 +45,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // MARK: Debugging variables
     var tracingGroupMaking = false
     
-    var tracingGesturesAndTouches = true
+    var tracingGesturesAndTouches = false
     
     var trivialGroup = false
     
@@ -608,9 +608,14 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
     // Slightly naughty to use an implicitly unwrapped optional
     var colorChangeInformation: ColorChangeInformation!
     
+    var useColorTable: Bool {
+        set { colorChangeInformation.polygon.useFillColorTable = newValue }
+        get { return colorChangeInformation.polygon.useFillColorTable }
+    }
+    
     func applyColor(_ color: UIColor) {
         let polygon = colorChangeInformation.polygon
-        if colorChangeInformation.changeColorTableEntry {
+        if polygon.useFillColorTable {
             polygon.fillColorTable[colorChangeInformation.colorNumber] = color
         } else {
             polygon.fillColor = color

@@ -16,11 +16,10 @@ class GalleryContext {
     
     var gallery: GalleryViewController
     
-    var canSwitchPage: Bool {
-        set(newValue) {
-            gallery.scrollView.isScrollEnabled = newValue
+    var canSwitchPage: Bool = true {
+        didSet {
+            gallery.updateScrollEnabled()
         }
-        get { return gallery.scrollView.isScrollEnabled }
     }
     
     func deletePage(currentPage: CircleViewController) {
@@ -35,6 +34,10 @@ class GalleryContext {
 
 class GalleryViewController: UIPageViewController
 {
+    func updateScrollEnabled() {
+        scrollView.isScrollEnabled = galleryContext!.canSwitchPage && pages.count > 1
+    }
+    
     var defaultNumberOfPagesToMake = 5
     
     fileprivate var numberOfPagesLocation = filePath(fileName: "numberOfPages")
@@ -81,7 +84,7 @@ class GalleryViewController: UIPageViewController
             pages.append(newCircleViewController(withIndex: i))
         }
         
-        // Puts a simple example in the first two pages
+        // Puts a simple example in two pages
         if virgin {
             pages[0].drawObjects = [Examples.getQuad334()]
             pages[2].drawObjects = [Examples.getQuad334()]
@@ -115,6 +118,7 @@ class GalleryViewController: UIPageViewController
         }
         pages.remove(at: currentIndex)
         giveEachPageItsIndex()
+        updateScrollEnabled()
     }
     
     func cloneCurrentPage(_ currentPage: CircleViewController) {
@@ -124,6 +128,7 @@ class GalleryViewController: UIPageViewController
         newPage.drawObjects = currentPage.drawObjects.map() {$0.copy()}
         pages.insert(newPage, at: currentIndex + 1)
         giveEachPageItsIndex()
+        updateScrollEnabled()
         setViewControllers([newPage], direction: .forward, animated: true, completion: nil)
     }
 }
@@ -132,26 +137,32 @@ extension GalleryViewController: UIPageViewControllerDataSource
 {
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         
+        guard pages.count > 1 else {return viewController}
+        
         guard let viewControllerIndex = pages.index(of: viewController as! CircleViewController) else { return nil }
         
         let previousIndex = viewControllerIndex - 1
         
         guard previousIndex >= 0          else { return pages.last }
         
-        guard pages.count > previousIndex else { return nil        }
+//        guard pages.count > previousIndex else { return nil        }
         
         return pages[previousIndex]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController?
     {
+        guard pages.count > 1 else {
+            return viewController
+        }
+        
         guard let viewControllerIndex = pages.index(of: viewController as! CircleViewController) else { return nil }
         
         let nextIndex = viewControllerIndex + 1
         
         guard nextIndex < pages.count else { return pages.first }
         
-        guard pages.count > nextIndex else { return nil         }
+//        guard pages.count > nextIndex else { return nil         }
         
         return pages[nextIndex]
     }

@@ -22,6 +22,8 @@ protocol ColorPickerDelegate {
     
     func applyColorAndReturn(_ color: UIColor)
     
+    var useColorTable: Bool {get set}
+    
 }
 
 protocol ZoomingColorPickerDelegate: ColorPickerDelegate {
@@ -30,6 +32,7 @@ protocol ZoomingColorPickerDelegate: ColorPickerDelegate {
     
 }
 
+// Why do we want these dummy classes?
 class DefaultColorPickerPreviewSource: ColorPickerPreviewSource {
     
     var preview = UIView()
@@ -47,6 +50,8 @@ class DefaultColorPickerDelegate: ColorPickerDelegate {
     func applyColorAndReturn(_ color: UIColor) {
         print("Chosen color \(color)")
     }
+    
+    var useColorTable: Bool { get {return true} set {} }
     
 }
 
