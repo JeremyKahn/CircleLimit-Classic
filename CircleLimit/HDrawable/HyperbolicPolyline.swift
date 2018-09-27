@@ -62,6 +62,7 @@ class HyperbolicPolyline : HDrawable, Codable {
         self.points = a.points
         self.lineColor = a.lineColor
         self.intrinsicLineWidth  = a.intrinsicLineWidth
+        self.fillColor = a.fillColor
         self.fillColorTable = a.fillColorTable
         self.fillColorBaseNumber = a.fillColorBaseNumber
         self.useFillColorTable = a.useFillColorTable

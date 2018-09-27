@@ -24,8 +24,8 @@ func saveStuff<T>(_ stuff: T, location file: URL) where T:Encodable {
     print("Saving to file: \(filename)")
     do {
         let data = try jse.encode(stuff)
-        let jsonString = String(data: data, encoding: .utf8)
-        print(jsonString ?? "No string!")
+//        let jsonString = String(data: data, encoding: .utf8)
+//        print(jsonString ?? "No string!")
         try data.write(to: file)
     } catch {
         print(error.localizedDescription)

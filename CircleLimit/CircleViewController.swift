@@ -557,6 +557,8 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         for m in matchedPoints {
             m.cleanUp()
         }
+        // Remove the HyperbolicPolyline's that have been reduced to a point
+        drawObjects = drawObjects.filter({!($0 is HyperbolicPolyline) || ($0 as! HyperbolicPolyline).points.count > 1})
         mode = .usual
         stateStack.append(State(completedObjects: oldDrawObjects, newCurve: nil))
         oldDrawObjects = []
@@ -620,6 +622,7 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         } else {
             polygon.fillColor = color
         }
+        save()
     }
     
     func applyColorAndReturn(_ color: UIColor) {
@@ -635,7 +638,11 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
         changingColor = true
         cancelEffectOfTouches()
         let colorNumber = action.action.mapping[ColorNumber.baseNumber]!
-        colorToStartWith = polygon.fillColorTable[colorNumber]!
+        if polygon.useFillColorTable {
+            colorToStartWith = polygon.fillColorTable[colorNumber]!
+        } else {
+            colorToStartWith = polygon.fillColor
+        }
         colorChangeInformation = ColorChangeInformation(polygon: polygon, colorNumber: colorNumber, changeColorTableEntry: true)
         performSegue(withIdentifier: "chooseColor", sender: self)
     }
@@ -845,7 +852,6 @@ class CircleViewController: UIViewController, PoincareViewDataSource, UIGestureR
             drawObjects = oldDrawObjects
             oldDrawObjects = []
             matchedPoints = []
-            save()
             poincareView.setNeedsDisplay()
         }
     }

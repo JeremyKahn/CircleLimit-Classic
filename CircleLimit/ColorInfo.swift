@@ -14,7 +14,7 @@ class ColorInfo: Codable {
     
     var fillColorTable: ColorTable = [1: UIColor.blue, 2: UIColor.green, 3: UIColor.red, 4: UIColor.yellow]
     
-    var fillColor: UIColor = UIColor.purple
+    var fillColor: UIColor = UIColor.brown
     
     init() {}
     

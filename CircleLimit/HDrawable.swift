@@ -116,6 +116,10 @@ extension HDrawable {
         
         set(newValue) {
             colorInfo.fillColor = newValue
+            // debugging stuff!
+            if !useFillColorTable || newValue == UIColor.brown {
+                print(fillColor, newValue)
+            }
         }
     }
     
@@ -147,6 +151,8 @@ extension HDrawable {
     func drawWithMaskAndAction(_ A: Action) {
         if useFillColorTable {
             fillColor = fillColorTable[A.action.mapping[fillColorBaseNumber]!]!
+        } else {
+//            print(type, useFillColorTable, fillColor.rgba, fillColor, fillColorTable.map() {$0.value.rgba})
         }
         drawWithMask(A.motion)
     }
