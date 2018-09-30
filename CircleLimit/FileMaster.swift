@@ -35,12 +35,12 @@ func saveStuff<T>(_ stuff: T, location file: URL) where T:Encodable {
 
 func loadStuff<T>(location file: URL, type: T.Type) -> T? where T:Decodable {
     let filename = file.absoluteString
-    print("Loading from file: \(filename)")
+//    print("Loading from file: \(filename)")
     let jsd = JSONDecoder()
     do {
         let data = try Data.init(contentsOf: file)
         let jsonString = String(data: data, encoding: .utf8)
-        print(jsonString ?? "No string!")
+//        print(jsonString ?? "No string!")
         let stuff = try jsd.decode(type, from: data)
         return stuff
     } catch {
